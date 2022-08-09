@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"server/internal/client"
+	"server/internal/agent"
 	"server/internal/conf"
 	"server/internal/utils"
 	"sync"
@@ -22,16 +22,16 @@ import (
 
 type handler interface {
 	Init(*conf.Configure, *stat.Mgr)
-	HandleFuncs() map[string]func(*client.Clients, *api.Context)
-	OnConnect(*client.Client)
+	HandleFuncs() map[string]func(*agent.Agents, *api.Context)
+	OnConnect(*agent.Agent)
 	OnClose(string)
-	OnMessage(*client.Client, *anet.Msg)
+	OnMessage(*agent.Agent, *anet.Msg)
 }
 
 type App struct {
-	cfg     *conf.Configure
-	stats   *stat.Mgr
-	clients *client.Clients
+	cfg    *conf.Configure
+	stats  *stat.Mgr
+	agents *agent.Agents
 
 	// runtime
 	connectLock  sync.Mutex
@@ -44,9 +44,9 @@ type App struct {
 func New(cfg *conf.Configure, version string) *App {
 	st := stat.New(5 * time.Second)
 	app := &App{
-		cfg:     cfg,
-		clients: client.NewClients(st),
-		stats:   st,
+		cfg:    cfg,
+		agents: agent.NewAgents(st),
+		stats:  st,
 		// runtime
 		stAgentCount: st.NewCounter("agent_count"),
 		connectLimit: rate.NewLimiter(
@@ -86,7 +86,7 @@ func (app *App) Start(s service.Service) error {
 				http.Error(w, "rate limit", http.StatusServiceUnavailable)
 				return
 			}
-			onConnect := make(chan *client.Client)
+			onConnect := make(chan *agent.Agent)
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 			go func() {
@@ -118,7 +118,7 @@ func (app *App) Start(s service.Service) error {
 			if cli != nil {
 				<-ctx.Done()
 				app.stAgentCount.Dec()
-				logging.Info("client %s connection closed", cli.ID())
+				logging.Info("agent %s connection closed", cli.ID())
 				for _, mod := range mods {
 					mod.OnClose(cli.ID())
 				}

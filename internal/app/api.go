@@ -3,15 +3,15 @@ package app
 import (
 	"fmt"
 	"net/http"
+	"server/internal/agent"
 	lapi "server/internal/api"
-	"server/internal/client"
 	"strings"
 
 	"github.com/jkstack/jkframe/api"
 	"github.com/jkstack/jkframe/logging"
 )
 
-func (app *App) reg(uri string, cb func(*client.Clients, *api.Context)) {
+func (app *App) reg(uri string, cb func(*agent.Agents, *api.Context)) {
 	http.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
 		if app.blocked {
 			http.Error(w, "rate limit", http.StatusServiceUnavailable)
@@ -43,6 +43,6 @@ func (app *App) reg(uri string, cb func(*client.Clients, *api.Context)) {
 				}
 			}
 		}()
-		cb(app.clients, ctx)
+		cb(app.agents, ctx)
 	})
 }

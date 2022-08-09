@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"server/internal/client"
+	"server/internal/agent"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -20,7 +20,7 @@ var upgrader = websocket.Upgrader{
 }
 
 func (app *App) agent(w http.ResponseWriter, r *http.Request,
-	onConnect chan *client.Client, cancel context.CancelFunc) *client.Client {
+	onConnect chan *agent.Agent, cancel context.CancelFunc) *agent.Agent {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		logging.Error("upgrade websocket: %v", err)
@@ -36,8 +36,8 @@ func (app *App) agent(w http.ResponseWriter, r *http.Request,
 		app.stAgentCount.Inc()
 		logging.Info("agent %s connection on, type=%s, os=%s, arch=%s, mac=%s",
 			come.ID, come.Name, come.OS, come.Arch, come.MAC)
-		cli := app.clients.New(conn, come, cancel)
-		app.clients.Add(cli)
+		cli := app.agents.New(conn, come, cancel)
+		app.agents.Add(cli)
 		onConnect <- cli
 		return cli
 	}
@@ -92,7 +92,7 @@ func (app *App) handshake(conn *websocket.Conn, come *anet.ComePayload) (ok bool
 			return false
 		}
 		come.ID = fmt.Sprintf("agent-%s-%s", time.Now().Format("20060102"), id)
-	} else if app.clients.Get(come.ID) != nil {
+	} else if app.agents.Get(come.ID) != nil {
 		errMsg = "agent id conflict"
 		return false
 	}
