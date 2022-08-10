@@ -1,0 +1,16 @@
+basePath: /api
+info:
+  contact:
+    name: API Support
+    url: https://www.jkstack.com
+  description: jkagent management server.
+  title: agent-server
+  version: "1.0"
+paths:
+  /agent/list:
+    get:
+      operationId: /api/agent/list
+      produces:
+      - application/json
+      responses: {}
+swagger: "2.0"

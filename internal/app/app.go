@@ -1,28 +1,32 @@
 package app
 
 import (
-	"context"
 	"fmt"
-	"net/http"
+	_ "server/docs"
 	"server/internal/agent"
+	"server/internal/api"
+	apiagent "server/internal/api/agent"
 	"server/internal/conf"
 	"server/internal/utils"
 	"sync"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
-	"github.com/jkstack/jkframe/api"
 	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/stat"
 	runtime "github.com/jkstack/jkframe/utils"
 	"github.com/kardianos/service"
 	"github.com/shirou/gopsutil/v3/disk"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"golang.org/x/time/rate"
 )
 
 type handler interface {
+	Module() string
 	Init(*conf.Configure, *stat.Mgr)
-	HandleFuncs() map[string]func(*agent.Agents, *api.Context)
+	HandleFuncs() map[api.Route]func(*agent.Agents, *gin.Context)
 	OnConnect(*agent.Agent)
 	OnClose(string)
 	OnMessage(*agent.Agent, *anet.Msg)
@@ -71,62 +75,33 @@ func (app *App) Start(s service.Service) error {
 
 		defer utils.Recover("service")
 
+		gin.SetMode(gin.ReleaseMode)
+		g := gin.New()
+
+		apiGroup := g.Group("/api")
+
 		var mods []handler
+		mods = append(mods, apiagent.New())
 
 		for _, mod := range mods {
 			mod.Init(app.cfg, app.stats)
-			for uri, cb := range mod.HandleFuncs() {
-				app.reg(uri, cb)
+			g := apiGroup.Group("/" + mod.Module())
+			bindRecovery(g)
+			for route, cb := range mod.HandleFuncs() {
+				app.reg(g, route, cb)
 			}
 		}
 
-		http.HandleFunc("/metrics", app.stats.ServeHTTP)
-		http.HandleFunc("/ws/agent", func(w http.ResponseWriter, r *http.Request) {
-			if !app.connectLimit.Allow() {
-				http.Error(w, "rate limit", http.StatusServiceUnavailable)
-				return
-			}
-			onConnect := make(chan *agent.Agent)
-			ctx, cancel := context.WithCancel(context.Background())
-			defer cancel()
-			go func() {
-				select {
-				case cli := <-onConnect:
-					for _, mod := range mods {
-						mod.OnConnect(cli)
-					}
-				case <-ctx.Done():
-					return
-				}
-			}()
-			cli := app.agent(w, r, onConnect, cancel)
-			go func() {
-				for {
-					select {
-					case msg := <-cli.Unknown():
-						if msg == nil {
-							return
-						}
-						for _, mod := range mods {
-							mod.OnMessage(cli, msg)
-						}
-					case <-ctx.Done():
-						return
-					}
-				}
-			}()
-			if cli != nil {
-				<-ctx.Done()
-				app.stAgentCount.Dec()
-				logging.Info("agent %s connection closed", cli.ID())
-				for _, mod := range mods {
-					mod.OnClose(cli.ID())
-				}
-			}
+		g.GET("/metrics", func(g *gin.Context) {
+			app.stats.ServeHTTP(g.Writer, g.Request)
 		})
+		g.GET("/ws/agent", func(g *gin.Context) {
+			app.handleWS(g, mods)
+		})
+		g.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 		logging.Info("http listen on %d", app.cfg.Listen)
-		runtime.Assert(http.ListenAndServe(fmt.Sprintf(":%d", app.cfg.Listen), nil))
+		runtime.Assert(g.Run(fmt.Sprintf(":%d", app.cfg.Listen)))
 	}()
 	return nil
 }

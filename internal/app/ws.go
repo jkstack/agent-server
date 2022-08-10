@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"net/http"
 	"server/internal/agent"
+	"server/internal/api"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/logging"
@@ -17,6 +19,51 @@ import (
 
 var upgrader = websocket.Upgrader{
 	EnableCompression: true,
+}
+
+// handleWS agent连接处理接口
+func (app *App) handleWS(g *gin.Context, mods []handler) {
+	if !app.connectLimit.Allow() {
+		api.HttpError(g, http.StatusServiceUnavailable, "rate limit")
+		return
+	}
+	onConnect := make(chan *agent.Agent)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	go func() {
+		select {
+		case cli := <-onConnect:
+			for _, mod := range mods {
+				mod.OnConnect(cli)
+			}
+		case <-ctx.Done():
+			return
+		}
+	}()
+	cli := app.agent(g.Writer, g.Request, onConnect, cancel)
+	go func() {
+		for {
+			select {
+			case msg := <-cli.Unknown():
+				if msg == nil {
+					return
+				}
+				for _, mod := range mods {
+					mod.OnMessage(cli, msg)
+				}
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+	if cli != nil {
+		<-ctx.Done()
+		app.stAgentCount.Dec()
+		logging.Info("agent %s connection closed", cli.ID())
+		for _, mod := range mods {
+			mod.OnClose(cli.ID())
+		}
+	}
 }
 
 func (app *App) agent(w http.ResponseWriter, r *http.Request,
