@@ -37,9 +37,9 @@ func (app *App) reg(g *gin.RouterGroup, module string, route api.Route, cb func(
 			api.ERR(g, http.StatusServiceUnavailable, "rate limit")
 			return
 		}
-		counter := app.stats.NewCounter("api_counter_" + module + "_" + route.MetricName)
+		counter := app.stats.NewCounter("api_counter_" + module + "_" + route.MetricName + ":" + route.Method)
 		counter.Inc()
-		tick := app.stats.NewTick("api_pref_" + module + "_" + route.MetricName)
+		tick := app.stats.NewTick("api_pref_" + module + "_" + route.MetricName + ":" + route.Method)
 		defer tick.Close()
 		cb(app.agents, g)
 	})
