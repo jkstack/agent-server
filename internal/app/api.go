@@ -31,7 +31,8 @@ func bindRecovery(g *gin.RouterGroup) {
 	}))
 }
 
-func (app *App) reg(g *gin.RouterGroup, module string, route api.Route, cb func(*agent.Agents, *gin.Context)) {
+func (app *App) regAPI(g *gin.RouterGroup, module string, route api.Route, cb func(*agent.Agents, *gin.Context)) {
+	logging.Info("route => %s /api/%s%s", route.Method, module, route.Uri)
 	g.Handle(route.Method, route.Uri, func(g *gin.Context) {
 		if app.blocked {
 			api.ERR(g, http.StatusServiceUnavailable, "rate limit")

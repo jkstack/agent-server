@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"net"
 	"server/internal/agent"
 	"server/internal/api"
 	apiagent "server/internal/api/agent"
@@ -87,19 +88,35 @@ func (app *App) Start(s service.Service) error {
 			g := apiGroup.Group("/" + mod.Module())
 			bindRecovery(g)
 			for route, cb := range mod.HandleFuncs() {
-				app.reg(g, mod.Module(), route, cb)
+				app.regAPI(g, mod.Module(), route, cb)
 			}
 		}
 
+		logging.Info("route => GET /metrics")
 		g.GET("/metrics", func(g *gin.Context) {
 			app.stats.ServeHTTP(g.Writer, g.Request)
 		})
+		logging.Info("route => GET /ws/agent")
 		g.GET("/ws/agent", func(g *gin.Context) {
 			app.handleWS(g, mods)
 		})
+		logging.Info("route => GET /docs/*any")
 		g.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 		logging.Info("http listen on %d", app.cfg.Listen)
+		addrs, _ := net.InterfaceAddrs()
+		for _, addr := range addrs {
+			a, ok := addr.(*net.IPNet)
+			if !ok {
+				continue
+			}
+			address := a.IP.String()
+			if address == "127.0.0.1" {
+				continue
+			}
+			logging.Info("  - docs url maybe in http://%s:%d/docs/index.html",
+				address, app.cfg.Listen)
+		}
 		runtime.Assert(g.Run(fmt.Sprintf(":%d", app.cfg.Listen)))
 	}()
 	return nil

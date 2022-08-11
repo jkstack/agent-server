@@ -28,21 +28,28 @@ type Agent struct {
 }
 
 func (agent *Agent) Close() {
-	logging.Info("agent %s connection closed", agent.info.ID)
+	logging.Info("agent [%s] connection closed", agent.info.ID)
 	if agent.remote != nil {
 		agent.remote.Close()
+		agent.remote = nil
 	}
-	close(agent.chRead)
-	close(agent.chWrite)
+	if agent.chRead != nil {
+		close(agent.chRead)
+		agent.chRead = nil
+	}
+	if agent.chWrite != nil {
+		close(agent.chWrite)
+		agent.chWrite = nil
+	}
 }
 
 func (agent *Agent) remoteAddr() string {
 	return agent.remote.RemoteAddr().String()
 }
 
-func (agent *Agent) read(ctx context.Context, cancel context.CancelFunc) {
+func (agent *Agent) read(ctx context.Context, cancel context.CancelFunc, remoteAddr string) {
 	defer func() {
-		utils.Recover(fmt.Sprintf("agent.read(%s)", agent.remoteAddr()))
+		utils.Recover(fmt.Sprintf("agent.read(%s)", remoteAddr))
 		cancel()
 	}()
 	agent.remote.SetReadDeadline(time.Time{})
@@ -91,9 +98,9 @@ func (agent *Agent) read(ctx context.Context, cancel context.CancelFunc) {
 	}
 }
 
-func (agent *Agent) write(ctx context.Context, cancel context.CancelFunc) {
+func (agent *Agent) write(ctx context.Context, cancel context.CancelFunc, remoteAddr string) {
 	defer func() {
-		utils.Recover(fmt.Sprintf("agent.write(%s)", agent.remoteAddr()))
+		utils.Recover(fmt.Sprintf("agent.write(%s)", remoteAddr))
 		cancel()
 	}()
 	send := func(msg *anet.Msg, i int) bool {

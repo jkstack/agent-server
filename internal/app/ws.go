@@ -69,18 +69,19 @@ func (app *App) handleWS(g *gin.Context, mods []handler) {
 	}
 
 	app.stAgentCount.Inc()
-	logging.Info("agent %s connection on, type=%s, os=%s, arch=%s, mac=%s",
+	logging.Info("agent [%s] connection on, type=%s, os=%s, arch=%s, mac=%s",
 		come.ID, come.Name, come.OS, come.Arch, come.MAC)
 
 	cli, done := app.agents.New(conn, come)
-	defer cli.Close()
+	defer func() {
+		app.agents.Remove(cli.ID())
+	}()
 	app.onConnect(cli.ID(), mods)
 	go dispatchMessage(done, cli, mods)
 
 	<-done
 
 	app.stAgentCount.Dec()
-	logging.Info("agent %s connection closed", cli.ID())
 	for _, mod := range mods {
 		mod.OnClose(cli.ID())
 	}

@@ -45,16 +45,8 @@ func (agents *Agents) New(conn *websocket.Conn, come *anet.ComePayload) (*Agent,
 		taskRead: make(map[string]chan *anet.Msg, channelBuffer/10),
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	go cli.read(ctx, cancel)
-	go cli.write(ctx, cancel)
-	go func() {
-		<-ctx.Done()
-
-		cli.Close()
-		agents.Lock()
-		delete(agents.data, come.ID)
-		agents.Unlock()
-	}()
+	go cli.read(ctx, cancel, conn.RemoteAddr().String())
+	go cli.write(ctx, cancel, conn.RemoteAddr().String())
 	agents.Add(cli)
 	return cli, ctx.Done()
 }
@@ -67,6 +59,16 @@ func (agents *Agents) Add(agent *Agent) {
 		old.Close()
 	}
 	agents.data[agent.info.ID] = agent
+}
+
+// Remove remote agent
+func (agents *Agents) Remove(id string) {
+	agents.Lock()
+	defer agents.Unlock()
+	if agent := agents.data[id]; agent != nil {
+		agent.Close()
+	}
+	delete(agents.data, id)
 }
 
 // Get get agent by id
