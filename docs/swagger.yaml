@@ -47,7 +47,6 @@ definitions:
     type: object
 info:
   contact:
-    name: API Support
     url: https://www.jkstack.com
   description: jkagent management server.
   title: agent-server

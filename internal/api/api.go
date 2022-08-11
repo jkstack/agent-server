@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//go:generate swag init -g api.go
+//go:generate swag init -g api.go -o ../../docs
 
 // @title       agent-server
 // @description jkagent management server.

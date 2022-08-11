@@ -11,7 +11,6 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "contact": {
-            "name": "API Support",
             "url": "https://www.jkstack.com"
         },
         "version": "{{.Version}}"
