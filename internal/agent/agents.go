@@ -34,7 +34,7 @@ func NewAgents(stats *stat.Mgr) *Agents {
 }
 
 // New new agent
-func (agents *Agents) New(conn *websocket.Conn, come *anet.ComePayload, cancel context.CancelFunc) *Agent {
+func (agents *Agents) New(conn *websocket.Conn, come *anet.ComePayload) (*Agent, <-chan struct{}) {
 	cli := &Agent{
 		t:        come.Name,
 		parent:   agents,
@@ -50,14 +50,13 @@ func (agents *Agents) New(conn *websocket.Conn, come *anet.ComePayload, cancel c
 	go func() {
 		<-ctx.Done()
 
-		cli.close()
+		cli.Close()
 		agents.Lock()
 		delete(agents.data, come.ID)
 		agents.Unlock()
-
-		cancel()
 	}()
-	return cli
+	agents.Add(cli)
+	return cli, ctx.Done()
 }
 
 // Add add agent
@@ -65,7 +64,7 @@ func (agents *Agents) Add(agent *Agent) {
 	agents.Lock()
 	defer agents.Unlock()
 	if old := agents.data[agent.info.ID]; old != nil {
-		old.close()
+		old.Close()
 	}
 	agents.data[agent.info.ID] = agent
 }

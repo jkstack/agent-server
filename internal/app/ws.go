@@ -1,7 +1,6 @@
 package app
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -21,74 +20,68 @@ var upgrader = websocket.Upgrader{
 	EnableCompression: true,
 }
 
+func dispatchMessage(done <-chan struct{}, cli *agent.Agent, mods []handler) {
+	for {
+		select {
+		case msg := <-cli.Unknown():
+			if msg == nil {
+				return
+			}
+			for _, mod := range mods {
+				mod.OnMessage(cli, msg)
+			}
+		case <-done:
+			return
+		}
+	}
+}
+
+func (app *App) onConnect(id string, mods []handler) {
+	for _, mod := range mods {
+		mod.OnClose(id)
+	}
+}
+
 // handleWS agent连接处理接口
 func (app *App) handleWS(g *gin.Context, mods []handler) {
 	if !app.connectLimit.Allow() {
 		api.HttpError(g, http.StatusServiceUnavailable, "rate limit")
 		return
 	}
-	onConnect := make(chan *agent.Agent)
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	go func() {
-		select {
-		case cli := <-onConnect:
-			for _, mod := range mods {
-				mod.OnConnect(cli)
-			}
-		case <-ctx.Done():
-			return
-		}
-	}()
-	cli := app.agent(g.Writer, g.Request, onConnect, cancel)
-	go func() {
-		for {
-			select {
-			case msg := <-cli.Unknown():
-				if msg == nil {
-					return
-				}
-				for _, mod := range mods {
-					mod.OnMessage(cli, msg)
-				}
-			case <-ctx.Done():
-				return
-			}
-		}
-	}()
-	if cli != nil {
-		<-ctx.Done()
-		app.stAgentCount.Dec()
-		logging.Info("agent %s connection closed", cli.ID())
-		for _, mod := range mods {
-			mod.OnClose(cli.ID())
-		}
-	}
-}
-
-func (app *App) agent(w http.ResponseWriter, r *http.Request,
-	onConnect chan *agent.Agent, cancel context.CancelFunc) *agent.Agent {
-	conn, err := upgrader.Upgrade(w, r, nil)
+	conn, err := upgrader.Upgrade(g.Writer, g.Request, nil)
 	if err != nil {
 		logging.Error("upgrade websocket: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return nil
+		api.HttpError(g, http.StatusInternalServerError, err.Error())
+		return
 	}
+	defer conn.Close()
 	come, err := app.waitCome(conn)
 	if err != nil {
 		logging.Error("wait come message(%s): %v", conn.RemoteAddr().String(), err)
-		return nil
+		return
 	}
-	if app.handshake(conn, come) {
-		app.stAgentCount.Inc()
-		logging.Info("agent %s connection on, type=%s, os=%s, arch=%s, mac=%s",
-			come.ID, come.Name, come.OS, come.Arch, come.MAC)
-		cli := app.agents.New(conn, come, cancel)
-		app.agents.Add(cli)
-		onConnect <- cli
-		return cli
+	if !app.responseHandshake(conn, come) {
+		logging.Error("response handshake failed, agent_id=%s, ip=%s, mac=%s",
+			come.ID, come.IP.String(), come.MAC)
+		return
 	}
-	return nil
+
+	app.stAgentCount.Inc()
+	logging.Info("agent %s connection on, type=%s, os=%s, arch=%s, mac=%s",
+		come.ID, come.Name, come.OS, come.Arch, come.MAC)
+
+	cli, done := app.agents.New(conn, come)
+	defer cli.Close()
+	app.onConnect(cli.ID(), mods)
+	go dispatchMessage(done, cli, mods)
+
+	<-done
+
+	app.stAgentCount.Dec()
+	logging.Info("agent %s connection closed", cli.ID())
+	for _, mod := range mods {
+		mod.OnClose(cli.ID())
+	}
 }
 
 func (app *App) waitCome(conn *websocket.Conn) (*anet.ComePayload, error) {
@@ -104,7 +97,7 @@ func (app *App) waitCome(conn *websocket.Conn) (*anet.ComePayload, error) {
 	return msg.Come, nil
 }
 
-func (app *App) handshake(conn *websocket.Conn, come *anet.ComePayload) (ok bool) {
+func (app *App) responseHandshake(conn *websocket.Conn, come *anet.ComePayload) (ok bool) {
 	var errMsg string
 	defer func() {
 		var rep anet.Msg

@@ -27,7 +27,7 @@ type Agent struct {
 	taskRead map[string]chan *anet.Msg
 }
 
-func (agent *Agent) close() {
+func (agent *Agent) Close() {
 	logging.Info("agent %s connection closed", agent.info.ID)
 	if agent.remote != nil {
 		agent.remote.Close()
