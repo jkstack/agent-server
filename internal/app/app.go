@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	_ "server/docs"
 	"server/internal/agent"
 	"server/internal/api"
 	apiagent "server/internal/api/agent"
@@ -88,7 +87,7 @@ func (app *App) Start(s service.Service) error {
 			g := apiGroup.Group("/" + mod.Module())
 			bindRecovery(g)
 			for route, cb := range mod.HandleFuncs() {
-				app.reg(g, route, cb)
+				app.reg(g, mod.Module(), route, cb)
 			}
 		}
 

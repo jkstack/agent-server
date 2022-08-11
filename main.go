@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	rt "runtime"
+	"server/docs"
 	"server/internal/app"
 	"server/internal/conf"
 
@@ -76,6 +77,8 @@ func main() {
 	app := app.New(cfg, version)
 	sv, err := service.New(app, appCfg)
 	runtime.Assert(err)
+
+	docs.SwaggerInfo.Version = version
 
 	switch *act {
 	case "install":

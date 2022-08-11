@@ -4,7 +4,6 @@
         "description": "jkagent management server.",
         "title": "agent-server",
         "contact": {
-            "name": "API Support",
             "url": "https://www.jkstack.com"
         }
     },

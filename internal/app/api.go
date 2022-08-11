@@ -2,17 +2,17 @@ package app
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"server/internal/agent"
 	"server/internal/api"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/jkframe/logging"
 )
 
 func bindRecovery(g *gin.RouterGroup) {
-	g.Use(gin.CustomRecovery(func(g *gin.Context, err any) {
+	g.Use(gin.CustomRecoveryWithWriter(io.Discard, func(g *gin.Context, err any) {
 		switch err := err.(type) {
 		case api.MissingParam:
 			api.ERR(g, http.StatusBadRequest, err.Error())
@@ -31,17 +31,15 @@ func bindRecovery(g *gin.RouterGroup) {
 	}))
 }
 
-func (app *App) reg(g *gin.RouterGroup, route api.Route, cb func(*agent.Agents, *gin.Context)) {
+func (app *App) reg(g *gin.RouterGroup, module string, route api.Route, cb func(*agent.Agents, *gin.Context)) {
 	g.Handle(route.Method, route.Uri, func(g *gin.Context) {
 		if app.blocked {
 			api.ERR(g, http.StatusServiceUnavailable, "rate limit")
 			return
 		}
-		statName := strings.TrimSuffix(g.Request.URL.Path, "/api/")
-		statName = strings.ReplaceAll(statName, "/", ":")
-		counter := app.stats.NewCounter("api_counter" + statName)
+		counter := app.stats.NewCounter("api_counter_" + module + "_" + route.MetricName)
 		counter.Inc()
-		tick := app.stats.NewTick("api_pref" + statName)
+		tick := app.stats.NewTick("api_pref_" + module + "_" + route.MetricName)
 		defer tick.Close()
 		cb(app.agents, g)
 	})

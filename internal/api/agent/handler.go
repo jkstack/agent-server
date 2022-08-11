@@ -27,7 +27,8 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 
 func (h *Handler) HandleFuncs() map[api.Route]func(*agent.Agents, *gin.Context) {
 	return map[api.Route]func(*agent.Agents, *gin.Context){
-		api.MakeRoute(http.MethodGet, "/list"): h.list,
+		api.MakeRoute(http.MethodGet, "/list", "list"):     h.list,
+		api.MakeRoute(http.MethodGet, "/info/:id", "info"): h.info,
 	}
 }
 

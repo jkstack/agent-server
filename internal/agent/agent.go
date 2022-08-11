@@ -136,6 +136,14 @@ func (agent *Agent) ID() string {
 	return agent.info.ID
 }
 
+func (agent *Agent) Type() string {
+	return agent.info.Name
+}
+
+func (agent *Agent) Info() anet.ComePayload {
+	return agent.info
+}
+
 func (agent *Agent) ChanRead(id string) <-chan *anet.Msg {
 	agent.RLock()
 	defer agent.RUnlock()
