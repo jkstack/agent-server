@@ -16,6 +16,8 @@ import (
 	runtime "github.com/jkstack/jkframe/utils"
 )
 
+var errIDConflict = errors.New("agent id conflict")
+
 var upgrader = websocket.Upgrader{
 	EnableCompression: true,
 }
@@ -60,9 +62,9 @@ func (app *App) handleWS(g *gin.Context, mods []handler) {
 		logging.Error("wait come message(%s): %v", conn.RemoteAddr().String(), err)
 		return
 	}
-	if !app.responseHandshake(conn, come) {
-		logging.Error("response handshake failed, agent_id=%s, ip=%s, mac=%s",
-			come.ID, come.IP.String(), come.MAC)
+	if ok, err := app.responseHandshake(conn, come); !ok {
+		logging.Error("response handshake failed, agent_id=%s, src_ip=%s: %v",
+			come.ID, conn.RemoteAddr().String(), err)
 		return
 	}
 
@@ -97,7 +99,7 @@ func (app *App) waitCome(conn *websocket.Conn) (*anet.ComePayload, error) {
 	return msg.Come, nil
 }
 
-func (app *App) responseHandshake(conn *websocket.Conn, come *anet.ComePayload) (ok bool) {
+func (app *App) responseHandshake(conn *websocket.Conn, come *anet.ComePayload) (ok bool, err error) {
 	var errMsg string
 	defer func() {
 		var rep anet.Msg
@@ -128,13 +130,12 @@ func (app *App) responseHandshake(conn *websocket.Conn, come *anet.ComePayload) 
 		id, err := runtime.UUID(16, "0123456789abcdef")
 		if err != nil {
 			errMsg = fmt.Sprintf("generate agent id: %v", err)
-			logging.Error(errMsg)
-			return false
+			return false, err
 		}
 		come.ID = fmt.Sprintf("agent-%s-%s", time.Now().Format("20060102"), id)
 	} else if app.agents.Get(come.ID) != nil {
 		errMsg = "agent id conflict"
-		return false
+		return false, errIDConflict
 	}
-	return true
+	return true, nil
 }
