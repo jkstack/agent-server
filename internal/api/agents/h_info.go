@@ -21,7 +21,7 @@ type info struct {
 // @Description 获取某个节点信息
 // @Tags agents
 // @Produce json
-// @Param   id    path string  true "节点ID,不指定则列出所有节点"
+// @Param   id    path string  true "节点ID"
 // @Success 200   {object}     api.Success{payload=info}
 // @Router /agents/{id} [get]
 func (h *Handler) info(ctx *api.GContext, agents *agent.Agents) {

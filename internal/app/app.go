@@ -6,6 +6,7 @@ import (
 	"server/internal/agent"
 	"server/internal/api"
 	"server/internal/api/agents"
+	"server/internal/api/foo"
 	"server/internal/conf"
 	"server/internal/utils"
 	"sync"
@@ -82,6 +83,7 @@ func (app *App) Start(s service.Service) error {
 
 		var apis []apiHandler
 		apis = append(apis, agents.New())
+		apis = append(apis, foo.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)

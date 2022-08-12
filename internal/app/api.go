@@ -27,9 +27,11 @@ func bindRecovery(g *gin.RouterGroup) {
 		case api.NotFound:
 			ctx.ERR(http.StatusNotFound, err.Error())
 		case api.Timeout:
-			ctx.ERR(http.StatusBadGateway, err.Error())
+			ctx.ERR(http.StatusGatewayTimeout, err.Error())
 		case api.Notfound:
 			ctx.ERR(http.StatusNotFound, err.Error())
+		case api.InvalidType:
+			ctx.ERR(http.StatusFailedDependency, err.Error())
 		default:
 			ctx.ERR(http.StatusInternalServerError, fmt.Sprintf("%v", err))
 			logging.Error("err: %v", err)

@@ -10,6 +10,8 @@ import (
 	"github.com/jkstack/jkframe/utils"
 )
 
+const RequestTimeout = 10 * time.Second
+
 //go:generate swag init -g api.go -o ../../docs
 
 // @title       agent-server

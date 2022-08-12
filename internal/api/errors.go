@@ -45,3 +45,14 @@ type Timeout struct{}
 func (e Timeout) Error() string {
 	return "timeout"
 }
+
+// InvalidType invalid agent type
+type InvalidType struct {
+	want string
+	got  string
+}
+
+// Error get invalid type error info data, format: invalid agent type want [<type>] got [<type>]
+func (e InvalidType) Error() string {
+	return fmt.Sprintf("invalid agent type want [%s] got [%s]", e.want, e.got)
+}

@@ -90,7 +90,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "节点ID,不指定则列出所有节点",
+                        "description": "节点ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -113,6 +113,35 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/foo/{id}": {
+            "get": {
+                "description": "调用example类型的agent",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "foo"
+                ],
+                "operationId": "/api/foo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
                         }
                     }
                 }

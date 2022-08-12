@@ -25,6 +25,16 @@ func (ctx *GContext) NotFound(what string) {
 	panic(NotFound(what))
 }
 
+// InvalidType invalid type error
+func (ctx *GContext) InvalidType(want, got string) {
+	panic(InvalidType{want: want, got: got})
+}
+
+// Timeout timeout error
+func (ctx *GContext) Timeout() {
+	panic(Timeout{})
+}
+
 // HttpError response http error
 func (ctx *GContext) HttpError(code int, msg string) {
 	ctx.g.String(code, msg)

@@ -96,7 +96,7 @@ paths:
       description: 获取某个节点信息
       operationId: /api/agents/info
       parameters:
-      - description: 节点ID,不指定则列出所有节点
+      - description: 节点ID
         in: path
         name: id
         required: true
@@ -115,4 +115,23 @@ paths:
               type: object
       tags:
       - agents
+  /foo/{id}:
+    get:
+      description: 调用example类型的agent
+      operationId: /api/foo
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Success'
+      tags:
+      - foo
 swagger: "2.0"
