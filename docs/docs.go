@@ -18,62 +18,21 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/agent/info/{id}": {
-            "get": {
-                "description": "获取某个节点信息",
-                "produces": [
-                    "application/json"
-                ],
-                "operationId": "/api/agent/info",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "节点ID,不指定则列出所有节点",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/api.Success"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "payload": {
-                                            "$ref": "#/definitions/agent.info"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/agent/list": {
+        "/agents": {
             "get": {
                 "description": "获取节点列表",
                 "produces": [
                     "application/json"
                 ],
-                "operationId": "/api/agent/list",
+                "tags": [
+                    "agents"
+                ],
+                "operationId": "/api/agents",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "节点类型,不指定则列出所有类型",
                         "name": "type",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "节点ID,不指定则列出所有节点",
-                        "name": "id",
                         "in": "query"
                     },
                     {
@@ -107,8 +66,49 @@ const docTemplate = `{
                                         "payload": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/agent.info"
+                                                "$ref": "#/definitions/agents.info"
                                             }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/agents/{id}": {
+            "get": {
+                "description": "获取某个节点信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "agents"
+                ],
+                "operationId": "/api/agents/info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID,不指定则列出所有节点",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/agents.info"
                                         }
                                     }
                                 }
@@ -120,7 +120,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "agent.info": {
+        "agents.info": {
             "type": "object",
             "properties": {
                 "arch": {
@@ -178,7 +178,11 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 0
                 },
-                "payload": {}
+                "payload": {},
+                "reqid": {
+                    "type": "string",
+                    "example": "20220812-00000001-2bf6c4"
+                }
             }
         }
     }

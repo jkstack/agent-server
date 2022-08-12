@@ -1,10 +1,8 @@
-package agent
+package agents
 
 import (
 	"server/internal/agent"
 	"server/internal/api"
-
-	"github.com/gin-gonic/gin"
 )
 
 type info struct {
@@ -19,17 +17,22 @@ type info struct {
 }
 
 // info 获取某个节点信息
-// @ID /api/agent/info
+// @ID /api/agents/info
 // @Description 获取某个节点信息
+// @Tags agents
 // @Produce json
 // @Param   id    path string  true "节点ID,不指定则列出所有节点"
 // @Success 200   {object}     api.Success{payload=info}
-// @Router /agent/info/{id} [get]
-func (h *Handler) info(agents *agent.Agents, g *gin.Context) {
-	id := g.Param("id")
+// @Router /agents/{id} [get]
+func (h *Handler) info(ctx *api.GContext, agents *agent.Agents) {
+	id := ctx.Param("id")
 	agent := agents.Get(id)
+	if agent == nil {
+		ctx.NotFound("agent")
+		return
+	}
 	a := agent.Info()
-	api.OK(g, info{
+	ctx.OK(info{
 		ID:       agent.ID(),
 		Type:     agent.Type(),
 		Version:  a.Version,

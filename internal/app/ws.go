@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"server/internal/agent"
-	"server/internal/api"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,15 +21,15 @@ var upgrader = websocket.Upgrader{
 	EnableCompression: true,
 }
 
-func dispatchMessage(done <-chan struct{}, cli *agent.Agent, mods []handler) {
+func dispatchMessage(done <-chan struct{}, cli *agent.Agent, apis []apiHandler) {
 	for {
 		select {
 		case msg := <-cli.Unknown():
 			if msg == nil {
 				return
 			}
-			for _, mod := range mods {
-				mod.OnMessage(cli, msg)
+			for _, api := range apis {
+				api.OnMessage(cli, msg)
 			}
 		case <-done:
 			return
@@ -38,22 +37,22 @@ func dispatchMessage(done <-chan struct{}, cli *agent.Agent, mods []handler) {
 	}
 }
 
-func (app *App) onConnect(id string, mods []handler) {
-	for _, mod := range mods {
-		mod.OnClose(id)
+func (app *App) onConnect(id string, apis []apiHandler) {
+	for _, api := range apis {
+		api.OnClose(id)
 	}
 }
 
 // handleWS agent连接处理接口
-func (app *App) handleWS(g *gin.Context, mods []handler) {
+func (app *App) handleWS(g *gin.Context, apis []apiHandler) {
 	if !app.connectLimit.Allow() {
-		api.HttpError(g, http.StatusServiceUnavailable, "rate limit")
+		g.String(http.StatusServiceUnavailable, "rate limit")
 		return
 	}
 	conn, err := upgrader.Upgrade(g.Writer, g.Request, nil)
 	if err != nil {
 		logging.Error("upgrade websocket: %v", err)
-		api.HttpError(g, http.StatusInternalServerError, err.Error())
+		g.String(http.StatusInternalServerError, err.Error())
 		return
 	}
 	defer conn.Close()
@@ -76,14 +75,14 @@ func (app *App) handleWS(g *gin.Context, mods []handler) {
 	defer func() {
 		app.agents.Remove(cli.ID())
 	}()
-	app.onConnect(cli.ID(), mods)
-	go dispatchMessage(done, cli, mods)
+	app.onConnect(cli.ID(), apis)
+	go dispatchMessage(done, cli, apis)
 
 	<-done
 
 	app.stAgentCount.Dec()
-	for _, mod := range mods {
-		mod.OnClose(cli.ID())
+	for _, api := range apis {
+		api.OnClose(cli.ID())
 	}
 }
 

@@ -1,33 +1,30 @@
-package agent
+package agents
 
 import (
 	"server/internal/agent"
 	"server/internal/api"
 	"sort"
-
-	"github.com/gin-gonic/gin"
 )
 
 type listArgs struct {
 	Type string `form:"type"`
-	ID   string `form:"id"`
 	Page int    `form:"page,default=1" binding:"min=1"`
 	Size int    `form:"size,default=20" binding:"min=10"`
 }
 
 // list 列出节点列表
-// @ID /api/agent/list
+// @ID /api/agents
 // @Description 获取节点列表
+// @Tags agents
 // @Produce json
 // @Param   type  query string  false "节点类型,不指定则列出所有类型"
-// @Param   id    query string  false "节点ID,不指定则列出所有节点"
 // @Param   page  query int     false "分页编号" default(1)  minimum(1)
 // @Param   size  query int     false "每页数量" default(20) minimum(10)
 // @Success 200   {object}      api.Success{payload=[]info}
-// @Router /agent/list [get]
-func (h *Handler) list(agents *agent.Agents, g *gin.Context) {
+// @Router /agents [get]
+func (h *Handler) list(ctx *api.GContext, agents *agent.Agents) {
 	var args listArgs
-	if err := g.ShouldBindQuery(&args); err != nil {
+	if err := ctx.ShouldBindQuery(&args); err != nil {
 		api.BadParamErr(err.Error())
 		return
 	}
@@ -35,9 +32,6 @@ func (h *Handler) list(agents *agent.Agents, g *gin.Context) {
 	agents.Range(func(agent *agent.Agent) bool {
 		want := true
 		if len(args.Type) > 0 && agent.Type() != args.Type {
-			want = false
-		}
-		if len(args.ID) > 0 && agent.ID() != args.ID {
 			want = false
 		}
 		if want {
@@ -60,12 +54,12 @@ func (h *Handler) list(agents *agent.Agents, g *gin.Context) {
 	})
 	offset := (args.Page - 1) * args.Size
 	if offset >= len(ret) {
-		api.OK(g, nil)
+		ctx.OK(nil)
 		return
 	}
 	end := offset + args.Size
 	if end > len(ret) {
 		end = len(ret)
 	}
-	api.OK(g, ret[offset:end])
+	ctx.OK(ret[offset:end])
 }

@@ -1,6 +1,6 @@
 basePath: /api
 definitions:
-  agent.info:
+  agents.info:
     properties:
       arch:
         enum:
@@ -44,6 +44,9 @@ definitions:
         example: 0
         type: integer
       payload: {}
+      reqid:
+        example: 20220812-00000001-2bf6c4
+        type: string
     type: object
 info:
   contact:
@@ -51,40 +54,14 @@ info:
   description: jkagent management server.
   title: agent-server
 paths:
-  /agent/info/{id}:
-    get:
-      description: 获取某个节点信息
-      operationId: /api/agent/info
-      parameters:
-      - description: 节点ID,不指定则列出所有节点
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/api.Success'
-            - properties:
-                payload:
-                  $ref: '#/definitions/agent.info'
-              type: object
-  /agent/list:
+  /agents:
     get:
       description: 获取节点列表
-      operationId: /api/agent/list
+      operationId: /api/agents
       parameters:
       - description: 节点类型,不指定则列出所有类型
         in: query
         name: type
-        type: string
-      - description: 节点ID,不指定则列出所有节点
-        in: query
-        name: id
         type: string
       - default: 1
         description: 分页编号
@@ -109,7 +86,33 @@ paths:
             - properties:
                 payload:
                   items:
-                    $ref: '#/definitions/agent.info'
+                    $ref: '#/definitions/agents.info'
                   type: array
               type: object
+      tags:
+      - agents
+  /agents/{id}:
+    get:
+      description: 获取某个节点信息
+      operationId: /api/agents/info
+      parameters:
+      - description: 节点ID,不指定则列出所有节点
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/agents.info'
+              type: object
+      tags:
+      - agents
 swagger: "2.0"

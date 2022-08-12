@@ -5,7 +5,7 @@ import (
 	"net"
 	"server/internal/agent"
 	"server/internal/api"
-	apiagent "server/internal/api/agent"
+	"server/internal/api/agents"
 	"server/internal/conf"
 	"server/internal/utils"
 	"sync"
@@ -23,10 +23,10 @@ import (
 	"golang.org/x/time/rate"
 )
 
-type handler interface {
+type apiHandler interface {
 	Module() string
 	Init(*conf.Configure, *stat.Mgr)
-	HandleFuncs() map[api.Route]func(*agent.Agents, *gin.Context)
+	HandleFuncs() map[api.Route]func(*api.GContext, *agent.Agents)
 	OnConnect(*agent.Agent)
 	OnClose(string)
 	OnMessage(*agent.Agent, *anet.Msg)
@@ -80,15 +80,15 @@ func (app *App) Start(s service.Service) error {
 
 		apiGroup := g.Group("/api")
 
-		var mods []handler
-		mods = append(mods, apiagent.New())
+		var apis []apiHandler
+		apis = append(apis, agents.New())
 
-		for _, mod := range mods {
-			mod.Init(app.cfg, app.stats)
-			g := apiGroup.Group("/" + mod.Module())
+		for _, api := range apis {
+			api.Init(app.cfg, app.stats)
+			g := apiGroup.Group("/" + api.Module())
 			bindRecovery(g)
-			for route, cb := range mod.HandleFuncs() {
-				app.regAPI(g, mod.Module(), route, cb)
+			for route, cb := range api.HandleFuncs() {
+				app.regAPI(g, api.Module(), route, cb)
 			}
 		}
 
@@ -98,7 +98,7 @@ func (app *App) Start(s service.Service) error {
 		})
 		logging.Info("route => GET /ws/agent")
 		g.GET("/ws/agent", func(g *gin.Context) {
-			app.handleWS(g, mods)
+			app.handleWS(g, apis)
 		})
 		logging.Info("route => GET /docs/*any")
 		g.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

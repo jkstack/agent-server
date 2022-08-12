@@ -1,4 +1,4 @@
-package agent
+package agents
 
 import (
 	"net/http"
@@ -6,7 +6,6 @@ import (
 	"server/internal/api"
 	"server/internal/conf"
 
-	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/stat"
 )
@@ -19,16 +18,16 @@ func New() *Handler {
 }
 
 func (h *Handler) Module() string {
-	return "agent"
+	return "agents"
 }
 
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 }
 
-func (h *Handler) HandleFuncs() map[api.Route]func(*agent.Agents, *gin.Context) {
-	return map[api.Route]func(*agent.Agents, *gin.Context){
-		api.MakeRoute(http.MethodGet, "/list", "list"):     h.list,
-		api.MakeRoute(http.MethodGet, "/info/:id", "info"): h.info,
+func (h *Handler) HandleFuncs() map[api.Route]func(*api.GContext, *agent.Agents) {
+	return map[api.Route]func(*api.GContext, *agent.Agents){
+		api.MakeRoute(http.MethodGet, "", "list"):     h.list,
+		api.MakeRoute(http.MethodGet, "/:id", "info"): h.info,
 	}
 }
 
