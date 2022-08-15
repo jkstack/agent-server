@@ -6,6 +6,7 @@ import (
 	"server/internal/api"
 	"server/internal/conf"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/stat"
 )
@@ -24,9 +25,9 @@ func (h *Handler) Module() string {
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 }
 
-func (h *Handler) HandleFuncs() map[api.Route]func(*api.GContext, *agent.Agents) {
-	return map[api.Route]func(*api.GContext, *agent.Agents){
-		api.MakeRoute(http.MethodGet, "/:id", "foo"): h.foo,
+func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
+	return map[api.Route]func(*gin.Context){
+		api.MakeRoute(http.MethodGet, "/:id"): h.foo,
 	}
 }
 

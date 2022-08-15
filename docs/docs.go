@@ -207,11 +207,7 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 0
                 },
-                "payload": {},
-                "reqid": {
-                    "type": "string",
-                    "example": "20220812-00000001-2bf6c4"
-                }
+                "payload": {}
             }
         }
     }

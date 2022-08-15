@@ -7,6 +7,7 @@ import (
 	"server/internal/api"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
 	runtime "github.com/jkstack/jkframe/utils"
 )
@@ -19,17 +20,17 @@ import (
 // @Param   id    path string  true "节点ID"
 // @Success 200   {object}     api.Success
 // @Router /foo/{id} [get]
-func (h *Handler) foo(ctx *api.GContext, agents *agent.Agents) {
-	id := ctx.Param("id")
+func (h *Handler) foo(g *gin.Context) {
+	id := g.Param("id")
+
+	agents := api.GetAgents(g)
 
 	cli := agents.Get(id)
 	if cli == nil {
-		ctx.NotFound("agent")
-		return
+		api.PanicNotFound("agent")
 	}
 	if cli.Type() != agent.TypeExample {
-		ctx.InvalidType(agent.TypeExample, cli.Type())
-		return
+		api.PanicInvalidType(agent.TypeExample, cli.Type())
 	}
 
 	taskID, err := cli.SendFoo()
@@ -40,17 +41,17 @@ func (h *Handler) foo(ctx *api.GContext, agents *agent.Agents) {
 	select {
 	case msg = <-cli.ChanRead(taskID):
 	case <-time.After(api.RequestTimeout):
-		ctx.Timeout()
+		api.PanicTimeout()
 	}
 
 	switch {
 	case msg.Type == anet.TypeError:
-		ctx.ERR(http.StatusServiceUnavailable, msg.ErrorMsg)
+		api.ERR(g, http.StatusServiceUnavailable, msg.ErrorMsg)
 		return
 	case msg.Type != anet.TypeBar:
-		ctx.ERR(http.StatusInternalServerError, fmt.Sprintf("invalid message type: %d", msg.Type))
+		api.ERR(g, http.StatusInternalServerError, fmt.Sprintf("invalid message type: %d", msg.Type))
 		return
 	}
 
-	ctx.OK(nil)
+	api.OK(g, nil)
 }

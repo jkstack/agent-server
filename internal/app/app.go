@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"io"
 	"net"
 	"server/internal/agent"
 	"server/internal/api"
@@ -27,7 +28,7 @@ import (
 type apiHandler interface {
 	Module() string
 	Init(*conf.Configure, *stat.Mgr)
-	HandleFuncs() map[api.Route]func(*api.GContext, *agent.Agents)
+	HandleFuncs() map[api.Route]func(*gin.Context)
 	OnConnect(*agent.Agent)
 	OnClose(string)
 	OnMessage(*agent.Agent, *anet.Msg)
@@ -80,6 +81,12 @@ func (app *App) Start(s service.Service) error {
 		g := gin.New()
 
 		apiGroup := g.Group("/api")
+		apiGroup.Use(
+			gin.RecoveryWithWriter(io.Discard, handleRecovery),
+			app.ratelimit,
+			app.point,
+			app.bind,
+		)
 
 		var apis []apiHandler
 		apis = append(apis, agents.New())
@@ -88,9 +95,9 @@ func (app *App) Start(s service.Service) error {
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)
 			g := apiGroup.Group("/" + api.Module())
-			bindRecovery(g)
 			for route, cb := range api.HandleFuncs() {
-				app.regAPI(g, api.Module(), route, cb)
+				logging.Info("route => %s /api/%s%s", route.Method, api.Module(), route.Uri)
+				g.Handle(route.Method, route.Uri, cb)
 			}
 		}
 

@@ -1,8 +1,9 @@
 package agents
 
 import (
-	"server/internal/agent"
 	"server/internal/api"
+
+	"github.com/gin-gonic/gin"
 )
 
 type info struct {
@@ -24,15 +25,18 @@ type info struct {
 // @Param   id    path string  true "节点ID"
 // @Success 200   {object}     api.Success{payload=info}
 // @Router /agents/{id} [get]
-func (h *Handler) info(ctx *api.GContext, agents *agent.Agents) {
-	id := ctx.Param("id")
+func (h *Handler) info(g *gin.Context) {
+	id := g.Param("id")
+
+	agents := api.GetAgents(g)
+
 	agent := agents.Get(id)
 	if agent == nil {
-		ctx.NotFound("agent")
+		api.PanicNotFound("agent")
 		return
 	}
 	a := agent.Info()
-	ctx.OK(info{
+	api.OK(g, info{
 		ID:       agent.ID(),
 		Type:     agent.Type(),
 		Version:  a.Version,

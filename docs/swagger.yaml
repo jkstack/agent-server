@@ -44,9 +44,6 @@ definitions:
         example: 0
         type: integer
       payload: {}
-      reqid:
-        example: 20220812-00000001-2bf6c4
-        type: string
     type: object
 info:
   contact:
