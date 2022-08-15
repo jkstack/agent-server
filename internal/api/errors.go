@@ -30,14 +30,6 @@ func (e MissingParam) Error() string {
 	return fmt.Sprintf("Missing [%s]", string(e))
 }
 
-// NotFound not found error
-type NotFound string
-
-// Error get not found error info data, format: <data> not found
-func (e NotFound) Error() string {
-	return fmt.Sprintf("%s not found", string(e))
-}
-
 // Timeout timeout error
 type Timeout struct{}
 

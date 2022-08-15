@@ -24,14 +24,16 @@ type listArgs struct {
 // @Param   size  query int     false "每页数量" default(20) minimum(10)
 // @Success 200   {object}      api.Success{payload=[]info}
 // @Router /agents [get]
-func (h *Handler) list(g *gin.Context) {
+func (h *Handler) list(gin *gin.Context) {
+	g := api.GetG(gin)
+
 	var args listArgs
 	if err := g.ShouldBindQuery(&args); err != nil {
 		api.BadParamErr(err.Error())
 		return
 	}
 
-	agents := api.GetAgents(g)
+	agents := g.GetAgents()
 
 	ret := make([]info, 0, agents.Size())
 	agents.Range(func(agent *agent.Agent) bool {
@@ -59,12 +61,12 @@ func (h *Handler) list(g *gin.Context) {
 	})
 	offset := (args.Page - 1) * args.Size
 	if offset >= len(ret) {
-		api.OK(g, nil)
+		g.OK(nil)
 		return
 	}
 	end := offset + args.Size
 	if end > len(ret) {
 		end = len(ret)
 	}
-	api.OK(g, ret[offset:end])
+	g.OK(ret[offset:end])
 }

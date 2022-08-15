@@ -2,42 +2,40 @@ package api
 
 import (
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
 // OK response api caller ok
-func OK(g *gin.Context, payload any) {
-	g.JSON(http.StatusOK, Success{
+func (ctx *GContext) OK(payload any) {
+	ctx.JSON(http.StatusOK, Success{
 		Code:    http.StatusOK,
 		Payload: payload,
 	})
 }
 
 // ERR response api caller error
-func ERR(g *gin.Context, code int, msg string) {
-	g.JSON(http.StatusOK, Failure{
+func (ctx *GContext) ERR(code int, msg string) {
+	ctx.JSON(http.StatusOK, Failure{
 		Code: code,
 		Msg:  msg,
 	})
 }
 
-// PanicNotFound not found error
-func PanicNotFound(what string) {
-	panic(NotFound(what))
+// NotFound not found error
+func (ctx *GContext) NotFound(what string) {
+	panic(Notfound(what))
 }
 
-// PanicInvalidType invalid type error
-func PanicInvalidType(want, got string) {
+// InvalidType invalid type error
+func (ctx *GContext) InvalidType(want, got string) {
 	panic(InvalidType{want: want, got: got})
 }
 
-// PanicTimeout timeout error
-func PanicTimeout() {
+// Timeout timeout error
+func (ctx *GContext) Timeout() {
 	panic(Timeout{})
 }
 
 // HttpError response http error
-func HttpError(g *gin.Context, code int, msg string) {
-	g.String(code, msg)
+func (ctx *GContext) HttpError(code int, msg string) {
+	ctx.String(code, msg)
 }

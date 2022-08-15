@@ -1,15 +1,12 @@
 package api
 
 import (
-	"server/internal/agent"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 const RequestTimeout = 10 * time.Second
 
-//go:generate swag init -g api.go -o ../../docs
+//go:generate swag init -g api.go -o ../../docs --generatedTime
 
 // @title       agent-server
 // @version     TODO
@@ -32,14 +29,6 @@ type Failure struct {
 	RequestID string `json:"reqid,omitempty" example:"20220812-00000001-2bf6c4"`
 }
 
-// GetRequestID get current request id
-func GetRequestID(g *gin.Context) string {
-	if id, ok := g.Get(KeyRequestID); ok {
-		return id.(string)
-	}
-	return "00000000"
-}
-
 type Route struct {
 	Method string
 	Uri    string
@@ -50,9 +39,4 @@ func MakeRoute(method, uri string) Route {
 		Method: method,
 		Uri:    uri,
 	}
-}
-
-func GetAgents(g *gin.Context) *agent.Agents {
-	agents, _ := g.Get(KeyAgents)
-	return agents.(*agent.Agents)
 }

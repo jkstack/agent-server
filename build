@@ -1,3 +1,14 @@
 #!/bin/sh
+
+BUILD_VERSION=1.0.0
+
+HASH=`git log -n1 --pretty=format:%h`
+REVERSION=`git log --oneline|wc -l|tr -d ' '`
+BUILD_TIME=`date +'%Y-%m-%d %H:%M:%S'`
+LDFLAGS="-X 'main.gitHash=$HASH'
+-X 'main.gitReversion=$REVERSION'
+-X 'main.buildTime=$BUILD_TIME'
+-X 'main.version=$BUILD_VERSION'"
+
 go generate ./...
-go build -o bin/server main.go
+go build -ldflags "$LDFLAGS" -o bin/server main.go

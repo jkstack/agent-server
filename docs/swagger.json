@@ -144,6 +144,38 @@
                     }
                 }
             }
+        },
+        "/info/server": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "info"
+                ],
+                "summary": "获取当前服务器状态",
+                "operationId": "/api/info/server",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/info.serverInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -151,50 +183,58 @@
             "type": "object",
             "properties": {
                 "arch": {
+                    "description": "操作系统位数",
                     "type": "string",
                     "enum": [
                         "i386",
                         "x86_64",
                         "..."
                     ],
-                    "example": "操作系统位数"
+                    "example": "x86_64"
                 },
                 "id": {
+                    "description": "agent-id",
                     "type": "string",
-                    "example": "agent_id"
+                    "example": "ct-01"
                 },
                 "ip": {
+                    "description": "ip地址",
                     "type": "string",
-                    "example": "ip地址"
+                    "example": "127.0.0.1"
                 },
                 "mac": {
+                    "description": "mac地址",
                     "type": "string",
-                    "example": "mac地址"
+                    "example": "00:15:5d:c9:e0:17"
                 },
                 "os": {
+                    "description": "操作系统类型",
                     "type": "string",
                     "enum": [
                         "windows",
                         "linux"
                     ],
-                    "example": "操作系统类型"
+                    "example": "linux"
                 },
                 "platform": {
+                    "description": "操作系统名称",
                     "type": "string",
                     "enum": [
                         "debian",
                         "centos",
                         "..."
                     ],
-                    "example": "操作系统名称"
+                    "example": "debian"
                 },
                 "type": {
+                    "description": "agent类型",
                     "type": "string",
-                    "example": "agent类型"
+                    "example": "container-agent"
                 },
                 "version": {
+                    "description": "agent版本号",
                     "type": "string",
-                    "example": "agent版本号"
+                    "example": "1.0.0"
                 }
             }
         },
@@ -206,6 +246,26 @@
                     "example": 0
                 },
                 "payload": {}
+            }
+        },
+        "info.serverInfo": {
+            "type": "object",
+            "properties": {
+                "agents": {
+                    "description": "当前连接的agent数量",
+                    "type": "integer",
+                    "example": 10
+                },
+                "is_blocking": {
+                    "description": "是否处于限流状态",
+                    "type": "boolean",
+                    "example": false
+                },
+                "version": {
+                    "description": "服务端版本号",
+                    "type": "string",
+                    "example": "1.0.0"
+                }
             }
         }
     }

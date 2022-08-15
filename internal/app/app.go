@@ -8,6 +8,7 @@ import (
 	"server/internal/api"
 	"server/internal/api/agents"
 	"server/internal/api/foo"
+	"server/internal/api/info"
 	"server/internal/conf"
 	"server/internal/utils"
 	"sync"
@@ -35,9 +36,10 @@ type apiHandler interface {
 }
 
 type App struct {
-	cfg    *conf.Configure
-	stats  *stat.Mgr
-	agents *agent.Agents
+	cfg     *conf.Configure
+	version string
+	stats   *stat.Mgr
+	agents  *agent.Agents
 
 	// runtime
 	connectLock  sync.Mutex
@@ -50,9 +52,10 @@ type App struct {
 func New(cfg *conf.Configure, version string) *App {
 	st := stat.New(5 * time.Second)
 	app := &App{
-		cfg:    cfg,
-		agents: agent.NewAgents(st),
-		stats:  st,
+		cfg:     cfg,
+		version: version,
+		agents:  agent.NewAgents(st),
+		stats:   st,
 		// runtime
 		stAgentCount: st.NewCounter("agent_count"),
 		connectLimit: rate.NewLimiter(
@@ -82,15 +85,16 @@ func (app *App) Start(s service.Service) error {
 
 		apiGroup := g.Group("/api")
 		apiGroup.Use(
+			app.context,
 			gin.RecoveryWithWriter(io.Discard, handleRecovery),
 			app.ratelimit,
 			app.point,
-			app.bind,
 		)
 
 		var apis []apiHandler
 		apis = append(apis, agents.New())
 		apis = append(apis, foo.New())
+		apis = append(apis, info.New(app.version, &app.blocked))
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)

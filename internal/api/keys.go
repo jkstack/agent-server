@@ -1,7 +1,6 @@
 package api
 
 const (
-	KeyRequestID   = "X-REQUEST-ID"
-	KeyPerformance = "X-PERFORMANCE"
-	KeyAgents      = "X-AGENTS"
+	KeyPerformance = "X-PERFORMANCE" // performance, stat.Tick
+	KeyGContext    = "X-GCONTEXT"    // gcontext, GContext
 )

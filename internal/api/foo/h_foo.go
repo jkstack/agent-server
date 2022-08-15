@@ -20,17 +20,19 @@ import (
 // @Param   id    path string  true "节点ID"
 // @Success 200   {object}     api.Success
 // @Router /foo/{id} [get]
-func (h *Handler) foo(g *gin.Context) {
+func (h *Handler) foo(gin *gin.Context) {
+	g := api.GetG(gin)
+
 	id := g.Param("id")
 
-	agents := api.GetAgents(g)
+	agents := g.GetAgents()
 
 	cli := agents.Get(id)
 	if cli == nil {
-		api.PanicNotFound("agent")
+		g.NotFound("agent")
 	}
 	if cli.Type() != agent.TypeExample {
-		api.PanicInvalidType(agent.TypeExample, cli.Type())
+		g.InvalidType(agent.TypeExample, cli.Type())
 	}
 
 	taskID, err := cli.SendFoo()
@@ -41,17 +43,17 @@ func (h *Handler) foo(g *gin.Context) {
 	select {
 	case msg = <-cli.ChanRead(taskID):
 	case <-time.After(api.RequestTimeout):
-		api.PanicTimeout()
+		g.Timeout()
 	}
 
 	switch {
 	case msg.Type == anet.TypeError:
-		api.ERR(g, http.StatusServiceUnavailable, msg.ErrorMsg)
+		g.ERR(http.StatusServiceUnavailable, msg.ErrorMsg)
 		return
 	case msg.Type != anet.TypeBar:
-		api.ERR(g, http.StatusInternalServerError, fmt.Sprintf("invalid message type: %d", msg.Type))
+		g.ERR(http.StatusInternalServerError, fmt.Sprintf("invalid message type: %d", msg.Type))
 		return
 	}
 
-	api.OK(g, nil)
+	g.OK(nil)
 }
