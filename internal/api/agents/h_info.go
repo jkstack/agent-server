@@ -19,7 +19,7 @@ type info struct {
 
 // info 获取某个节点信息
 // @ID /api/agents/info
-// @Description 获取某个节点信息
+// @Summary 获取某个节点信息
 // @Tags agents
 // @Produce json
 // @Param   id    path string  true "节点ID"

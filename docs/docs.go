@@ -20,16 +20,22 @@ const docTemplate = `{
     "paths": {
         "/agents": {
             "get": {
-                "description": "获取节点列表",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "agents"
                 ],
+                "summary": "获取节点列表",
                 "operationId": "/api/agents",
                 "parameters": [
                     {
+                        "enum": [
+                            "example-agent",
+                            "container-agent",
+                            "metrics-agent",
+                            "..."
+                        ],
                         "type": "string",
                         "description": "节点类型,不指定则列出所有类型",
                         "name": "type",
@@ -79,13 +85,13 @@ const docTemplate = `{
         },
         "/agents/{id}": {
             "get": {
-                "description": "获取某个节点信息",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "agents"
                 ],
+                "summary": "获取某个节点信息",
                 "operationId": "/api/agents/info",
                 "parameters": [
                     {
@@ -120,13 +126,13 @@ const docTemplate = `{
         },
         "/foo/{id}": {
             "get": {
-                "description": "调用example类型的agent",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "foo"
                 ],
+                "summary": "调用example类型的agent",
                 "operationId": "/api/foo",
                 "parameters": [
                     {
@@ -215,7 +221,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "TODO",
 	Host:             "",
 	BasePath:         "/api",
 	Schemes:          []string{},

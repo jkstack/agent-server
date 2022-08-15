@@ -50,13 +50,18 @@ info:
     url: https://www.jkstack.com
   description: jkagent management server.
   title: agent-server
+  version: TODO
 paths:
   /agents:
     get:
-      description: 获取节点列表
       operationId: /api/agents
       parameters:
       - description: 节点类型,不指定则列出所有类型
+        enum:
+        - example-agent
+        - container-agent
+        - metrics-agent
+        - '...'
         in: query
         name: type
         type: string
@@ -86,11 +91,11 @@ paths:
                     $ref: '#/definitions/agents.info'
                   type: array
               type: object
+      summary: 获取节点列表
       tags:
       - agents
   /agents/{id}:
     get:
-      description: 获取某个节点信息
       operationId: /api/agents/info
       parameters:
       - description: 节点ID
@@ -110,11 +115,11 @@ paths:
                 payload:
                   $ref: '#/definitions/agents.info'
               type: object
+      summary: 获取某个节点信息
       tags:
       - agents
   /foo/{id}:
     get:
-      description: 调用example类型的agent
       operationId: /api/foo
       parameters:
       - description: 节点ID
@@ -129,6 +134,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/api.Success'
+      summary: 调用example类型的agent
       tags:
       - foo
 swagger: "2.0"

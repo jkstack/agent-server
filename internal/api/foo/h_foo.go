@@ -14,7 +14,7 @@ import (
 
 // info 调用example类型的agent
 // @ID /api/foo
-// @Description 调用example类型的agent
+// @Summary 调用example类型的agent
 // @Tags foo
 // @Produce json
 // @Param   id    path string  true "节点ID"

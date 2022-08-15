@@ -12,6 +12,7 @@ const RequestTimeout = 10 * time.Second
 //go:generate swag init -g api.go -o ../../docs
 
 // @title       agent-server
+// @version     TODO
 // @description jkagent management server.
 
 // @contact.url  https://www.jkstack.com

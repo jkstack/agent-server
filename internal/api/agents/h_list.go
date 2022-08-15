@@ -16,10 +16,10 @@ type listArgs struct {
 
 // list 列出节点列表
 // @ID /api/agents
-// @Description 获取节点列表
+// @Summary 获取节点列表
 // @Tags agents
 // @Produce json
-// @Param   type  query string  false "节点类型,不指定则列出所有类型"
+// @Param   type  query string  false "节点类型,不指定则列出所有类型" enums(example-agent,container-agent,metrics-agent,...)
 // @Param   page  query int     false "分页编号" default(1)  minimum(1)
 // @Param   size  query int     false "每页数量" default(20) minimum(10)
 // @Success 200   {object}      api.Success{payload=[]info}
