@@ -1,7 +1,10 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/jkstack/jkframe/logging"
 )
 
 // OK response api caller ok
@@ -15,9 +18,33 @@ func (ctx *GContext) OK(payload any) {
 // ERR response api caller error
 func (ctx *GContext) ERR(code int, msg string) {
 	ctx.JSON(http.StatusOK, Failure{
-		Code: code,
-		Msg:  msg,
+		Code:      code,
+		Msg:       msg,
+		RequestID: ctx.reqID,
 	})
+}
+
+// ErrAndLog response api caller error and log arguments
+func (ctx *GContext) ErrAndLog(code int, msg string) {
+	ctx.JSON(http.StatusOK, Failure{
+		Code:      code,
+		Msg:       msg,
+		RequestID: ctx.reqID,
+	})
+	format := "REQUEST ERROR --- [%s] ---> code: %d, msg: %s"
+	args := []interface{}{ctx.reqID, code, msg}
+	format += "\n=> uri: %s"
+	args = append(args, ctx.Request.RequestURI)
+	if ctx.qryArgs != nil {
+		format += "\n=> query: %s"
+		args = append(args, fmt.Sprintf("%#v", ctx.qryArgs))
+	}
+	if ctx.reqBody != nil {
+		format += "\n=> body: %s"
+		args = append(args, fmt.Sprintf("%#v", ctx.reqBody))
+	}
+	format += "\n"
+	logging.Error(format, args...)
 }
 
 // NotFound not found error

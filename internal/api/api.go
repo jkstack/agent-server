@@ -6,7 +6,7 @@ import (
 
 const RequestTimeout = 10 * time.Second
 
-//go:generate swag init -g api.go -o ../../docs --generatedTime
+//go:generate swag init -g api.go -o ../../docs
 
 // @title       agent-server
 // @version     TODO
@@ -26,7 +26,7 @@ type Success struct {
 type Failure struct {
 	Code      int    `json:"code" example:"1"`
 	Msg       string `json:"msg,omitempty" example:"错误内容"`
-	RequestID string `json:"reqid,omitempty" example:"20220812-00000001-2bf6c4"`
+	RequestID string `json:"reqid" example:"20220812-00000001-2bf6c4"`
 }
 
 type Route struct {

@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/stat"
 )
 
@@ -30,9 +29,9 @@ func handleRecovery(g *gin.Context, err any) {
 	case api.InvalidType:
 		ctx.ERR(http.StatusFailedDependency, err.Error())
 	default:
-		// TODO: trace log
 		ctx.ERR(http.StatusInternalServerError, fmt.Sprintf("%v", err))
-		logging.Error("err: %v", err)
+		ctx.LogError("uncatched error: %v", err)
+		ctx.ShowLog()
 	}
 }
 

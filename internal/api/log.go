@@ -1,6 +1,9 @@
 package api
 
 import (
+	"strings"
+
+	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/utils"
 )
 
@@ -52,4 +55,23 @@ func (ctx *GContext) LogWarning(format string, args ...interface{}) {
 // LogError write error log
 func (ctx *GContext) LogError(format string, args ...interface{}) {
 	ctx.log(logError, format, args...)
+}
+
+// ShowLog print trace log
+func (ctx *GContext) ShowLog() {
+	for _, item := range ctx.logs {
+		format := "REQUEST --- [%s] ---> " + item.format
+		args := append([]interface{}{ctx.reqID}, item.data...)
+		switch item.level {
+		case logDebug:
+			logging.Debug(format, args...)
+		case logInfo:
+			logging.Info(format, args...)
+		case logWarning:
+			logging.Warning(format, args...)
+		case logError:
+			logging.Printf("[ERROR]"+format+"\n%s",
+				append(args, strings.Join(item.trace, "\n"))...)
+		}
+	}
 }

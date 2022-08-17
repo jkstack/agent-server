@@ -18,7 +18,7 @@ type GContext struct {
 
 	reqID   string
 	qryArgs any
-	qryBody any
+	reqBody any
 
 	muLogs sync.Mutex
 	logs   []logItem
@@ -59,6 +59,6 @@ func (ctx *GContext) ShouldBindQuery(obj any) error {
 
 func (ctx *GContext) ShouldBindJson(obj any) error {
 	err := ctx.Context.ShouldBindJSON(obj)
-	ctx.qryBody = obj
+	ctx.reqBody = obj
 	return err
 }
