@@ -27,7 +27,11 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
-		api.MakeRoute(http.MethodGet, "/:id/static"): h.static,
+		api.MakeRoute(http.MethodGet, "/:id/static"):              h.static,
+		api.MakeRoute(http.MethodGet, "/:id/dynamic"):             h.dynamic,
+		api.MakeRoute(http.MethodGet, "/:id/dynamic/usage"):       h.dynamicUsage,
+		api.MakeRoute(http.MethodGet, "/:id/dynamic/process"):     h.dynamicProcess,
+		api.MakeRoute(http.MethodGet, "/:id/dynamic/connections"): h.dynamicConnections,
 	}
 }
 

@@ -68,6 +68,8 @@ definitions:
         example: 1.0.0
         type: string
     type: object
+  metrics.connection:
+    type: object
   metrics.core:
     properties:
       core:
@@ -120,6 +122,45 @@ definitions:
         - SSD
         example: HDD
         type: string
+    type: object
+  metrics.dynamicInfo:
+    properties:
+      connections:
+        description: 连接列表
+        items:
+          $ref: '#/definitions/metrics.connection'
+        type: array
+      process:
+        description: 进程列表
+        items:
+          $ref: '#/definitions/metrics.process'
+        type: array
+      usage:
+        $ref: '#/definitions/metrics.usage'
+        description: usage数据
+    type: object
+  metrics.interfaceUsage:
+    properties:
+      bytes_recv:
+        description: 接收字节数
+        example: 24422
+        type: integer
+      bytes_sent:
+        description: 发送字节数
+        example: 6162729
+        type: integer
+      name:
+        description: 网卡名称
+        example: eth0
+        type: string
+      packets_recv:
+        description: 接收数据包数量
+        example: 4399
+        type: integer
+      packets_sent:
+        description: 发送数据包数量
+        example: 5699
+        type: integer
     type: object
   metrics.intf:
     properties:
@@ -184,6 +225,23 @@ definitions:
         description: 总容量
         example: 209666048
         type: integer
+    type: object
+  metrics.partitionUsage:
+    properties:
+      free:
+        description: 剩余字节数
+        type: integer
+      name:
+        description: 'linux为挂载路径如/run，windows为盘符如C:'
+        type: string
+      usage:
+        description: 磁盘使用率
+        type: number
+      used:
+        description: 已使用字节数
+        type: integer
+    type: object
+  metrics.process:
     type: object
   metrics.staticInfo:
     properties:
@@ -299,6 +357,61 @@ definitions:
         description: 用户列表
         items:
           $ref: '#/definitions/metrics.user'
+        type: array
+    type: object
+  metrics.usage:
+    properties:
+      cpu:
+        properties:
+          usage:
+            description: CPU使用率(百分比)
+            example: 2.3
+            type: number
+        type: object
+      interface:
+        description: 网卡
+        items:
+          $ref: '#/definitions/metrics.interfaceUsage'
+        type: array
+      memory:
+        properties:
+          available:
+            description: 可用字节数
+            example: 201332
+            type: integer
+          free:
+            description: 剩余字节数
+            example: 94896
+            type: integer
+          swap_free:
+            description: swap剩余字节数
+            example: 7242344
+            type: integer
+          swap_total:
+            description: swap总字节数
+            example: 8388608
+            type: integer
+          swap_used:
+            description: swap已使用字节数
+            example: 1146264
+            type: integer
+          total:
+            description: 总字节数
+            example: 1956784
+            type: integer
+          usage:
+            description: 内存使用率(百分比)
+            example: 1.2
+            type: number
+          used:
+            description: 已使用字节数
+            example: 1595712
+            type: integer
+        type: object
+      partitions:
+        description: 分区
+        items:
+          $ref: '#/definitions/metrics.partitionUsage'
         type: array
     type: object
   metrics.user:
@@ -426,6 +539,106 @@ paths:
       summary: 获取当前服务器状态
       tags:
       - info
+  /metrics/{id}/dynamic:
+    get:
+      operationId: /api/metrics/dynamic
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/metrics.dynamicInfo'
+              type: object
+      summary: 获取节点的所有动态数据
+      tags:
+      - metrics
+  /metrics/{id}/dynamic/connections:
+    get:
+      operationId: /api/metrics/dynamic/connections
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/metrics.connection'
+                  type: array
+              type: object
+      summary: 获取节点的连接列表数据
+      tags:
+      - metrics
+  /metrics/{id}/dynamic/process:
+    get:
+      operationId: /api/metrics/dynamic/process
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/metrics.process'
+                  type: array
+              type: object
+      summary: 获取节点的所有进程列表数据
+      tags:
+      - metrics
+  /metrics/{id}/dynamic/usage:
+    get:
+      operationId: /api/metrics/dynamic/usage
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/metrics.usage'
+              type: object
+      summary: 获取节点的usage动态数据
+      tags:
+      - metrics
   /metrics/{id}/static:
     get:
       operationId: /api/metrics/static
@@ -447,7 +660,7 @@ paths:
                 payload:
                   $ref: '#/definitions/metrics.staticInfo'
               type: object
-      summary: 获取当前服务器状态
+      summary: 获取节点的静态数据
       tags:
       - metrics
 swagger: "2.0"

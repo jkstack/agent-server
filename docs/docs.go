@@ -185,6 +185,176 @@ const docTemplate = `{
                 }
             }
         },
+        "/metrics/{id}/dynamic": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "获取节点的所有动态数据",
+                "operationId": "/api/metrics/dynamic",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/metrics.dynamicInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/metrics/{id}/dynamic/connections": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "获取节点的连接列表数据",
+                "operationId": "/api/metrics/dynamic/connections",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/metrics.connection"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/metrics/{id}/dynamic/process": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "获取节点的所有进程列表数据",
+                "operationId": "/api/metrics/dynamic/process",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/metrics.process"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/metrics/{id}/dynamic/usage": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "获取节点的usage动态数据",
+                "operationId": "/api/metrics/dynamic/usage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/metrics.usage"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/metrics/{id}/static": {
             "get": {
                 "produces": [
@@ -193,7 +363,7 @@ const docTemplate = `{
                 "tags": [
                     "metrics"
                 ],
-                "summary": "获取当前服务器状态",
+                "summary": "获取节点的静态数据",
                 "operationId": "/api/metrics/static",
                 "parameters": [
                     {
@@ -317,6 +487,9 @@ const docTemplate = `{
                 }
             }
         },
+        "metrics.connection": {
+            "type": "object"
+        },
         "metrics.core": {
             "type": "object",
             "properties": {
@@ -384,6 +557,59 @@ const docTemplate = `{
                         "SSD"
                     ],
                     "example": "HDD"
+                }
+            }
+        },
+        "metrics.dynamicInfo": {
+            "type": "object",
+            "properties": {
+                "connections": {
+                    "description": "连接列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.connection"
+                    }
+                },
+                "process": {
+                    "description": "进程列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.process"
+                    }
+                },
+                "usage": {
+                    "description": "usage数据",
+                    "$ref": "#/definitions/metrics.usage"
+                }
+            }
+        },
+        "metrics.interfaceUsage": {
+            "type": "object",
+            "properties": {
+                "bytes_recv": {
+                    "description": "接收字节数",
+                    "type": "integer",
+                    "example": 24422
+                },
+                "bytes_sent": {
+                    "description": "发送字节数",
+                    "type": "integer",
+                    "example": 6162729
+                },
+                "name": {
+                    "description": "网卡名称",
+                    "type": "string",
+                    "example": "eth0"
+                },
+                "packets_recv": {
+                    "description": "接收数据包数量",
+                    "type": "integer",
+                    "example": 4399
+                },
+                "packets_sent": {
+                    "description": "发送数据包数量",
+                    "type": "integer",
+                    "example": 5699
                 }
             }
         },
@@ -471,6 +697,30 @@ const docTemplate = `{
                     "example": 209666048
                 }
             }
+        },
+        "metrics.partitionUsage": {
+            "type": "object",
+            "properties": {
+                "free": {
+                    "description": "剩余字节数",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "linux为挂载路径如/run，windows为盘符如C:",
+                    "type": "string"
+                },
+                "usage": {
+                    "description": "磁盘使用率",
+                    "type": "number"
+                },
+                "used": {
+                    "description": "已使用字节数",
+                    "type": "integer"
+                }
+            }
+        },
+        "metrics.process": {
+            "type": "object"
         },
         "metrics.staticInfo": {
             "type": "object",
@@ -624,6 +874,80 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/metrics.user"
+                    }
+                }
+            }
+        },
+        "metrics.usage": {
+            "type": "object",
+            "properties": {
+                "cpu": {
+                    "type": "object",
+                    "properties": {
+                        "usage": {
+                            "description": "CPU使用率(百分比)",
+                            "type": "number",
+                            "example": 2.3
+                        }
+                    }
+                },
+                "interface": {
+                    "description": "网卡",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.interfaceUsage"
+                    }
+                },
+                "memory": {
+                    "type": "object",
+                    "properties": {
+                        "available": {
+                            "description": "可用字节数",
+                            "type": "integer",
+                            "example": 201332
+                        },
+                        "free": {
+                            "description": "剩余字节数",
+                            "type": "integer",
+                            "example": 94896
+                        },
+                        "swap_free": {
+                            "description": "swap剩余字节数",
+                            "type": "integer",
+                            "example": 7242344
+                        },
+                        "swap_total": {
+                            "description": "swap总字节数",
+                            "type": "integer",
+                            "example": 8388608
+                        },
+                        "swap_used": {
+                            "description": "swap已使用字节数",
+                            "type": "integer",
+                            "example": 1146264
+                        },
+                        "total": {
+                            "description": "总字节数",
+                            "type": "integer",
+                            "example": 1956784
+                        },
+                        "usage": {
+                            "description": "内存使用率(百分比)",
+                            "type": "number",
+                            "example": 1.2
+                        },
+                        "used": {
+                            "description": "已使用字节数",
+                            "type": "integer",
+                            "example": 1595712
+                        }
+                    }
+                },
+                "partitions": {
+                    "description": "分区",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.partitionUsage"
                     }
                 }
             }
