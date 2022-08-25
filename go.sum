@@ -172,8 +172,8 @@ github.com/gorilla/websocket v1.5.0/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/ad
 github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
-github.com/jkstack/anet v0.0.0-20220805084406-b2b99e224f87 h1:cvdLKwhsL8PfEtAF0gwPa2gJ3QsFyXwsxg2gyHR8mnY=
-github.com/jkstack/anet v0.0.0-20220805084406-b2b99e224f87/go.mod h1:zpkHPpKpEdaNNLLLabhWdyjRcczZYwPLocie5ys/RTc=
+github.com/jkstack/anet v0.0.0-20220825072141-2dac5daf572c h1:3gHhcpw6jBwsw72v8cOM0DL+Tu7Kgy/fdF/wOku89To=
+github.com/jkstack/anet v0.0.0-20220825072141-2dac5daf572c/go.mod h1:96cesKVzD7XphMYim6bupr/74vds/p/07iBbZC/oEdw=
 github.com/jkstack/jkframe v1.0.5 h1:SUUkgnSHQ6IVnVgJlP6d0bbaANvtbiTwPsuTECq6t2E=
 github.com/jkstack/jkframe v1.0.5/go.mod h1:s3Eq2ScKxRLGjHU8qfjapfO5fcuXtDwsZSJiq+naIfY=
 github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=

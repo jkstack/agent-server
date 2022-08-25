@@ -9,6 +9,7 @@ import (
 	"server/internal/api/agents"
 	"server/internal/api/foo"
 	"server/internal/api/info"
+	"server/internal/api/metrics"
 	"server/internal/conf"
 	"server/internal/utils"
 	"sync"
@@ -95,6 +96,7 @@ func (app *App) Start(s service.Service) error {
 		apis = append(apis, agents.New())
 		apis = append(apis, foo.New())
 		apis = append(apis, info.New(app.version, &app.blocked))
+		apis = append(apis, metrics.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)

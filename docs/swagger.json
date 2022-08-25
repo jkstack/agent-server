@@ -176,6 +176,47 @@
                     }
                 }
             }
+        },
+        "/metrics/{id}/static": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "获取当前服务器状态",
+                "operationId": "/api/metrics/static",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/metrics.staticInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -265,6 +306,342 @@
                     "description": "服务端版本号",
                     "type": "string",
                     "example": "1.0.0"
+                }
+            }
+        },
+        "metrics.core": {
+            "type": "object",
+            "properties": {
+                "core": {
+                    "description": "所在物理核上的编号",
+                    "type": "integer",
+                    "example": 0
+                },
+                "cores": {
+                    "description": "某块CPU上的编号",
+                    "type": "integer",
+                    "example": 0
+                },
+                "mhz": {
+                    "description": "核心频率",
+                    "type": "number",
+                    "example": 1600
+                },
+                "model": {
+                    "description": "CPU型号",
+                    "type": "string",
+                    "example": "Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz"
+                },
+                "physical": {
+                    "description": "物理CPU编号",
+                    "type": "integer",
+                    "example": 0
+                },
+                "processor": {
+                    "description": "第几个核心",
+                    "type": "integer",
+                    "example": 0
+                }
+            }
+        },
+        "metrics.disk": {
+            "type": "object",
+            "properties": {
+                "disks": {
+                    "description": "逻辑分区",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "/boot",
+                        "/home"
+                    ]
+                },
+                "model": {
+                    "description": "品牌型号",
+                    "type": "string",
+                    "example": "Samsung SSD 870 QVO 1TB"
+                },
+                "total": {
+                    "description": "容量",
+                    "type": "integer",
+                    "example": 1000204886016
+                },
+                "type": {
+                    "description": "磁盘类型",
+                    "type": "string",
+                    "enum": [
+                        "HDD",
+                        "SSD"
+                    ],
+                    "example": "HDD"
+                }
+            }
+        },
+        "metrics.intf": {
+            "type": "object",
+            "properties": {
+                "addrs": {
+                    "description": "网卡上绑定的IP地址列表",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "192.168.1.100"
+                    ]
+                },
+                "flags": {
+                    "description": "网卡附加参数",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "UP",
+                        "BROADCAST",
+                        "RUNNING",
+                        "MULTICAST"
+                    ]
+                },
+                "index": {
+                    "description": "网卡下标",
+                    "type": "integer",
+                    "example": 0
+                },
+                "mac": {
+                    "description": "网卡mac地址",
+                    "type": "string",
+                    "example": "26:29:93:f2:84:22"
+                },
+                "mtu": {
+                    "description": "网卡mtu",
+                    "type": "integer",
+                    "example": 1500
+                },
+                "name": {
+                    "description": "网卡名称",
+                    "type": "string",
+                    "example": "lo"
+                }
+            }
+        },
+        "metrics.partition": {
+            "type": "object",
+            "properties": {
+                "fstype": {
+                    "description": "文件系统类型",
+                    "type": "string",
+                    "example": "NTFS"
+                },
+                "inodes": {
+                    "description": "inode数量",
+                    "type": "integer",
+                    "example": 4072701
+                },
+                "name": {
+                    "description": "linux为挂载路径如/run，windows为盘符如C:",
+                    "type": "string",
+                    "example": "/boot"
+                },
+                "opts": {
+                    "description": "附加信息",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "rw",
+                        "nosuid",
+                        "nodev"
+                    ]
+                },
+                "total": {
+                    "description": "总容量",
+                    "type": "integer",
+                    "example": 209666048
+                }
+            }
+        },
+        "metrics.staticInfo": {
+            "type": "object",
+            "properties": {
+                "cpu": {
+                    "type": "object",
+                    "properties": {
+                        "cores": {
+                            "description": "每个核心参数",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/metrics.core"
+                            }
+                        },
+                        "logical": {
+                            "description": "逻辑核心数",
+                            "type": "integer",
+                            "example": 4
+                        },
+                        "physical": {
+                            "description": "物理核心数",
+                            "type": "integer",
+                            "example": 2
+                        },
+                        "socket": {
+                            "description": "CPU数量",
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                },
+                "disks": {
+                    "description": "物理磁盘列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.disk"
+                    }
+                },
+                "gateway": {
+                    "description": "网关地址",
+                    "type": "string",
+                    "example": "192.168.1.1"
+                },
+                "host": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "description": "主机名",
+                            "type": "string",
+                            "example": "DESKTOP-OQ8O3DR"
+                        },
+                        "uptime": {
+                            "description": "启动时长",
+                            "type": "integer",
+                            "example": 1900
+                        }
+                    }
+                },
+                "interface": {
+                    "description": "网卡列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.intf"
+                    }
+                },
+                "kernel": {
+                    "type": "object",
+                    "properties": {
+                        "arch": {
+                            "description": "位数",
+                            "type": "string",
+                            "enum": [
+                                "x86_64",
+                                "i386",
+                                "..."
+                            ],
+                            "example": "x86_64"
+                        },
+                        "version": {
+                            "description": "内核版本",
+                            "type": "string",
+                            "example": "3.10.0-1062.el7.x86_64"
+                        }
+                    }
+                },
+                "memory": {
+                    "type": "object",
+                    "properties": {
+                        "physical": {
+                            "description": "物理内存大小",
+                            "type": "integer",
+                            "example": 33363566592
+                        },
+                        "swap": {
+                            "description": "swap内存大小",
+                            "type": "integer",
+                            "example": 8589930496
+                        }
+                    }
+                },
+                "os": {
+                    "type": "object",
+                    "properties": {
+                        "install": {
+                            "description": "系统安装时间",
+                            "type": "integer",
+                            "example": 1661396019
+                        },
+                        "name": {
+                            "description": "系统类型",
+                            "type": "string",
+                            "enum": [
+                                "linux",
+                                "windows"
+                            ],
+                            "example": "linux"
+                        },
+                        "platform_name": {
+                            "description": "系统名称",
+                            "type": "string",
+                            "enum": [
+                                "redhat",
+                                "centos",
+                                "debian",
+                                "ubuntu",
+                                "..."
+                            ],
+                            "example": "centos"
+                        },
+                        "platform_version": {
+                            "description": "系统版本号",
+                            "type": "string",
+                            "example": "7.7.1908"
+                        },
+                        "startup": {
+                            "description": "系统启动时间",
+                            "type": "integer",
+                            "example": 1661396019
+                        }
+                    }
+                },
+                "partitions": {
+                    "description": "逻辑分区列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.partition"
+                    }
+                },
+                "time": {
+                    "description": "客户端时间",
+                    "type": "integer",
+                    "example": 1661396019
+                },
+                "user": {
+                    "description": "用户列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.user"
+                    }
+                }
+            }
+        },
+        "metrics.user": {
+            "type": "object",
+            "properties": {
+                "gid": {
+                    "description": "用户组ID",
+                    "type": "string",
+                    "example": "0"
+                },
+                "id": {
+                    "description": "用户ID",
+                    "type": "string",
+                    "example": "0"
+                },
+                "name": {
+                    "description": "用户名",
+                    "type": "string",
+                    "example": "root"
                 }
             }
         }

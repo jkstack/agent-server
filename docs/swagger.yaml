@@ -68,6 +68,258 @@ definitions:
         example: 1.0.0
         type: string
     type: object
+  metrics.core:
+    properties:
+      core:
+        description: 所在物理核上的编号
+        example: 0
+        type: integer
+      cores:
+        description: 某块CPU上的编号
+        example: 0
+        type: integer
+      mhz:
+        description: 核心频率
+        example: 1600
+        type: number
+      model:
+        description: CPU型号
+        example: Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz
+        type: string
+      physical:
+        description: 物理CPU编号
+        example: 0
+        type: integer
+      processor:
+        description: 第几个核心
+        example: 0
+        type: integer
+    type: object
+  metrics.disk:
+    properties:
+      disks:
+        description: 逻辑分区
+        example:
+        - /boot
+        - /home
+        items:
+          type: string
+        type: array
+      model:
+        description: 品牌型号
+        example: Samsung SSD 870 QVO 1TB
+        type: string
+      total:
+        description: 容量
+        example: 1000204886016
+        type: integer
+      type:
+        description: 磁盘类型
+        enum:
+        - HDD
+        - SSD
+        example: HDD
+        type: string
+    type: object
+  metrics.intf:
+    properties:
+      addrs:
+        description: 网卡上绑定的IP地址列表
+        example:
+        - 192.168.1.100
+        items:
+          type: string
+        type: array
+      flags:
+        description: 网卡附加参数
+        example:
+        - UP
+        - BROADCAST
+        - RUNNING
+        - MULTICAST
+        items:
+          type: string
+        type: array
+      index:
+        description: 网卡下标
+        example: 0
+        type: integer
+      mac:
+        description: 网卡mac地址
+        example: 26:29:93:f2:84:22
+        type: string
+      mtu:
+        description: 网卡mtu
+        example: 1500
+        type: integer
+      name:
+        description: 网卡名称
+        example: lo
+        type: string
+    type: object
+  metrics.partition:
+    properties:
+      fstype:
+        description: 文件系统类型
+        example: NTFS
+        type: string
+      inodes:
+        description: inode数量
+        example: 4072701
+        type: integer
+      name:
+        description: 'linux为挂载路径如/run，windows为盘符如C:'
+        example: /boot
+        type: string
+      opts:
+        description: 附加信息
+        example:
+        - rw
+        - nosuid
+        - nodev
+        items:
+          type: string
+        type: array
+      total:
+        description: 总容量
+        example: 209666048
+        type: integer
+    type: object
+  metrics.staticInfo:
+    properties:
+      cpu:
+        properties:
+          cores:
+            description: 每个核心参数
+            items:
+              $ref: '#/definitions/metrics.core'
+            type: array
+          logical:
+            description: 逻辑核心数
+            example: 4
+            type: integer
+          physical:
+            description: 物理核心数
+            example: 2
+            type: integer
+          socket:
+            description: CPU数量
+            example: 1
+            type: integer
+        type: object
+      disks:
+        description: 物理磁盘列表
+        items:
+          $ref: '#/definitions/metrics.disk'
+        type: array
+      gateway:
+        description: 网关地址
+        example: 192.168.1.1
+        type: string
+      host:
+        properties:
+          name:
+            description: 主机名
+            example: DESKTOP-OQ8O3DR
+            type: string
+          uptime:
+            description: 启动时长
+            example: 1900
+            type: integer
+        type: object
+      interface:
+        description: 网卡列表
+        items:
+          $ref: '#/definitions/metrics.intf'
+        type: array
+      kernel:
+        properties:
+          arch:
+            description: 位数
+            enum:
+            - x86_64
+            - i386
+            - '...'
+            example: x86_64
+            type: string
+          version:
+            description: 内核版本
+            example: 3.10.0-1062.el7.x86_64
+            type: string
+        type: object
+      memory:
+        properties:
+          physical:
+            description: 物理内存大小
+            example: 33363566592
+            type: integer
+          swap:
+            description: swap内存大小
+            example: 8589930496
+            type: integer
+        type: object
+      os:
+        properties:
+          install:
+            description: 系统安装时间
+            example: 1661396019
+            type: integer
+          name:
+            description: 系统类型
+            enum:
+            - linux
+            - windows
+            example: linux
+            type: string
+          platform_name:
+            description: 系统名称
+            enum:
+            - redhat
+            - centos
+            - debian
+            - ubuntu
+            - '...'
+            example: centos
+            type: string
+          platform_version:
+            description: 系统版本号
+            example: 7.7.1908
+            type: string
+          startup:
+            description: 系统启动时间
+            example: 1661396019
+            type: integer
+        type: object
+      partitions:
+        description: 逻辑分区列表
+        items:
+          $ref: '#/definitions/metrics.partition'
+        type: array
+      time:
+        description: 客户端时间
+        example: 1661396019
+        type: integer
+      user:
+        description: 用户列表
+        items:
+          $ref: '#/definitions/metrics.user'
+        type: array
+    type: object
+  metrics.user:
+    properties:
+      gid:
+        description: 用户组ID
+        example: "0"
+        type: string
+      id:
+        description: 用户ID
+        example: "0"
+        type: string
+      name:
+        description: 用户名
+        example: root
+        type: string
+    type: object
 info:
   contact:
     url: https://www.jkstack.com
@@ -178,4 +430,28 @@ paths:
       summary: 获取当前服务器状态
       tags:
       - info
+  /metrics/{id}/static:
+    get:
+      operationId: /api/metrics/static
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/metrics.staticInfo'
+              type: object
+      summary: 获取当前服务器状态
+      tags:
+      - metrics
 swagger: "2.0"
