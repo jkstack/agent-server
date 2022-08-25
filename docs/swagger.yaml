@@ -202,10 +202,6 @@ definitions:
             description: 物理核心数
             example: 2
             type: integer
-          socket:
-            description: CPU数量
-            example: 1
-            type: integer
         type: object
       disks:
         description: 物理磁盘列表

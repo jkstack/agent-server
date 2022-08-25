@@ -494,11 +494,6 @@ const docTemplate = `{
                             "description": "物理核心数",
                             "type": "integer",
                             "example": 2
-                        },
-                        "socket": {
-                            "description": "CPU数量",
-                            "type": "integer",
-                            "example": 1
                         }
                     }
                 },

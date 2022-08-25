@@ -71,7 +71,6 @@ type staticInfo struct {
 	CPU struct {
 		Physical int    `json:"physical" example:"2"` // 物理核心数
 		Logical  int    `json:"logical" example:"4"`  // 逻辑核心数
-		Socket   int    `json:"socket" example:"1"`   // CPU数量
 		Cores    []core `json:"cores,omitempty"`      // 每个核心参数
 	} `json:"cpu"`
 	Memory struct {
@@ -159,7 +158,6 @@ func fillStaticHost(ret *staticInfo, payload *anet.HMStaticPayload) {
 func fillStaticCpu(ret *staticInfo, payload *anet.HMStaticPayload) {
 	ret.CPU.Physical = payload.CPU.Physical
 	ret.CPU.Logical = payload.CPU.Logical
-	ret.CPU.Socket = payload.CPU.Socket
 	for _, c := range payload.CPU.Cores {
 		ret.CPU.Cores = append(ret.CPU.Cores, core{
 			Processor: c.Processor,
