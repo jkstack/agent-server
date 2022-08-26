@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"server/internal/agent"
 	"server/internal/api"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -20,16 +21,20 @@ type dynamicInfo struct {
 
 // static 获取节点的所有动态数据
 // @ID /api/metrics/dynamic
+// @Description 当指定top参数时将会获取CPU占用率最高的n个进程数据
 // @Summary 获取节点的所有动态数据
 // @Tags metrics
 // @Produce json
-// @Param   id   path string  true "节点ID"
+// @Param   id   path  string  true  "节点ID"
+// @Param   top  query integer false "获取进程列表时的数量限制"
 // @Success 200  {object}     api.Success{payload=dynamicInfo}
 // @Router /metrics/{id}/dynamic [get]
 func (h *Handler) dynamic(gin *gin.Context) {
 	g := api.GetG(gin)
 
 	id := g.Param("id")
+	topStr := g.DefaultQuery("top", "0")
+	top, _ := strconv.ParseInt(topStr, 10, 64)
 
 	agents := g.GetAgents()
 
@@ -44,14 +49,14 @@ func (h *Handler) dynamic(gin *gin.Context) {
 
 	taskID, err := cli.SendHMDynamicReq([]anet.HMDynamicReqType{
 		anet.HMReqUsage, anet.HMReqProcess, anet.HMReqConnections,
-	})
+	}, int(top))
 	runtime.Assert(err)
 	defer cli.ChanClose(id)
 
 	var msg *anet.Msg
 	select {
 	case msg = <-cli.ChanRead(taskID):
-	case <-time.After(api.RequestTimeout):
+	case <-time.After(time.Minute):
 		g.Timeout()
 	}
 

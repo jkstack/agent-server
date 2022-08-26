@@ -610,6 +610,7 @@ paths:
       - info
   /metrics/{id}/dynamic:
     get:
+      description: 当指定top参数时将会获取CPU占用率最高的n个进程数据
       operationId: /api/metrics/dynamic
       parameters:
       - description: 节点ID
@@ -617,6 +618,10 @@ paths:
         name: id
         required: true
         type: string
+      - description: 获取进程列表时的数量限制
+        in: query
+        name: top
+        type: integer
       produces:
       - application/json
       responses:
@@ -667,6 +672,10 @@ paths:
         name: id
         required: true
         type: string
+      - description: 数量限制
+        in: query
+        name: top
+        type: integer
       produces:
       - application/json
       responses:

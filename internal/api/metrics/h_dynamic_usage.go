@@ -74,14 +74,14 @@ func (h *Handler) dynamicUsage(gin *gin.Context) {
 
 	taskID, err := cli.SendHMDynamicReq([]anet.HMDynamicReqType{
 		anet.HMReqUsage,
-	})
+	}, 0)
 	runtime.Assert(err)
 	defer cli.ChanClose(id)
 
 	var msg *anet.Msg
 	select {
 	case msg = <-cli.ChanRead(taskID):
-	case <-time.After(api.RequestTimeout):
+	case <-time.After(time.Minute):
 		g.Timeout()
 	}
 

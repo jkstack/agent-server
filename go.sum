@@ -182,6 +182,8 @@ github.com/jkstack/anet v0.0.0-20220826022354-8dadf507d1cd h1:q8rg0Bo8DG4UKmhUfw
 github.com/jkstack/anet v0.0.0-20220826022354-8dadf507d1cd/go.mod h1:96cesKVzD7XphMYim6bupr/74vds/p/07iBbZC/oEdw=
 github.com/jkstack/anet v0.0.0-20220826041714-fbfef034c5a5 h1:1ZjiM2FPpL/+6rrCqOqRN3KoQNnQ/sdyF9IHBa5dvgk=
 github.com/jkstack/anet v0.0.0-20220826041714-fbfef034c5a5/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
+github.com/jkstack/anet v0.0.0-20220826054900-51088f1e010c h1:mr7C0KVE6V1anA2qnb/Yy2i9o+Pq8r5ngqUje9R4lpQ=
+github.com/jkstack/anet v0.0.0-20220826054900-51088f1e010c/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
 github.com/jkstack/jkframe v1.0.5 h1:SUUkgnSHQ6IVnVgJlP6d0bbaANvtbiTwPsuTECq6t2E=
 github.com/jkstack/jkframe v1.0.5/go.mod h1:s3Eq2ScKxRLGjHU8qfjapfO5fcuXtDwsZSJiq+naIfY=
 github.com/jkstack/jkframe v1.0.8 h1:+hrdYFs7OnwJB3QiYoqfsH3laXYKR/gI56Xc5k88zDs=

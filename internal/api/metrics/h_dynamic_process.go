@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"server/internal/agent"
 	"server/internal/api"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -31,13 +32,16 @@ type process struct {
 // @Summary 获取节点的所有进程列表数据
 // @Tags metrics
 // @Produce json
-// @Param   id   path string  true "节点ID"
+// @Param   id   path  string  true  "节点ID"
+// @Param   top  query integer false "数量限制"
 // @Success 200  {object}     api.Success{payload=[]process}
 // @Router /metrics/{id}/dynamic/process [get]
 func (h *Handler) dynamicProcess(gin *gin.Context) {
 	g := api.GetG(gin)
 
 	id := g.Param("id")
+	topStr := g.DefaultQuery("top", "0")
+	top, _ := strconv.ParseInt(topStr, 10, 64)
 
 	agents := g.GetAgents()
 
@@ -52,14 +56,14 @@ func (h *Handler) dynamicProcess(gin *gin.Context) {
 
 	taskID, err := cli.SendHMDynamicReq([]anet.HMDynamicReqType{
 		anet.HMReqProcess,
-	})
+	}, int(top))
 	runtime.Assert(err)
 	defer cli.ChanClose(id)
 
 	var msg *anet.Msg
 	select {
 	case msg = <-cli.ChanRead(taskID):
-	case <-time.After(api.RequestTimeout):
+	case <-time.After(time.Minute):
 		g.Timeout()
 	}
 

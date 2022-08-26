@@ -187,6 +187,7 @@ const docTemplate = `{
         },
         "/metrics/{id}/dynamic": {
             "get": {
+                "description": "当指定top参数时将会获取CPU占用率最高的n个进程数据",
                 "produces": [
                     "application/json"
                 ],
@@ -202,6 +203,12 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "获取进程列表时的数量限制",
+                        "name": "top",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -287,6 +294,12 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "数量限制",
+                        "name": "top",
+                        "in": "query"
                     }
                 ],
                 "responses": {
