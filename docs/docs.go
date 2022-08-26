@@ -253,7 +253,7 @@ const docTemplate = `{
         },
         "/metrics/{id}/dynamic/connections": {
             "get": {
-                "description": "1. 当指定top参数时将会获取CPU占用率最高的n个进程数据\n2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置\n3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接",
+                "description": "1. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置\n2. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接",
                 "produces": [
                     "application/json"
                 ],
