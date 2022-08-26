@@ -31,13 +31,13 @@ type usage struct {
 }
 
 type partitionUsage struct {
-	Mount      string  `json:"name" example:"/"`              // linux为挂载路径如/run，windows为盘符如C:
-	Used       uint64  `json:"used" example:"16920992"`       // 已使用字节数
-	Free       uint64  `json:"free" example:"232815064"`      // 剩余字节数
-	Usage      float64 `json:"usage" example:"6.27"`          // 磁盘使用率
-	InodeUsed  uint64  `json:"inode_used" example:"778282"`   // inode已使用数量
-	InodeFree  uint64  `json:"inode_free" example:"15998934"` // inode剩余数量
-	InodeUsage float64 `json:"inode_usage" example:"5.64"`    // inode使用率
+	Mount      string  `json:"name" example:"/"`                        // linux为挂载路径如/run，windows为盘符如C:
+	Used       uint64  `json:"used" example:"16920992"`                 // 已使用字节数
+	Free       uint64  `json:"free" example:"232815064"`                // 剩余字节数
+	Usage      float64 `json:"usage" example:"6.27"`                    // 磁盘使用率
+	InodeUsed  uint64  `json:"inode_used,omitempty" example:"778282"`   // inode已使用数量
+	InodeFree  uint64  `json:"inode_free,omitempty" example:"15998934"` // inode剩余数量
+	InodeUsage float64 `json:"inode_usage,omitempty" example:"5.64"`    // inode使用率
 }
 
 type interfaceUsage struct {

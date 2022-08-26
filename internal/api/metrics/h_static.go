@@ -33,7 +33,7 @@ type partition struct {
 	FSType string   `json:"fstype,omitempty" example:"NTFS"`          // 文件系统类型
 	Opts   []string `json:"opts,omitempty" example:"rw,nosuid,nodev"` // 附加信息
 	Total  uint64   `json:"total" example:"209666048"`                // 总容量
-	INodes uint64   `json:"inodes" example:"4072701"`                 // inode数量
+	INodes uint64   `json:"inodes,omitempty" example:"4072701"`       // inode数量
 }
 
 type intf struct {
