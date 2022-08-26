@@ -59,8 +59,7 @@ func New(cfg *conf.Configure, version string) *App {
 		stats:   st,
 		// runtime
 		stAgentCount: st.NewCounter("agent_count"),
-		connectLimit: rate.NewLimiter(
-			rate.Limit(time.Second/time.Duration(cfg.ConnectLimit)), 1),
+		connectLimit: rate.NewLimiter(rate.Limit(cfg.ConnectLimit), 1),
 	}
 	go app.limit()
 	return app
