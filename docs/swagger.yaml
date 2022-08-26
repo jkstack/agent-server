@@ -69,6 +69,50 @@ definitions:
         type: string
     type: object
   metrics.connection:
+    properties:
+      fd:
+        description: 句柄号
+        example: 8
+        type: integer
+      local:
+        description: 本地地址
+        example: 127.0.0.1:13081
+        type: string
+      pid:
+        description: 所属进程ID
+        example: 28093
+        type: integer
+      remote:
+        description: 远程地址
+        example: 127.0.0.1:37470
+        type: string
+      status:
+        description: 连接状态
+        enum:
+        - ESTABLISHED
+        - SYN_SENT
+        - SYN_RECV
+        - FIN_WAIT1
+        - FIN_WAIT2
+        - TIME_WAIT
+        - CLOSE
+        - CLOSE_WAIT
+        - LAST_ACK
+        - LISTEN
+        - CLOSING
+        example: ESTABLISHED
+        type: string
+      type:
+        description: 连接类型
+        enum:
+        - tcp4
+        - tcp6
+        - udp4
+        - udp6
+        - unix
+        - file
+        example: tcp4
+        type: string
     type: object
   metrics.core:
     properties:
@@ -610,7 +654,10 @@ paths:
       - info
   /metrics/{id}/dynamic:
     get:
-      description: 当指定top参数时将会获取CPU占用率最高的n个进程数据
+      description: |-
+        1. 当指定top参数时将会获取CPU占用率最高的n个进程数据
+        2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置
+        3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接
       operationId: /api/metrics/dynamic
       parameters:
       - description: 节点ID
@@ -622,6 +669,20 @@ paths:
         in: query
         name: top
         type: integer
+      - description: 获取连接类型
+        in: query
+        items:
+          enum:
+          - tcp
+          - tcp4
+          - tcp6
+          - udp
+          - udp4
+          - udp6
+          - unix
+          type: string
+        name: kinds
+        type: array
       produces:
       - application/json
       responses:
@@ -639,6 +700,10 @@ paths:
       - metrics
   /metrics/{id}/dynamic/connections:
     get:
+      description: |-
+        1. 当指定top参数时将会获取CPU占用率最高的n个进程数据
+        2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置
+        3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接
       operationId: /api/metrics/dynamic/connections
       parameters:
       - description: 节点ID
@@ -646,6 +711,20 @@ paths:
         name: id
         required: true
         type: string
+      - description: 获取连接类型
+        in: query
+        items:
+          enum:
+          - tcp
+          - tcp4
+          - tcp6
+          - udp
+          - udp4
+          - udp6
+          - unix
+          type: string
+        name: kinds
+        type: array
       produces:
       - application/json
       responses:

@@ -74,7 +74,7 @@ func (h *Handler) dynamicUsage(gin *gin.Context) {
 
 	taskID, err := cli.SendHMDynamicReq([]anet.HMDynamicReqType{
 		anet.HMReqUsage,
-	}, 0)
+	}, 0, nil)
 	runtime.Assert(err)
 	defer cli.ChanClose(id)
 

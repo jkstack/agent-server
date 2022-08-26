@@ -187,7 +187,7 @@ const docTemplate = `{
         },
         "/metrics/{id}/dynamic": {
             "get": {
-                "description": "当指定top参数时将会获取CPU占用率最高的n个进程数据",
+                "description": "1. 当指定top参数时将会获取CPU占用率最高的n个进程数据\n2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置\n3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接",
                 "produces": [
                     "application/json"
                 ],
@@ -208,6 +208,24 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "获取进程列表时的数量限制",
                         "name": "top",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "tcp",
+                                "tcp4",
+                                "tcp6",
+                                "udp",
+                                "udp4",
+                                "udp6",
+                                "unix"
+                            ],
+                            "type": "string"
+                        },
+                        "description": "获取连接类型",
+                        "name": "kinds",
                         "in": "query"
                     }
                 ],
@@ -235,6 +253,7 @@ const docTemplate = `{
         },
         "/metrics/{id}/dynamic/connections": {
             "get": {
+                "description": "1. 当指定top参数时将会获取CPU占用率最高的n个进程数据\n2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置\n3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接",
                 "produces": [
                     "application/json"
                 ],
@@ -250,6 +269,24 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "enum": [
+                                "tcp",
+                                "tcp4",
+                                "tcp6",
+                                "udp",
+                                "udp4",
+                                "udp6",
+                                "unix"
+                            ],
+                            "type": "string"
+                        },
+                        "description": "获取连接类型",
+                        "name": "kinds",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -501,7 +538,60 @@ const docTemplate = `{
             }
         },
         "metrics.connection": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "fd": {
+                    "description": "句柄号",
+                    "type": "integer",
+                    "example": 8
+                },
+                "local": {
+                    "description": "本地地址",
+                    "type": "string",
+                    "example": "127.0.0.1:13081"
+                },
+                "pid": {
+                    "description": "所属进程ID",
+                    "type": "integer",
+                    "example": 28093
+                },
+                "remote": {
+                    "description": "远程地址",
+                    "type": "string",
+                    "example": "127.0.0.1:37470"
+                },
+                "status": {
+                    "description": "连接状态",
+                    "type": "string",
+                    "enum": [
+                        "ESTABLISHED",
+                        "SYN_SENT",
+                        "SYN_RECV",
+                        "FIN_WAIT1",
+                        "FIN_WAIT2",
+                        "TIME_WAIT",
+                        "CLOSE",
+                        "CLOSE_WAIT",
+                        "LAST_ACK",
+                        "LISTEN",
+                        "CLOSING"
+                    ],
+                    "example": "ESTABLISHED"
+                },
+                "type": {
+                    "description": "连接类型",
+                    "type": "string",
+                    "enum": [
+                        "tcp4",
+                        "tcp6",
+                        "udp4",
+                        "udp6",
+                        "unix",
+                        "file"
+                    ],
+                    "example": "tcp4"
+                }
+            }
         },
         "metrics.core": {
             "type": "object",

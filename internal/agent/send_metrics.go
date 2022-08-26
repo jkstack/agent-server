@@ -21,7 +21,8 @@ func (agent *Agent) SendHMStaticReq() (string, error) {
 	return id, nil
 }
 
-func (agent *Agent) SendHMDynamicReq(req []anet.HMDynamicReqType, top int) (string, error) {
+func (agent *Agent) SendHMDynamicReq(req []anet.HMDynamicReqType,
+	top int, kind []string) (string, error) {
 	id, err := utils.TaskID()
 	if err != nil {
 		return "", err
@@ -30,8 +31,9 @@ func (agent *Agent) SendHMDynamicReq(req []anet.HMDynamicReqType, top int) (stri
 	msg.Type = anet.TypeHMDynamicReq
 	msg.TaskID = id
 	msg.HMDynamicReq = &anet.HMDynamicReq{
-		Req: req,
-		Top: top,
+		Req:        req,
+		Top:        top,
+		AllowConns: kind,
 	}
 	agent.Lock()
 	agent.taskRead[id] = make(chan *anet.Msg)
