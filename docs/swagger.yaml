@@ -258,6 +258,59 @@ definitions:
         type: integer
     type: object
   metrics.process:
+    properties:
+      cmd:
+        description: 命令行
+        example:
+        - /usr/bin/zsh
+        - -i
+        items:
+          type: string
+        type: array
+      conns:
+        description: 连接数
+        example: 16
+        type: integer
+      cpu_usage:
+        description: CPU使用率
+        example: 3.2
+        type: number
+      id:
+        description: 进程ID
+        example: 5167
+        type: integer
+      listen:
+        description: 监听端口
+        example:
+        - 8080
+        - 9090
+        items:
+          type: integer
+        type: array
+      memory_usage:
+        description: 内存使用率
+        example: 6.4
+        type: number
+      parent_id:
+        description: 父进程ID
+        example: 1
+        type: integer
+      rss:
+        description: 物理内存数
+        example: 37654
+        type: integer
+      swap:
+        description: swap内存数
+        example: 0
+        type: integer
+      user:
+        description: 用户
+        example: root
+        type: string
+      vms:
+        description: 虚拟内存数
+        example: 26754
+        type: integer
     type: object
   metrics.staticInfo:
     properties:

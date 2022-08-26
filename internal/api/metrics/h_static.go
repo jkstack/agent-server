@@ -165,7 +165,7 @@ func fillStaticCpu(ret *staticInfo, payload *anet.HMStaticPayload) {
 			Core:      c.Core,
 			Cores:     c.Cores,
 			Physical:  c.Physical,
-			Mhz:       c.Mhz,
+			Mhz:       c.Mhz.Float(),
 		})
 	}
 }

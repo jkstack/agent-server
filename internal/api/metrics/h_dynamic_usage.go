@@ -73,7 +73,7 @@ func (h *Handler) dynamicUsage(gin *gin.Context) {
 	}
 
 	taskID, err := cli.SendHMDynamicReq([]anet.HMDynamicReqType{
-		anet.HMReqUsage, anet.HMReqProcess, anet.HMReqConnections,
+		anet.HMReqUsage,
 	})
 	runtime.Assert(err)
 	defer cli.ChanClose(id)
@@ -99,12 +99,12 @@ func (h *Handler) dynamicUsage(gin *gin.Context) {
 
 func transDynamicUsage(input *anet.HMDynamicUsage) *usage {
 	var ret usage
-	ret.Cpu.Usage = input.Cpu.Usage
+	ret.Cpu.Usage = input.Cpu.Usage.Float()
 	ret.Memory.Used = input.Memory.Used
 	ret.Memory.Free = input.Memory.Free
 	ret.Memory.Available = input.Memory.Available
 	ret.Memory.Total = input.Memory.Total
-	ret.Memory.Usage = input.Memory.Usage
+	ret.Memory.Usage = input.Memory.Usage.Float()
 	ret.Memory.SwapUsed = input.Memory.SwapUsed
 	ret.Memory.SwapFree = input.Memory.SwapFree
 	ret.Memory.SwapTotal = input.Memory.SwapTotal
@@ -113,10 +113,10 @@ func transDynamicUsage(input *anet.HMDynamicUsage) *usage {
 			Mount:      part.Name,
 			Used:       part.Used,
 			Free:       part.Free,
-			Usage:      part.Usage,
+			Usage:      part.Usage.Float(),
 			InodeUsed:  part.InodeUsed,
 			InodeFree:  part.InodeFree,
-			InodeUsage: part.InodeUsage,
+			InodeUsage: part.InodeUsage.Float(),
 		})
 	}
 	for _, intf := range input.Interface {

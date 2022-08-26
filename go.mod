@@ -6,8 +6,8 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/gorilla/websocket v1.5.0
-	github.com/jkstack/anet v0.0.0-20220826022354-8dadf507d1cd
-	github.com/jkstack/jkframe v1.0.5
+	github.com/jkstack/anet v0.0.0-20220826041714-fbfef034c5a5
+	github.com/jkstack/jkframe v1.0.8
 	github.com/kardianos/service v1.2.1
 	github.com/shirou/gopsutil/v3 v3.22.7
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
@@ -56,4 +56,5 @@ require (
 	golang.org/x/tools v0.1.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

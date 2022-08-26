@@ -731,7 +731,76 @@
             }
         },
         "metrics.process": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "cmd": {
+                    "description": "命令行",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "/usr/bin/zsh",
+                        "-i"
+                    ]
+                },
+                "conns": {
+                    "description": "连接数",
+                    "type": "integer",
+                    "example": 16
+                },
+                "cpu_usage": {
+                    "description": "CPU使用率",
+                    "type": "number",
+                    "example": 3.2
+                },
+                "id": {
+                    "description": "进程ID",
+                    "type": "integer",
+                    "example": 5167
+                },
+                "listen": {
+                    "description": "监听端口",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "example": [
+                        8080,
+                        9090
+                    ]
+                },
+                "memory_usage": {
+                    "description": "内存使用率",
+                    "type": "number",
+                    "example": 6.4
+                },
+                "parent_id": {
+                    "description": "父进程ID",
+                    "type": "integer",
+                    "example": 1
+                },
+                "rss": {
+                    "description": "物理内存数",
+                    "type": "integer",
+                    "example": 37654
+                },
+                "swap": {
+                    "description": "swap内存数",
+                    "type": "integer",
+                    "example": 0
+                },
+                "user": {
+                    "description": "用户",
+                    "type": "string",
+                    "example": "root"
+                },
+                "vms": {
+                    "description": "虚拟内存数",
+                    "type": "integer",
+                    "example": 26754
+                }
+            }
         },
         "metrics.staticInfo": {
             "type": "object",
