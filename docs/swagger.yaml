@@ -89,17 +89,23 @@ definitions:
       status:
         description: 连接状态
         enum:
+        - ""
         - ESTABLISHED
         - SYN_SENT
+        - SYN_RECEIVED
         - SYN_RECV
+        - FIN_WAIT_1
+        - FIN_WAIT_2
         - FIN_WAIT1
         - FIN_WAIT2
         - TIME_WAIT
         - CLOSE
+        - CLOSED
         - CLOSE_WAIT
         - LAST_ACK
         - LISTEN
         - CLOSING
+        - DELETE
         example: ESTABLISHED
         type: string
       type:
