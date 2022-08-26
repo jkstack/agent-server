@@ -15,7 +15,7 @@ import (
 
 type process struct {
 	ID            int32    `json:"id" example:"5167"`                       // 进程ID
-	ParentID      int32    `json:"parent_id" example:"1"`                   // 父进程ID
+	ParentID      int32    `json:"pid" example:"1"`                         // 父进程ID
 	User          string   `json:"user" example:"root"`                     // 用户
 	CpuUsage      float64  `json:"cpu_usage" example:"3.2"`                 // CPU使用率
 	RssMemory     uint64   `json:"rss" example:"37654"`                     // 物理内存数
