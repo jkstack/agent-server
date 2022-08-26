@@ -39,6 +39,9 @@ func (h *Handler) dynamic(gin *gin.Context) {
 	topStr := g.DefaultQuery("top", "0")
 	top, _ := strconv.ParseInt(topStr, 10, 64)
 	kinds := g.QueryArray("kinds")
+	if len(kinds) == 1 && kinds[0] == "" {
+		kinds = []string{}
+	}
 
 	agents := g.GetAgents()
 

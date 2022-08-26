@@ -38,6 +38,9 @@ func (h *Handler) dynamicConnections(gin *gin.Context) {
 
 	id := g.Param("id")
 	kinds := g.QueryArray("kinds")
+	if len(kinds) == 1 && kinds[0] == "" {
+		kinds = []string{}
+	}
 
 	agents := g.GetAgents()
 

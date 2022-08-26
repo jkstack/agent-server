@@ -335,7 +335,7 @@ definitions:
         description: 内存使用率
         example: 6.4
         type: number
-      parent_id:
+      pid:
         description: 父进程ID
         example: 1
         type: integer

@@ -886,7 +886,7 @@ const docTemplate = `{
                     "type": "number",
                     "example": 6.4
                 },
-                "parent_id": {
+                "pid": {
                     "description": "父进程ID",
                     "type": "integer",
                     "example": 1
