@@ -1,8 +1,15 @@
 package metrics
 
 import (
+	"fmt"
+	"net/http"
+	"server/internal/agent"
+	"server/internal/api"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
+	runtime "github.com/jkstack/jkframe/utils"
 )
 
 type usage struct {
@@ -24,10 +31,13 @@ type usage struct {
 }
 
 type partitionUsage struct {
-	Name  string  `json:"name,omitempty"`  // linux为挂载路径如/run，windows为盘符如C:
-	Used  uint64  `json:"used,omitempty"`  // 已使用字节数
-	Free  uint64  `json:"free,omitempty"`  // 剩余字节数
-	Usage float64 `json:"usage,omitempty"` // 磁盘使用率
+	Mount      string  `json:"name" example:"/"`              // linux为挂载路径如/run，windows为盘符如C:
+	Used       uint64  `json:"used" example:"16920992"`       // 已使用字节数
+	Free       uint64  `json:"free" example:"232815064"`      // 剩余字节数
+	Usage      float64 `json:"usage" example:"6.27"`          // 磁盘使用率
+	InodeUsed  uint64  `json:"inode_used" example:"778282"`   // inode已使用数量
+	InodeFree  uint64  `json:"inode_free" example:"15998934"` // inode剩余数量
+	InodeUsage float64 `json:"inode_usage" example:"5.64"`    // inode使用率
 }
 
 type interfaceUsage struct {
@@ -47,8 +57,76 @@ type interfaceUsage struct {
 // @Success 200  {object}     api.Success{payload=usage}
 // @Router /metrics/{id}/dynamic/usage [get]
 func (h *Handler) dynamicUsage(gin *gin.Context) {
+	g := api.GetG(gin)
+
+	id := g.Param("id")
+
+	agents := g.GetAgents()
+
+	cli := agents.Get(id)
+	if cli == nil {
+		g.NotFound("agent")
+		return
+	}
+	if cli.Type() != agent.TypeMetrics {
+		g.InvalidType(agent.TypeMetrics, cli.Type())
+	}
+
+	taskID, err := cli.SendHMDynamicReq([]anet.HMDynamicReqType{
+		anet.HMReqUsage, anet.HMReqProcess, anet.HMReqConnections,
+	})
+	runtime.Assert(err)
+	defer cli.ChanClose(id)
+
+	var msg *anet.Msg
+	select {
+	case msg = <-cli.ChanRead(taskID):
+	case <-time.After(api.RequestTimeout):
+		g.Timeout()
+	}
+
+	switch {
+	case msg.Type == anet.TypeError:
+		g.ERR(http.StatusServiceUnavailable, msg.ErrorMsg)
+		return
+	case msg.Type != anet.TypeHMDynamicRep:
+		g.ERR(http.StatusInternalServerError, fmt.Sprintf("invalid message type: %d", msg.Type))
+		return
+	}
+
+	g.OK(transDynamicUsage(msg.HMDynamicRep.Usage))
 }
 
-func transDynamicUsage(usage *anet.HMDynamicUsage) *usage {
-	return nil
+func transDynamicUsage(input *anet.HMDynamicUsage) *usage {
+	var ret usage
+	ret.Cpu.Usage = input.Cpu.Usage
+	ret.Memory.Used = input.Memory.Used
+	ret.Memory.Free = input.Memory.Free
+	ret.Memory.Available = input.Memory.Available
+	ret.Memory.Total = input.Memory.Total
+	ret.Memory.Usage = input.Memory.Usage
+	ret.Memory.SwapUsed = input.Memory.SwapUsed
+	ret.Memory.SwapFree = input.Memory.SwapFree
+	ret.Memory.SwapTotal = input.Memory.SwapTotal
+	for _, part := range input.Partitions {
+		ret.Partitions = append(ret.Partitions, partitionUsage{
+			Mount:      part.Name,
+			Used:       part.Used,
+			Free:       part.Free,
+			Usage:      part.Usage,
+			InodeUsed:  part.InodeUsed,
+			InodeFree:  part.InodeFree,
+			InodeUsage: part.InodeUsage,
+		})
+	}
+	for _, intf := range input.Interface {
+		ret.Interface = append(ret.Interface, interfaceUsage{
+			Name:        intf.Name,
+			BytesSent:   intf.BytesSent,
+			BytesRecv:   intf.BytesRecv,
+			PacketsSent: intf.PacketsSent,
+			PacketsRecv: intf.PacketsRecv,
+		})
+	}
+	return &ret
 }

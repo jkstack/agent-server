@@ -208,7 +208,7 @@ definitions:
         description: inode数量
         example: 4072701
         type: integer
-      name:
+      mount:
         description: 'linux为挂载路径如/run，windows为盘符如C:'
         example: /boot
         type: string
@@ -230,15 +230,31 @@ definitions:
     properties:
       free:
         description: 剩余字节数
+        example: 232815064
+        type: integer
+      inode_free:
+        description: inode剩余数量
+        example: 15998934
+        type: integer
+      inode_usage:
+        description: inode使用率
+        example: 5.64
+        type: number
+      inode_used:
+        description: inode已使用数量
+        example: 778282
         type: integer
       name:
         description: 'linux为挂载路径如/run，windows为盘符如C:'
+        example: /
         type: string
       usage:
         description: 磁盘使用率
+        example: 6.27
         type: number
       used:
         description: 已使用字节数
+        example: 16920992
         type: integer
     type: object
   metrics.process:

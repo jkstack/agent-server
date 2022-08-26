@@ -29,7 +29,7 @@ type disk struct {
 }
 
 type partition struct {
-	Name   string   `json:"name" example:"/boot"`                     // linux为挂载路径如/run，windows为盘符如C:
+	Mount  string   `json:"mount" example:"/boot"`                    // linux为挂载路径如/run，windows为盘符如C:
 	FSType string   `json:"fstype,omitempty" example:"NTFS"`          // 文件系统类型
 	Opts   []string `json:"opts,omitempty" example:"rw,nosuid,nodev"` // 附加信息
 	Total  uint64   `json:"total" example:"209666048"`                // 总容量
@@ -186,7 +186,7 @@ func fillStaticDisk(ret *staticInfo, payload *anet.HMStaticPayload) {
 	}
 	for _, p := range payload.Partitions {
 		ret.Partitions = append(ret.Partitions, partition{
-			Name:   p.Name,
+			Mount:  p.Name,
 			FSType: p.FSType,
 			Opts:   p.Opts,
 			Total:  p.Total,

@@ -674,7 +674,7 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 4072701
                 },
-                "name": {
+                "mount": {
                     "description": "linux为挂载路径如/run，windows为盘符如C:",
                     "type": "string",
                     "example": "/boot"
@@ -703,19 +703,38 @@ const docTemplate = `{
             "properties": {
                 "free": {
                     "description": "剩余字节数",
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 232815064
+                },
+                "inode_free": {
+                    "description": "inode剩余数量",
+                    "type": "integer",
+                    "example": 15998934
+                },
+                "inode_usage": {
+                    "description": "inode使用率",
+                    "type": "number",
+                    "example": 5.64
+                },
+                "inode_used": {
+                    "description": "inode已使用数量",
+                    "type": "integer",
+                    "example": 778282
                 },
                 "name": {
                     "description": "linux为挂载路径如/run，windows为盘符如C:",
-                    "type": "string"
+                    "type": "string",
+                    "example": "/"
                 },
                 "usage": {
                     "description": "磁盘使用率",
-                    "type": "number"
+                    "type": "number",
+                    "example": 6.27
                 },
                 "used": {
                     "description": "已使用字节数",
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 16920992
                 }
             }
         },

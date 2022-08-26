@@ -178,6 +178,8 @@ github.com/jkstack/anet v0.0.0-20220825083909-1ee75022d55f h1:dd0tE0yGIyFrf46Zfc
 github.com/jkstack/anet v0.0.0-20220825083909-1ee75022d55f/go.mod h1:96cesKVzD7XphMYim6bupr/74vds/p/07iBbZC/oEdw=
 github.com/jkstack/anet v0.0.0-20220825101045-7ca66bc2bd33 h1:LUqPk26RiSgY7k8XMI4AUWmUGZAwhpXIt0cgpjjYVls=
 github.com/jkstack/anet v0.0.0-20220825101045-7ca66bc2bd33/go.mod h1:96cesKVzD7XphMYim6bupr/74vds/p/07iBbZC/oEdw=
+github.com/jkstack/anet v0.0.0-20220826022354-8dadf507d1cd h1:q8rg0Bo8DG4UKmhUfwsXJ3NmS+E9q1H8mKBDp5WtRWc=
+github.com/jkstack/anet v0.0.0-20220826022354-8dadf507d1cd/go.mod h1:96cesKVzD7XphMYim6bupr/74vds/p/07iBbZC/oEdw=
 github.com/jkstack/jkframe v1.0.5 h1:SUUkgnSHQ6IVnVgJlP6d0bbaANvtbiTwPsuTECq6t2E=
 github.com/jkstack/jkframe v1.0.5/go.mod h1:s3Eq2ScKxRLGjHU8qfjapfO5fcuXtDwsZSJiq+naIfY=
 github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=
