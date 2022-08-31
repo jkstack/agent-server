@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
+	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/stat"
 )
 
@@ -41,5 +42,11 @@ func (h *Handler) OnConnect(*agent.Agent) {
 func (h *Handler) OnClose(string) {
 }
 
-func (h *Handler) OnMessage(*agent.Agent, *anet.Msg) {
+func (h *Handler) OnMessage(agent *agent.Agent, msg *anet.Msg) {
+	switch msg.Type {
+	case anet.TypeHMStaticRep:
+		logging.Info("agent [%s] report static info")
+	case anet.TypeHMDynamicRep:
+		logging.Info("agent [%s] report dynamic info")
+	}
 }
