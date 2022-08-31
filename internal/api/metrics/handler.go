@@ -45,8 +45,8 @@ func (h *Handler) OnClose(string) {
 func (h *Handler) OnMessage(agent *agent.Agent, msg *anet.Msg) {
 	switch msg.Type {
 	case anet.TypeHMStaticRep:
-		logging.Info("agent [%s] report static info")
+		logging.Info("agent [%s] report static info", agent.ID())
 	case anet.TypeHMDynamicRep:
-		logging.Info("agent [%s] report dynamic info")
+		logging.Info("agent [%s] report dynamic info", agent.ID())
 	}
 }
