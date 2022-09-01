@@ -445,6 +445,47 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/metrics/{id}/status": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "获取节点自动采集状态",
+                "operationId": "/api/metrics/status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/metrics.status"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -770,6 +811,27 @@ const docTemplate = `{
                 }
             }
         },
+        "metrics.job": {
+            "type": "object",
+            "properties": {
+                "interval": {
+                    "description": "间隔时间",
+                    "type": "integer",
+                    "example": 5
+                },
+                "name": {
+                    "description": "任务名称",
+                    "type": "string",
+                    "enum": [
+                        "static",
+                        "usage",
+                        "process",
+                        "conns"
+                    ],
+                    "example": "static"
+                }
+            }
+        },
         "metrics.partition": {
             "type": "object",
             "properties": {
@@ -1071,6 +1133,38 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/metrics.user"
+                    }
+                }
+            }
+        },
+        "metrics.status": {
+            "type": "object",
+            "properties": {
+                "allow_conns": {
+                    "description": "采集的连接类型",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "tcp",
+                            "tcp4",
+                            "tcp6",
+                            "udp",
+                            "udp4",
+                            "udp6",
+                            "unix"
+                        ]
+                    },
+                    "example": [
+                        "tcp",
+                        "udp"
+                    ]
+                },
+                "jobs": {
+                    "description": "正在运行的任务列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.job"
                     }
                 }
             }

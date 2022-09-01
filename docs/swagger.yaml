@@ -248,6 +248,22 @@ definitions:
         example: lo
         type: string
     type: object
+  metrics.job:
+    properties:
+      interval:
+        description: 间隔时间
+        example: 5
+        type: integer
+      name:
+        description: 任务名称
+        enum:
+        - static
+        - usage
+        - process
+        - conns
+        example: static
+        type: string
+    type: object
   metrics.partition:
     properties:
       fstype:
@@ -476,6 +492,30 @@ definitions:
         description: 用户列表
         items:
           $ref: '#/definitions/metrics.user'
+        type: array
+    type: object
+  metrics.status:
+    properties:
+      allow_conns:
+        description: 采集的连接类型
+        example:
+        - tcp
+        - udp
+        items:
+          enum:
+          - tcp
+          - tcp4
+          - tcp6
+          - udp
+          - udp4
+          - udp6
+          - unix
+          type: string
+        type: array
+      jobs:
+        description: 正在运行的任务列表
+        items:
+          $ref: '#/definitions/metrics.job'
         type: array
     type: object
   metrics.usage:
@@ -823,6 +863,30 @@ paths:
                   $ref: '#/definitions/metrics.staticInfo'
               type: object
       summary: 获取节点的静态数据
+      tags:
+      - metrics
+  /metrics/{id}/status:
+    get:
+      operationId: /api/metrics/status
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/metrics.status'
+              type: object
+      summary: 获取节点自动采集状态
       tags:
       - metrics
 swagger: "2.0"

@@ -41,3 +41,18 @@ func (agent *Agent) SendHMDynamicReq(req []anet.HMDynamicReqType,
 	agent.chWrite <- &msg
 	return id, nil
 }
+
+func (agent *Agent) SendHMQueryStatus() (string, error) {
+	id, err := utils.TaskID()
+	if err != nil {
+		return "", err
+	}
+	var msg anet.Msg
+	msg.Type = anet.TypeHMQueryCollect
+	msg.TaskID = id
+	agent.Lock()
+	agent.taskRead[id] = make(chan *anet.Msg)
+	agent.Unlock()
+	agent.chWrite <- &msg
+	return id, nil
+}
