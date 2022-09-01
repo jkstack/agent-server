@@ -1112,6 +1112,7 @@ const docTemplate = `{
         "metrics.process": {
             "type": "object",
             "required": [
+                "cmd",
                 "conns",
                 "cpu_usage",
                 "id",

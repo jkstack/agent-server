@@ -51,5 +51,7 @@ func (h *Handler) OnMessage(agent *agent.Agent, msg *anet.Msg) {
 		logging.Info("agent [%s] report static info", agent.ID())
 	case anet.TypeHMDynamicRep:
 		logging.Info("agent [%s] report dynamic info", agent.ID())
+	case anet.TypeHMReportAgentStatus:
+		logging.Info("agent status report: %s", agent.ID())
 	}
 }

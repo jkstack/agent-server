@@ -466,6 +466,7 @@ definitions:
         example: 26754
         type: integer
     required:
+    - cmd
     - conns
     - cpu_usage
     - id
