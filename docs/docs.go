@@ -580,6 +580,16 @@ const docTemplate = `{
     "definitions": {
         "agents.info": {
             "type": "object",
+            "required": [
+                "arch",
+                "id",
+                "ip",
+                "mac",
+                "os",
+                "platform",
+                "type",
+                "version"
+            ],
             "properties": {
                 "arch": {
                     "description": "操作系统位数",
@@ -639,16 +649,24 @@ const docTemplate = `{
         },
         "api.Success": {
             "type": "object",
+            "required": [
+                "code"
+            ],
             "properties": {
                 "code": {
                     "type": "integer",
-                    "example": 0
+                    "example": 200
                 },
                 "payload": {}
             }
         },
         "info.serverInfo": {
             "type": "object",
+            "required": [
+                "agents",
+                "is_blocking",
+                "version"
+            ],
             "properties": {
                 "agents": {
                     "description": "当前连接的agent数量",
@@ -691,6 +709,12 @@ const docTemplate = `{
         },
         "metrics.connection": {
             "type": "object",
+            "required": [
+                "fd",
+                "pid",
+                "status",
+                "type"
+            ],
             "properties": {
                 "fd": {
                     "description": "句柄号",
@@ -753,6 +777,14 @@ const docTemplate = `{
         },
         "metrics.core": {
             "type": "object",
+            "required": [
+                "core",
+                "cores",
+                "mhz",
+                "model",
+                "physical",
+                "processor"
+            ],
             "properties": {
                 "core": {
                     "description": "所在物理核上的编号",
@@ -788,23 +820,36 @@ const docTemplate = `{
         },
         "metrics.counts": {
             "type": "object",
+            "required": [
+                "failure",
+                "success",
+                "total"
+            ],
             "properties": {
                 "failure": {
                     "description": "失败节点数",
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 0
                 },
                 "success": {
                     "description": "成功节点数",
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 10
                 },
                 "total": {
                     "description": "触达节点数",
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 10
                 }
             }
         },
         "metrics.disk": {
             "type": "object",
+            "required": [
+                "model",
+                "total",
+                "type"
+            ],
             "properties": {
                 "disks": {
                     "description": "逻辑分区",
@@ -863,6 +908,13 @@ const docTemplate = `{
         },
         "metrics.interfaceUsage": {
             "type": "object",
+            "required": [
+                "bytes_recv",
+                "bytes_sent",
+                "name",
+                "packets_recv",
+                "packets_sent"
+            ],
             "properties": {
                 "bytes_recv": {
                     "description": "接收字节数",
@@ -893,6 +945,12 @@ const docTemplate = `{
         },
         "metrics.intf": {
             "type": "object",
+            "required": [
+                "index",
+                "mac",
+                "mtu",
+                "name"
+            ],
             "properties": {
                 "addrs": {
                     "description": "网卡上绑定的IP地址列表",
@@ -941,6 +999,10 @@ const docTemplate = `{
         },
         "metrics.job": {
             "type": "object",
+            "required": [
+                "interval",
+                "name"
+            ],
             "properties": {
                 "interval": {
                     "description": "间隔时间",
@@ -962,6 +1024,10 @@ const docTemplate = `{
         },
         "metrics.partition": {
             "type": "object",
+            "required": [
+                "mount",
+                "total"
+            ],
             "properties": {
                 "fstype": {
                     "description": "文件系统类型",
@@ -999,6 +1065,12 @@ const docTemplate = `{
         },
         "metrics.partitionUsage": {
             "type": "object",
+            "required": [
+                "free",
+                "name",
+                "usage",
+                "used"
+            ],
             "properties": {
                 "free": {
                     "description": "剩余字节数",
@@ -1039,6 +1111,17 @@ const docTemplate = `{
         },
         "metrics.process": {
             "type": "object",
+            "required": [
+                "conns",
+                "cpu_usage",
+                "id",
+                "memory_usage",
+                "pid",
+                "rss",
+                "swap",
+                "user",
+                "vms"
+            ],
             "properties": {
                 "cmd": {
                     "description": "命令行",
@@ -1136,9 +1219,22 @@ const docTemplate = `{
         },
         "metrics.staticInfo": {
             "type": "object",
+            "required": [
+                "cpu",
+                "gateway",
+                "host",
+                "kernel",
+                "memory",
+                "os",
+                "time"
+            ],
             "properties": {
                 "cpu": {
                     "type": "object",
+                    "required": [
+                        "logical",
+                        "physical"
+                    ],
                     "properties": {
                         "cores": {
                             "description": "每个核心参数",
@@ -1173,6 +1269,10 @@ const docTemplate = `{
                 },
                 "host": {
                     "type": "object",
+                    "required": [
+                        "name",
+                        "uptime"
+                    ],
                     "properties": {
                         "name": {
                             "description": "主机名",
@@ -1195,6 +1295,10 @@ const docTemplate = `{
                 },
                 "kernel": {
                     "type": "object",
+                    "required": [
+                        "arch",
+                        "version"
+                    ],
                     "properties": {
                         "arch": {
                             "description": "位数",
@@ -1215,6 +1319,10 @@ const docTemplate = `{
                 },
                 "memory": {
                     "type": "object",
+                    "required": [
+                        "physical",
+                        "swap"
+                    ],
                     "properties": {
                         "physical": {
                             "description": "物理内存大小",
@@ -1230,6 +1338,13 @@ const docTemplate = `{
                 },
                 "os": {
                     "type": "object",
+                    "required": [
+                        "install",
+                        "name",
+                        "platform_name",
+                        "platform_version",
+                        "startup"
+                    ],
                     "properties": {
                         "install": {
                             "description": "系统安装时间",
@@ -1327,6 +1442,9 @@ const docTemplate = `{
             "properties": {
                 "cpu": {
                     "type": "object",
+                    "required": [
+                        "usage"
+                    ],
                     "properties": {
                         "usage": {
                             "description": "CPU使用率(百分比)",
@@ -1344,6 +1462,16 @@ const docTemplate = `{
                 },
                 "memory": {
                     "type": "object",
+                    "required": [
+                        "available",
+                        "free",
+                        "swap_free",
+                        "swap_total",
+                        "swap_used",
+                        "total",
+                        "usage",
+                        "used"
+                    ],
                     "properties": {
                         "available": {
                             "description": "可用字节数",
@@ -1398,6 +1526,11 @@ const docTemplate = `{
         },
         "metrics.user": {
             "type": "object",
+            "required": [
+                "gid",
+                "id",
+                "name"
+            ],
             "properties": {
                 "gid": {
                     "description": "用户组ID",

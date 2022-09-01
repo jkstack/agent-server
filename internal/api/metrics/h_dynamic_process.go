@@ -14,17 +14,17 @@ import (
 )
 
 type process struct {
-	ID            int32    `json:"id" example:"5167"`                       // 进程ID
-	ParentID      int32    `json:"pid" example:"1"`                         // 父进程ID
-	User          string   `json:"user" example:"root"`                     // 用户
-	CpuUsage      float64  `json:"cpu_usage" example:"3.2"`                 // CPU使用率
-	RssMemory     uint64   `json:"rss" example:"37654"`                     // 物理内存数
-	VirtualMemory uint64   `json:"vms" example:"26754"`                     // 虚拟内存数
-	SwapMemory    uint64   `json:"swap" example:"0"`                        // swap内存数
-	MemoryUsage   float64  `json:"memory_usage" example:"6.4"`              // 内存使用率
-	Cmd           []string `json:"cmd,omitempty" example:"/usr/bin/zsh,-i"` // 命令行
-	Listen        []uint32 `json:"listen,omitempty" example:"8080,9090"`    // 监听端口
-	Connections   int      `json:"conns" example:"16"`                      // 连接数
+	ID            int32    `json:"id" example:"5167" validate:"required"`             // 进程ID
+	ParentID      int32    `json:"pid" example:"1" validate:"required"`               // 父进程ID
+	User          string   `json:"user" example:"root" validate:"required"`           // 用户
+	CpuUsage      float64  `json:"cpu_usage" example:"3.2" validate:"required"`       // CPU使用率
+	RssMemory     uint64   `json:"rss" example:"37654" validate:"required"`           // 物理内存数
+	VirtualMemory uint64   `json:"vms" example:"26754" validate:"required"`           // 虚拟内存数
+	SwapMemory    uint64   `json:"swap" example:"0" validate:"required"`              // swap内存数
+	MemoryUsage   float64  `json:"memory_usage" example:"6.4" validate:"required"`    // 内存使用率
+	Cmd           []string `json:"cmd" example:"/usr/bin/zsh,-i" validate:"required"` // 命令行
+	Listen        []uint32 `json:"listen,omitempty" example:"8080,9090"`              // 监听端口
+	Connections   int      `json:"conns" example:"16" validate:"required"`            // 连接数
 }
 
 // static 获取节点的进程列表数据

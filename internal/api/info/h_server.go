@@ -7,9 +7,9 @@ import (
 )
 
 type serverInfo struct {
-	Version    string `json:"version" example:"1.0.0"`     // 服务端版本号
-	Agents     int    `json:"agents" example:"10"`         // 当前连接的agent数量
-	IsBlocking bool   `json:"is_blocking" example:"false"` // 是否处于限流状态
+	Version    string `json:"version" example:"1.0.0" validate:"required"`     // 服务端版本号
+	Agents     int    `json:"agents" example:"10" validate:"required"`         // 当前连接的agent数量
+	IsBlocking bool   `json:"is_blocking" example:"false" validate:"required"` // 是否处于限流状态
 }
 
 // server 获取当前服务器状态

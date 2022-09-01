@@ -45,13 +45,24 @@ definitions:
         description: agent版本号
         example: 1.0.0
         type: string
+    required:
+    - arch
+    - id
+    - ip
+    - mac
+    - os
+    - platform
+    - type
+    - version
     type: object
   api.Success:
     properties:
       code:
-        example: 0
+        example: 200
         type: integer
       payload: {}
+    required:
+    - code
     type: object
   info.serverInfo:
     properties:
@@ -67,6 +78,10 @@ definitions:
         description: 服务端版本号
         example: 1.0.0
         type: string
+    required:
+    - agents
+    - is_blocking
+    - version
     type: object
   metrics.batchSetArgs:
     properties:
@@ -135,6 +150,11 @@ definitions:
         - file
         example: tcp4
         type: string
+    required:
+    - fd
+    - pid
+    - status
+    - type
     type: object
   metrics.core:
     properties:
@@ -162,18 +182,32 @@ definitions:
         description: 第几个核心
         example: 0
         type: integer
+    required:
+    - core
+    - cores
+    - mhz
+    - model
+    - physical
+    - processor
     type: object
   metrics.counts:
     properties:
       failure:
         description: 失败节点数
+        example: 0
         type: integer
       success:
         description: 成功节点数
+        example: 10
         type: integer
       total:
         description: 触达节点数
+        example: 10
         type: integer
+    required:
+    - failure
+    - success
+    - total
     type: object
   metrics.disk:
     properties:
@@ -200,6 +234,10 @@ definitions:
         - SSD
         example: HDD
         type: string
+    required:
+    - model
+    - total
+    - type
     type: object
   metrics.dynamicInfo:
     properties:
@@ -239,6 +277,12 @@ definitions:
         description: 发送数据包数量
         example: 5699
         type: integer
+    required:
+    - bytes_recv
+    - bytes_sent
+    - name
+    - packets_recv
+    - packets_sent
     type: object
   metrics.intf:
     properties:
@@ -275,6 +319,11 @@ definitions:
         description: 网卡名称
         example: lo
         type: string
+    required:
+    - index
+    - mac
+    - mtu
+    - name
     type: object
   metrics.job:
     properties:
@@ -291,6 +340,9 @@ definitions:
         - conns
         example: static
         type: string
+    required:
+    - interval
+    - name
     type: object
   metrics.partition:
     properties:
@@ -319,6 +371,9 @@ definitions:
         description: 总容量
         example: 209666048
         type: integer
+    required:
+    - mount
+    - total
     type: object
   metrics.partitionUsage:
     properties:
@@ -350,6 +405,11 @@ definitions:
         description: 已使用字节数
         example: 16920992
         type: integer
+    required:
+    - free
+    - name
+    - usage
+    - used
     type: object
   metrics.process:
     properties:
@@ -405,6 +465,16 @@ definitions:
         description: 虚拟内存数
         example: 26754
         type: integer
+    required:
+    - conns
+    - cpu_usage
+    - id
+    - memory_usage
+    - pid
+    - rss
+    - swap
+    - user
+    - vms
     type: object
   metrics.setArgs:
     properties:
@@ -441,6 +511,9 @@ definitions:
             description: 物理核心数
             example: 2
             type: integer
+        required:
+        - logical
+        - physical
         type: object
       disks:
         description: 物理磁盘列表
@@ -461,6 +534,9 @@ definitions:
             description: 启动时长
             example: 1900
             type: integer
+        required:
+        - name
+        - uptime
         type: object
       interface:
         description: 网卡列表
@@ -481,6 +557,9 @@ definitions:
             description: 内核版本
             example: 3.10.0-1062.el7.x86_64
             type: string
+        required:
+        - arch
+        - version
         type: object
       memory:
         properties:
@@ -492,6 +571,9 @@ definitions:
             description: swap内存大小
             example: 8589930496
             type: integer
+        required:
+        - physical
+        - swap
         type: object
       os:
         properties:
@@ -524,6 +606,12 @@ definitions:
             description: 系统启动时间
             example: 1661396019
             type: integer
+        required:
+        - install
+        - name
+        - platform_name
+        - platform_version
+        - startup
         type: object
       partitions:
         description: 逻辑分区列表
@@ -539,6 +627,14 @@ definitions:
         items:
           $ref: '#/definitions/metrics.user'
         type: array
+    required:
+    - cpu
+    - gateway
+    - host
+    - kernel
+    - memory
+    - os
+    - time
     type: object
   metrics.status:
     properties:
@@ -572,6 +668,8 @@ definitions:
             description: CPU使用率(百分比)
             example: 2.3
             type: number
+        required:
+        - usage
         type: object
       interface:
         description: 网卡
@@ -612,6 +710,15 @@ definitions:
             description: 已使用字节数
             example: 1595712
             type: integer
+        required:
+        - available
+        - free
+        - swap_free
+        - swap_total
+        - swap_used
+        - total
+        - usage
+        - used
         type: object
       partitions:
         description: 分区
@@ -633,6 +740,10 @@ definitions:
         description: 用户名
         example: root
         type: string
+    required:
+    - gid
+    - id
+    - name
     type: object
 info:
   contact:

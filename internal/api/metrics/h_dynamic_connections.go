@@ -13,12 +13,12 @@ import (
 )
 
 type connection struct {
-	Fd     uint32 `json:"fd" example:"8"`                                                                                                                                                                              // 句柄号
-	Pid    int32  `json:"pid" example:"28093"`                                                                                                                                                                         // 所属进程ID
-	Type   string `json:"type" example:"tcp4" enums:"tcp4,tcp6,udp4,udp6,unix,file"`                                                                                                                                   // 连接类型
-	Local  string `json:"local,omitempty" example:"127.0.0.1:13081"`                                                                                                                                                   // 本地地址
-	Remote string `json:"remote,omitempty" example:"127.0.0.1:37470"`                                                                                                                                                  // 远程地址
-	Status string `json:"status" example:"ESTABLISHED" enums:",ESTABLISHED,SYN_SENT,SYN_RECEIVED,SYN_RECV,FIN_WAIT_1,FIN_WAIT_2,FIN_WAIT1,FIN_WAIT2,TIME_WAIT,CLOSE,CLOSED,CLOSE_WAIT,LAST_ACK,LISTEN,CLOSING,DELETE"` // 连接状态
+	Fd     uint32 `json:"fd" example:"8" validate:"required"`                                                                                                                                                                              // 句柄号
+	Pid    int32  `json:"pid" example:"28093" validate:"required"`                                                                                                                                                                         // 所属进程ID
+	Type   string `json:"type" example:"tcp4" enums:"tcp4,tcp6,udp4,udp6,unix,file" validate:"required"`                                                                                                                                   // 连接类型
+	Local  string `json:"local,omitempty" example:"127.0.0.1:13081"`                                                                                                                                                                       // 本地地址
+	Remote string `json:"remote,omitempty" example:"127.0.0.1:37470"`                                                                                                                                                                      // 远程地址
+	Status string `json:"status" example:"ESTABLISHED" enums:",ESTABLISHED,SYN_SENT,SYN_RECEIVED,SYN_RECV,FIN_WAIT_1,FIN_WAIT_2,FIN_WAIT1,FIN_WAIT2,TIME_WAIT,CLOSE,CLOSED,CLOSE_WAIT,LAST_ACK,LISTEN,CLOSING,DELETE" validate:"required"` // 连接状态
 }
 
 // static 获取节点的连接列表数据

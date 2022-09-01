@@ -16,13 +16,13 @@ import (
 var allJobs = []string{"static", "usage", "process", "conns"}
 
 type job struct {
-	Name     string `json:"name" example:"static" enums:"static,usage,process,conns"` // 任务名称
-	Interval int    `json:"interval" example:"5"`                                     // 间隔时间
+	Name     string `json:"name" example:"static" enums:"static,usage,process,conns" validate:"required"` // 任务名称
+	Interval int    `json:"interval" example:"5" validate:"required"`                                     // 间隔时间
 }
 
 type status struct {
-	Jobs       []job    `json:"jobs"`                                                                   // 正在运行的任务列表
-	AllowConns []string `json:"allow_conns" example:"tcp,udp" enums:"tcp,tcp4,tcp6,udp,udp4,udp6,unix"` // 采集的连接类型
+	Jobs       []job    `json:"jobs"`                                                                             // 正在运行的任务列表
+	AllowConns []string `json:"allow_conns,omitempty" example:"tcp,udp" enums:"tcp,tcp4,tcp6,udp,udp4,udp6,unix"` // 采集的连接类型
 }
 
 // getStatus 获取节点自动采集状态
@@ -126,9 +126,9 @@ type batchSetArgs struct {
 }
 
 type counts struct {
-	Total   int `json:"total"`   // 触达节点数
-	Success int `json:"success"` // 成功节点数
-	Failure int `json:"failure"` // 失败节点数
+	Total   int `json:"total" example:"10" validate:"required"`   // 触达节点数
+	Success int `json:"success" example:"10" validate:"required"` // 成功节点数
+	Failure int `json:"failure" example:"0" validate:"required"`  // 失败节点数
 }
 
 // batchSetStatus 批量启动或停止采集
