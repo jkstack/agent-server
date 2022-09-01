@@ -455,7 +455,7 @@ const docTemplate = `{
                     "metrics"
                 ],
                 "summary": "获取节点自动采集状态",
-                "operationId": "/api/metrics/status",
+                "operationId": "/api/metrics/status_get",
                 "parameters": [
                     {
                         "type": "string",
@@ -482,6 +482,42 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "设置节点自动采集状态",
+                "operationId": "/api/metrics/status_set",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "需启动的任务列表",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/metrics.setArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
                         }
                     }
                 }
@@ -978,6 +1014,31 @@ const docTemplate = `{
                     "description": "虚拟内存数",
                     "type": "integer",
                     "example": 26754
+                }
+            }
+        },
+        "metrics.setArgs": {
+            "type": "object",
+            "required": [
+                "jobs"
+            ],
+            "properties": {
+                "jobs": {
+                    "description": "需启动的任务类型",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "static",
+                            "usage",
+                            "process",
+                            "conns"
+                        ]
+                    },
+                    "example": [
+                        "static",
+                        "usage"
+                    ]
                 }
             }
         },

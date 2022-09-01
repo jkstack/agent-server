@@ -5,7 +5,10 @@ import "fmt"
 type BadParam string
 
 func (e BadParam) Error() string {
-	return fmt.Sprintf("bad param: %s", string(e))
+	if len(e) > 0 {
+		return fmt.Sprintf("bad param: %s", string(e))
+	}
+	return "bad param"
 }
 
 func BadParamErr(param string) {

@@ -56,3 +56,18 @@ func (agent *Agent) SendHMQueryStatus() (string, error) {
 	agent.chWrite <- &msg
 	return id, nil
 }
+
+func (agent *Agent) SendHMChangeStatus(jobs []string) error {
+	id, err := utils.TaskID()
+	if err != nil {
+		return err
+	}
+	var msg anet.Msg
+	msg.Type = anet.TypeHMChangeCollectStatus
+	msg.TaskID = id
+	msg.HMChangeStatus = &anet.HMChangeReportStatus{
+		Jobs: jobs,
+	}
+	agent.chWrite <- &msg
+	return nil
+}

@@ -378,6 +378,24 @@ definitions:
         example: 26754
         type: integer
     type: object
+  metrics.setArgs:
+    properties:
+      jobs:
+        description: 需启动的任务类型
+        example:
+        - static
+        - usage
+        items:
+          enum:
+          - static
+          - usage
+          - process
+          - conns
+          type: string
+        type: array
+    required:
+    - jobs
+    type: object
   metrics.staticInfo:
     properties:
       cpu:
@@ -867,7 +885,7 @@ paths:
       - metrics
   /metrics/{id}/status:
     get:
-      operationId: /api/metrics/status
+      operationId: /api/metrics/status_get
       parameters:
       - description: 节点ID
         in: path
@@ -887,6 +905,30 @@ paths:
                   $ref: '#/definitions/metrics.status'
               type: object
       summary: 获取节点自动采集状态
+      tags:
+      - metrics
+    put:
+      operationId: /api/metrics/status_set
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 需启动的任务列表
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/metrics.setArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Success'
+      summary: 设置节点自动采集状态
       tags:
       - metrics
 swagger: "2.0"
