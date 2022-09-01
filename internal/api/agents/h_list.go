@@ -10,6 +10,7 @@ import (
 
 type listArgs struct {
 	Type string `form:"type"`
+	OS   string `form:"os,default=all"`
 	Page int    `form:"page,default=1" binding:"min=1"`
 	Size int    `form:"size,default=20" binding:"min=10"`
 }
@@ -19,7 +20,8 @@ type listArgs struct {
 // @Summary 获取节点列表
 // @Tags agents
 // @Produce json
-// @Param   type  query string  false "节点类型,不指定则列出所有类型" enums(example-agent,container-agent,metrics-agent,...)
+// @Param   type  query string  false "节点类型,不指定则为所有" enums(example-agent,container-agent,metrics-agent,...)
+// @Param   os    query string  false "节点操作系统,不指定则为所有" enums(linux,windows)
 // @Param   page  query int     false "分页编号" default(1)  minimum(1)
 // @Param   size  query int     false "每页数量" default(20) minimum(10)
 // @Success 200   {object}      api.Success{payload=[]info}
@@ -33,12 +35,21 @@ func (h *Handler) list(gin *gin.Context) {
 		return
 	}
 
+	switch args.OS {
+	case "linux", "windows":
+	default:
+		args.OS = ""
+	}
+
 	agents := g.GetAgents()
 
 	ret := make([]info, 0, agents.Size())
 	agents.Range(func(agent *agent.Agent) bool {
 		want := true
 		if len(args.Type) > 0 && agent.Type() != args.Type {
+			want = false
+		}
+		if len(args.OS) > 0 && agent.Info().OS != args.OS {
 			want = false
 		}
 		if want {

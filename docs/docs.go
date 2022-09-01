@@ -37,8 +37,18 @@ const docTemplate = `{
                             "..."
                         ],
                         "type": "string",
-                        "description": "节点类型,不指定则列出所有类型",
+                        "description": "节点类型,不指定则为所有",
                         "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "linux",
+                            "windows"
+                        ],
+                        "type": "string",
+                        "description": "节点操作系统,不指定则为所有",
+                        "name": "os",
                         "in": "query"
                     },
                     {
@@ -176,6 +186,49 @@ const docTemplate = `{
                                     "properties": {
                                         "payload": {
                                             "$ref": "#/definitions/info.serverInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/metrics/status": {
+            "put": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "批量启动或停止采集",
+                "operationId": "/api/metrics/batch_status_set",
+                "parameters": [
+                    {
+                        "description": "需启动的任务列表",
+                        "name": "jobs",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/metrics.batchSetArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/metrics.counts"
                                         }
                                     }
                                 }
@@ -505,7 +558,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "需启动的任务列表",
-                        "name": "args",
+                        "name": "jobs",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -614,6 +667,28 @@ const docTemplate = `{
                 }
             }
         },
+        "metrics.batchSetArgs": {
+            "type": "object",
+            "required": [
+                "start"
+            ],
+            "properties": {
+                "os": {
+                    "description": "操作系统",
+                    "type": "string",
+                    "enum": [
+                        "linux",
+                        "windows"
+                    ],
+                    "example": "linux"
+                },
+                "start": {
+                    "description": "是否启动",
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
         "metrics.connection": {
             "type": "object",
             "properties": {
@@ -708,6 +783,23 @@ const docTemplate = `{
                     "description": "第几个核心",
                     "type": "integer",
                     "example": 0
+                }
+            }
+        },
+        "metrics.counts": {
+            "type": "object",
+            "properties": {
+                "failure": {
+                    "description": "失败节点数",
+                    "type": "integer"
+                },
+                "success": {
+                    "description": "成功节点数",
+                    "type": "integer"
+                },
+                "total": {
+                    "description": "触达节点数",
+                    "type": "integer"
                 }
             }
         },

@@ -68,6 +68,22 @@ definitions:
         example: 1.0.0
         type: string
     type: object
+  metrics.batchSetArgs:
+    properties:
+      os:
+        description: 操作系统
+        enum:
+        - linux
+        - windows
+        example: linux
+        type: string
+      start:
+        description: 是否启动
+        example: true
+        type: boolean
+    required:
+    - start
+    type: object
   metrics.connection:
     properties:
       fd:
@@ -145,6 +161,18 @@ definitions:
       processor:
         description: 第几个核心
         example: 0
+        type: integer
+    type: object
+  metrics.counts:
+    properties:
+      failure:
+        description: 失败节点数
+        type: integer
+      success:
+        description: 成功节点数
+        type: integer
+      total:
+        description: 触达节点数
         type: integer
     type: object
   metrics.disk:
@@ -617,7 +645,7 @@ paths:
     get:
       operationId: /api/agents
       parameters:
-      - description: 节点类型,不指定则列出所有类型
+      - description: 节点类型,不指定则为所有
         enum:
         - example-agent
         - container-agent
@@ -625,6 +653,13 @@ paths:
         - '...'
         in: query
         name: type
+        type: string
+      - description: 节点操作系统,不指定则为所有
+        enum:
+        - linux
+        - windows
+        in: query
+        name: os
         type: string
       - default: 1
         description: 分页编号
@@ -917,7 +952,7 @@ paths:
         type: string
       - description: 需启动的任务列表
         in: body
-        name: args
+        name: jobs
         required: true
         schema:
           $ref: '#/definitions/metrics.setArgs'
@@ -929,6 +964,31 @@ paths:
           schema:
             $ref: '#/definitions/api.Success'
       summary: 设置节点自动采集状态
+      tags:
+      - metrics
+  /metrics/status:
+    put:
+      operationId: /api/metrics/batch_status_set
+      parameters:
+      - description: 需启动的任务列表
+        in: body
+        name: jobs
+        required: true
+        schema:
+          $ref: '#/definitions/metrics.batchSetArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/metrics.counts'
+              type: object
+      summary: 批量启动或停止采集
       tags:
       - metrics
 swagger: "2.0"

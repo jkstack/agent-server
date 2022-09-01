@@ -9,8 +9,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
+	"github.com/jkstack/jkframe/logging"
 	runtime "github.com/jkstack/jkframe/utils"
 )
+
+var allJobs = []string{"static", "usage", "process", "conns"}
 
 type job struct {
 	Name     string `json:"name" example:"static" enums:"static,usage,process,conns"` // 任务名称
@@ -87,7 +90,7 @@ type setArgs struct {
 // @Tags metrics
 // @Produce json
 // @Param   id   path string  true "节点ID"
-// @Param   args body setArgs true "需启动的任务列表"
+// @Param   jobs body setArgs true "需启动的任务列表"
 // @Success 200  {object}     api.Success
 // @Router /metrics/{id}/status [put]
 func (h *Handler) setStatus(gin *gin.Context) {
@@ -96,7 +99,7 @@ func (h *Handler) setStatus(gin *gin.Context) {
 	id := g.Param("id")
 	var args setArgs
 	if err := g.ShouldBindJson(&args); err != nil {
-		api.BadParamErr("")
+		api.BadParamErr(err.Error())
 		return
 	}
 
@@ -115,4 +118,76 @@ func (h *Handler) setStatus(gin *gin.Context) {
 	runtime.Assert(err)
 
 	g.OK(nil)
+}
+
+type batchSetArgs struct {
+	Start bool   `json:"start" example:"true" validate:"required"`                     // 是否启动
+	OS    string `json:"os" example:"linux" enums:"linux,windows" validate:"optional"` // 操作系统
+}
+
+type counts struct {
+	Total   int `json:"total"`   // 触达节点数
+	Success int `json:"success"` // 成功节点数
+	Failure int `json:"failure"` // 失败节点数
+}
+
+// batchSetStatus 批量启动或停止采集
+// @ID /api/metrics/batch_status_set
+// @Summary 批量启动或停止采集
+// @Tags metrics
+// @Produce json
+// @Param   jobs body batchSetArgs true "需启动的任务列表"
+// @Success 200  {object}     api.Success{payload=counts}
+// @Router /metrics/status [put]
+func (h *Handler) batchSetStatus(gin *gin.Context) {
+	g := api.GetG(gin)
+
+	var args batchSetArgs
+	if err := g.ShouldBindJson(&args); err != nil {
+		api.BadParamErr(err.Error())
+		return
+	}
+	switch args.OS {
+	case "linux", "windows":
+	default:
+		args.OS = ""
+	}
+
+	agents := g.GetAgents()
+
+	var targets []*agent.Agent
+	agents.Range(func(a *agent.Agent) bool {
+		if a.Type() != agent.TypeMetrics {
+			return true
+		}
+		if len(args.OS) > 0 {
+			if a.Info().OS == args.OS {
+				targets = append(targets, a)
+			}
+			return true
+		} else {
+			targets = append(targets, a)
+		}
+		return true
+	})
+
+	jobs := allJobs
+	if !args.Start {
+		jobs = []string{}
+	}
+
+	var ret counts
+	for _, cli := range targets {
+		err := cli.SendHMChangeStatus(jobs)
+		if err != nil {
+			ret.Failure++
+			logging.Warning("can not change status(%t) to agent [%s]", args.Start, cli.ID())
+			continue
+		} else {
+			ret.Success++
+		}
+		ret.Total++
+	}
+
+	g.OK(ret)
 }

@@ -35,6 +35,7 @@ func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 		api.MakeRoute(http.MethodGet, "/:id/dynamic/connections"): h.dynamicConnections,
 		api.MakeRoute(http.MethodGet, "/:id/status"):              h.getStatus,
 		api.MakeRoute(http.MethodPut, "/:id/status"):              h.setStatus,
+		api.MakeRoute(http.MethodPut, "/status"):                  h.batchSetStatus,
 	}
 }
 
