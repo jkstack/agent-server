@@ -91,7 +91,8 @@ func (h *Handler) saveStaticData(agentID string, data *anet.HMStaticPayload) {
 	}
 	jBuf, _ := json.Marshal(data)
 	pBuf, _ := proto.Marshal(&static)
-	logging.Info("static data, json=%s, proto=%s, saved=%.02f%%",
+	logging.Info("static data from [%s], json=%s, proto=%s, saved=%.02f%%",
+		agentID,
 		humanize.IBytes(uint64(len(jBuf))),
 		humanize.IBytes(uint64(len(pBuf))),
 		percent(len(jBuf)-len(pBuf), len(jBuf)))
@@ -177,7 +178,8 @@ func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
 	}
 	jBuf, _ := json.Marshal(data)
 	pBuf, _ := proto.Marshal(&dynamic)
-	logging.Info("dyanmic data, json=%s, proto=%s, saved=%.02f%%",
+	logging.Info("dyanmic data from [%s], json=%s, proto=%s, saved=%.02f%%",
+		agentID,
 		humanize.IBytes(uint64(len(jBuf))),
 		humanize.IBytes(uint64(len(pBuf))),
 		percent(len(jBuf)-len(pBuf), len(jBuf)))
