@@ -37,4 +37,6 @@ func (h *Handler) handleReport(id, t string, msg *anet.Msg) {
 	setValue(h.stAgentInfo, id, t, "out_packets", float64(info.OutPackets))
 	setValue(h.stAgentInfo, id, t, "out_bytes", float64(info.OutBytes))
 	setValue(h.stAgentInfo, id, t, "reconnect_count", float64(info.ReconnectCount))
+	setValue(h.stAgentInfo, id, t, "read_chan_size", float64(info.ReadChanSize))
+	setValue(h.stAgentInfo, id, t, "write_chan_size", float64(info.WriteChanSize))
 }
