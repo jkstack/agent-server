@@ -13,11 +13,9 @@ func setValue(vec *prometheus.GaugeVec, id, t, tag string, n float64) {
 	}).Set(n)
 }
 
-func (h *Handler) handleReport(id, t string, msg *anet.Msg) {
-	info := msg.AgentInfo
+func (h *Handler) handleReport(id, t string, info *anet.AgentInfo) {
 	h.stAgentVersion.With(prometheus.Labels{
 		"id":         id,
-		"agent_type": t,
 		"version":    info.Version,
 		"go_version": info.GoVersion,
 	}).Set(1)

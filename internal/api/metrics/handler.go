@@ -10,9 +10,16 @@ import (
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/stat"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
+var allJobs = []string{"static", "usage", "process", "conns"}
+
 type Handler struct {
+	stJobs      *prometheus.GaugeVec
+	stWarning   *prometheus.GaugeVec
+	stBytesSent *prometheus.GaugeVec
+	stCounts    *prometheus.GaugeVec
 }
 
 func New() *Handler {
@@ -24,6 +31,10 @@ func (h *Handler) Module() string {
 }
 
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
+	h.stJobs = mgr.RawVec("metrics_jobs", []string{"id", "name"})
+	h.stWarning = mgr.RawVec("metrics_warning", []string{"id"})
+	h.stBytesSent = mgr.RawVec("metrics_bytes_sent", []string{"id", "name"})
+	h.stCounts = mgr.RawVec("metrics_report_count", []string{"id", "name"})
 }
 
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
@@ -54,6 +65,6 @@ func (h *Handler) OnMessage(agent *agent.Agent, msg *anet.Msg) {
 		logging.Debug("agent [%s] report dynamic info", agent.ID())
 		h.saveDynamicData(agent.ID(), msg.HMDynamicRep)
 	case anet.TypeHMReportAgentStatus:
-		logging.Info("agent status report: %s", agent.ID())
+		h.handleReport(agent.ID(), msg.HMAgentStatus)
 	}
 }

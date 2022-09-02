@@ -13,8 +13,6 @@ import (
 	runtime "github.com/jkstack/jkframe/utils"
 )
 
-var allJobs = []string{"static", "usage", "process", "conns"}
-
 type job struct {
 	Name     string `json:"name" example:"static" enums:"static,usage,process,conns" validate:"required"` // 任务名称
 	Interval int    `json:"interval" example:"5" validate:"required"`                                     // 间隔时间

@@ -26,7 +26,7 @@ func (h *Handler) Module() string {
 }
 
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
-	h.stAgentVersion = mgr.RawVec("agent_version", []string{"id", "agent_type", "version", "go_version"})
+	h.stAgentVersion = mgr.RawVec("agent_version", []string{"id", "version", "go_version"})
 	h.stAgentInfo = mgr.RawVec("agent_info", []string{"id", "agent_type", "tag"})
 }
 
@@ -47,5 +47,5 @@ func (h *Handler) OnMessage(cli *agent.Agent, msg *anet.Msg) {
 	if msg.Type != anet.TypeAgentInfo {
 		return
 	}
-	h.handleReport(cli.ID(), cli.Type(), msg)
+	h.handleReport(cli.ID(), cli.Type(), msg.AgentInfo)
 }
