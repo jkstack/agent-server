@@ -48,9 +48,11 @@ func (h *Handler) OnClose(string) {
 func (h *Handler) OnMessage(agent *agent.Agent, msg *anet.Msg) {
 	switch msg.Type {
 	case anet.TypeHMStaticRep:
-		logging.Info("agent [%s] report static info", agent.ID())
+		logging.Debug("agent [%s] report static info", agent.ID())
+		h.saveStaticData(agent.ID(), msg.HMStatic)
 	case anet.TypeHMDynamicRep:
-		logging.Info("agent [%s] report dynamic info", agent.ID())
+		logging.Debug("agent [%s] report dynamic info", agent.ID())
+		h.saveDynamicData(agent.ID(), msg.HMDynamicRep)
 	case anet.TypeHMReportAgentStatus:
 		logging.Info("agent status report: %s", agent.ID())
 	}

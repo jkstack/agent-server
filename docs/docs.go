@@ -1467,9 +1467,7 @@ const docTemplate = `{
                         "available",
                         "free",
                         "swap_free",
-                        "swap_total",
                         "swap_used",
-                        "total",
                         "usage",
                         "used"
                     ],
@@ -1489,20 +1487,10 @@ const docTemplate = `{
                             "type": "integer",
                             "example": 7242344
                         },
-                        "swap_total": {
-                            "description": "swap总字节数",
-                            "type": "integer",
-                            "example": 8388608
-                        },
                         "swap_used": {
                             "description": "swap已使用字节数",
                             "type": "integer",
                             "example": 1146264
-                        },
-                        "total": {
-                            "description": "总字节数",
-                            "type": "integer",
-                            "example": 1956784
                         },
                         "usage": {
                             "description": "内存使用率(百分比)",

@@ -17,14 +17,12 @@ type usage struct {
 		Usage float64 `json:"usage" example:"2.3" validate:"required"` // CPU使用率(百分比)
 	} `json:"cpu"`
 	Memory struct {
-		Used      uint64  `json:"used" example:"1595712" validate:"required"`       // 已使用字节数
-		Free      uint64  `json:"free" example:"94896" validate:"required"`         // 剩余字节数
-		Available uint64  `json:"available" example:"201332" validate:"required"`   // 可用字节数
-		Total     uint64  `json:"total" example:"1956784" validate:"required"`      // 总字节数
-		Usage     float64 `json:"usage" example:"1.2" validate:"required"`          // 内存使用率(百分比)
-		SwapUsed  uint64  `json:"swap_used" example:"1146264" validate:"required"`  // swap已使用字节数
-		SwapFree  uint64  `json:"swap_free" example:"7242344" validate:"required"`  // swap剩余字节数
-		SwapTotal uint64  `json:"swap_total" example:"8388608" validate:"required"` // swap总字节数
+		Used      uint64  `json:"used" example:"1595712" validate:"required"`      // 已使用字节数
+		Free      uint64  `json:"free" example:"94896" validate:"required"`        // 剩余字节数
+		Available uint64  `json:"available" example:"201332" validate:"required"`  // 可用字节数
+		Usage     float64 `json:"usage" example:"1.2" validate:"required"`         // 内存使用率(百分比)
+		SwapUsed  uint64  `json:"swap_used" example:"1146264" validate:"required"` // swap已使用字节数
+		SwapFree  uint64  `json:"swap_free" example:"7242344" validate:"required"` // swap剩余字节数
 	} `json:"memory"`
 	Partitions []partitionUsage `json:"partitions,omitempty"` // 分区
 	Interface  []interfaceUsage `json:"interface,omitempty"`  // 网卡
@@ -103,11 +101,9 @@ func transDynamicUsage(input *anet.HMDynamicUsage) *usage {
 	ret.Memory.Used = input.Memory.Used
 	ret.Memory.Free = input.Memory.Free
 	ret.Memory.Available = input.Memory.Available
-	ret.Memory.Total = input.Memory.Total
 	ret.Memory.Usage = input.Memory.Usage.Float()
 	ret.Memory.SwapUsed = input.Memory.SwapUsed
 	ret.Memory.SwapFree = input.Memory.SwapFree
-	ret.Memory.SwapTotal = input.Memory.SwapTotal
 	for _, part := range input.Partitions {
 		ret.Partitions = append(ret.Partitions, partitionUsage{
 			Mount:      part.Name,

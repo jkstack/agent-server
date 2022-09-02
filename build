@@ -10,5 +10,6 @@ LDFLAGS="-X 'main.gitHash=$HASH'
 -X 'main.buildTime=$BUILD_TIME'
 -X 'main.version=$BUILD_VERSION'"
 
-go generate ./...
+swag init -g internal/api/api.go
+protoc --go_out=internal/api/metrics internal/api/metrics/*.proto
 go build -ldflags "$LDFLAGS" -o bin/server main.go

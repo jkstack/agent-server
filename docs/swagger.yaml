@@ -691,17 +691,9 @@ definitions:
             description: swap剩余字节数
             example: 7242344
             type: integer
-          swap_total:
-            description: swap总字节数
-            example: 8388608
-            type: integer
           swap_used:
             description: swap已使用字节数
             example: 1146264
-            type: integer
-          total:
-            description: 总字节数
-            example: 1956784
             type: integer
           usage:
             description: 内存使用率(百分比)
@@ -715,9 +707,7 @@ definitions:
         - available
         - free
         - swap_free
-        - swap_total
         - swap_used
-        - total
         - usage
         - used
         type: object

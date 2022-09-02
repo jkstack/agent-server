@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+package metrics;
+
+option go_package = ".;metrics";
+
+import "google/protobuf/timestamp.proto";
+
+message static_core {
+    uint32 processor = 1; // 第几个核心
+    string     model = 2; // Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz
+    uint32      core = 3; // 所在物理核上的编号
+    uint32     cores = 4; // 某块CPU上的编号
+    uint32  physical = 5; // 物理CPU编号
+    float        mhz = 6; // CPU频率
+}
+
+message static_disk {
+    string model = 1; // 品牌型号
+    uint64 total = 2; // 容量
+    enum disk_type {
+        hdd     = 0;
+        fdd     = 1;
+        odd     = 2;
+        unknown = 3;
+    }
+    disk_type             type = 3; // 类型
+    repeated string partitions = 4; // 逻辑分区
+}
+
+message static_partition {
+    string            mount = 1; // linux为挂载路径如/run，windows为盘符如C:
+    string             type = 2; // NTFS
+    repeated string options = 3; // rw,nosuid,nodev
+    uint64            total = 4; // 总容量
+    uint64           inodes = 5; // inode数量
+}
+
+message static_interface {
+    uint64          index = 1; // 网卡下标
+    string           name = 2; // 网卡名称
+    uint32            mtu = 3; // 网卡mtu
+    repeated string flags = 4; // 网卡附加参数
+    repeated string addrs = 5; // 网卡上绑定的IP地址列表
+    string            mac = 6; // 网卡mac地址
+}
+
+message static_user {
+    string name = 1; // 用户名
+    string   id = 2; // 用户ID
+    string  gid = 3; // 用户组ID
+}
+
+message static_data {
+    string                      agent_id = 1;  // agent id
+    google.protobuf.Timestamp       time = 2;  // 上报时间戳
+    string                     host_name = 3;  // 主机名
+    uint64                        uptime = 4;  // 系统启动时长
+    string                       os_name = 5;  // linux,windows
+    string                 platform_name = 6;  // debian,centos,...
+    string              platform_version = 7;  // 7.7.1908
+    google.protobuf.Timestamp    install = 8;  // 系统安装时间
+    google.protobuf.Timestamp    startup = 9;  // 系统启动时间
+    string                kernel_version = 10;  // 3.10.0-1062.el7.x86_64
+    string                          arch = 11; // amd64,i386,...
+    uint64                  physical_cpu = 12; // 物理核心数
+    uint64                   logical_cpu = 13; // 逻辑核心数
+    repeated static_core           cores = 14; // CPU核心列表
+    repeated static_disk           disks = 15; // 磁盘列表
+    repeated static_partition partitions = 16; // 分区列表
+    string                       gateway = 17; // 网关地址
+    repeated static_interface interfaces = 18; // 网卡列表
+    repeated static_user           users = 19; // 用户列表
+}
+
+message dynamic_partition {
+    string      mount = 1; // linux为挂载路径如/run，windows为盘符如C:
+    uint64       used = 2; // 已使用字节数
+    uint64       free = 3; // 剩余字节数
+    float       usage = 4; // 分区使用率
+    uint64 inode_used = 5; // inode使用数量
+    uint64 inode_free = 6; // inode剩余数量
+    float inode_usage = 7; // inode使用率
+}
+
+message dynamic_interface {
+    string name         = 1; // 网卡名称
+    uint64 bytes_sent   = 2; // 发送字节数
+    uint64 bytes_recv   = 3; // 接收字节数
+    uint64 packets_sent = 4; // 发送数据包数量
+    uint64 packets_recv = 5; // 接收数据包数量
+}
+
+message dynamic_usage {
+    float cpu_usage                       = 1; // CPU使用率
+    uint64 memory_used                    = 2; // 已使用内存字节数
+    uint64 memory_free                    = 3; // 剩余内存字节数
+    uint64 memory_available               = 4; // 可用内存字节数
+    float memory_usage                    = 5; // 内存使用率
+    uint64 swap_used                      = 6; // 已使用swap内存字节数
+    uint64 swap_free                      = 7; // 剩余swap内存字节数
+    repeated dynamic_partition partitions = 8; // 分区列表
+    repeated dynamic_interface interfaces = 9; // 网卡列表
+}
+
+message dynamic_process {
+    uint32              id = 1; // 进程ID
+    uint32       parent_id = 2; // 父进程ID
+    string            user = 3; // 用户
+    float        cpu_usage = 4; // CPU使用率
+    uint64             rss = 5; // 物理内存占用字节数
+    uint64             vms = 6; // 虚拟内存占用字节数
+    uint64            swap = 7; // swap内存占用字节数
+    float     memory_usage = 8; // 内存使用率
+    repeated string    cmd = 9; // 命令行
+    repeated uint32 listen = 10; // 监听端口列表
+    uint64     connections = 11; // 连接数
+}
+
+message dynamic_connection {
+    uint32  fd = 1; // 句柄号
+    uint32 pid = 2; // 进程号
+    enum connection_type {
+        tcp4    = 0;
+        tcp6    = 1;
+        udp4    = 2;
+        udp6    = 3;
+        unix    = 4;
+        file    = 5;
+        unknown = 6;
+    }
+    connection_type type = 3; // 连接类型
+    string         local = 4; // 本地地址
+    string        remote = 5; // 远程地址
+    string        status = 6; // 连接状态
+}
+
+message dynamic_data {
+    string                         agent_id = 1; // agent id
+    google.protobuf.Timestamp         begin = 2; // 采集开始时间
+    google.protobuf.Timestamp           end = 3; // 采集结束时间
+    dynamic_usage                     usage = 4; // usage数据
+    repeated dynamic_process      processes = 5; // 进程列表
+    repeated dynamic_connection connections = 6; // 连接列表
+    bool                          has_usage = 7; // 是否有usage数据
+}

@@ -6,7 +6,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/gorilla/websocket v1.5.0
-	github.com/jkstack/anet v0.0.0-20220901103313-f55a4486d138
+	github.com/jkstack/anet v0.0.0-20220902075838-e3f281b972d3
 	github.com/jkstack/jkframe v1.0.8
 	github.com/kardianos/service v1.2.1
 	github.com/prometheus/client_golang v1.12.2
@@ -15,6 +15,7 @@ require (
 	github.com/swaggo/gin-swagger v1.5.2
 	github.com/swaggo/swag v1.8.1
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
+	google.golang.org/protobuf v1.28.0
 )
 
 require (
@@ -54,7 +55,6 @@ require (
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.7 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
