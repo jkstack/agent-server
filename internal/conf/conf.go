@@ -3,6 +3,7 @@ package conf
 import (
 	"os"
 	"path/filepath"
+	"server/internal/api/metrics"
 	"server/internal/utils"
 	"time"
 
@@ -58,6 +59,7 @@ func Load(dir, abs string) *Configure {
 		cfg.Producer.Flush.Frequency = time.Second
 		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka}, cfg)
 		runtime.Assert(err)
+		go metrics.HandleReportError(ret.MetricsCli)
 	}
 
 	return &ret
