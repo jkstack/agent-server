@@ -4,7 +4,9 @@ import (
 	"os"
 	"path/filepath"
 	"server/internal/utils"
+	"time"
 
+	"github.com/Shopify/sarama"
 	"github.com/jkstack/jkframe/conf/kvconf"
 	"github.com/jkstack/jkframe/logging"
 	runtime "github.com/jkstack/jkframe/utils"
@@ -29,8 +31,13 @@ type Configure struct {
 	LogSize        utils.Bytes `kv:"log_size"`
 	LogRotate      int         `kv:"log_rotate"`
 	ConnectLimit   int         `kv:"connect_limit"`
+	Metrics        struct {
+		Kafka string `kv:"kafka_addr"`
+		Topic string `kv:"kafka_topic"`
+	} `kv:"metrics"`
 	// runtime
-	WorkDir string
+	WorkDir    string
+	MetricsCli sarama.AsyncProducer
 }
 
 func Load(dir, abs string) *Configure {
@@ -43,6 +50,15 @@ func Load(dir, abs string) *Configure {
 	ret.check(abs)
 
 	ret.WorkDir, _ = os.Getwd()
+
+	if len(ret.Metrics.Kafka) > 0 {
+		cfg := sarama.NewConfig()
+		cfg.Producer.Flush.Bytes = 1024 * 1024 // 1MB
+		cfg.Producer.Flush.Messages = 100
+		cfg.Producer.Flush.Frequency = time.Second
+		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka}, cfg)
+		runtime.Assert(err)
+	}
 
 	return &ret
 }

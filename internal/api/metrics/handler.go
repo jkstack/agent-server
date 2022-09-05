@@ -6,6 +6,7 @@ import (
 	"server/internal/api"
 	"server/internal/conf"
 
+	"github.com/Shopify/sarama"
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/logging"
@@ -20,6 +21,8 @@ type Handler struct {
 	stWarning   *prometheus.GaugeVec
 	stBytesSent *prometheus.GaugeVec
 	stCounts    *prometheus.GaugeVec
+	cli         sarama.AsyncProducer
+	topic       string
 }
 
 func New() *Handler {
@@ -35,6 +38,8 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	h.stWarning = mgr.RawVec("metrics_warning", []string{"id"})
 	h.stBytesSent = mgr.RawVec("metrics_bytes_sent", []string{"id", "name"})
 	h.stCounts = mgr.RawVec("metrics_report_count", []string{"id", "name"})
+	h.cli = cfg.MetricsCli
+	h.topic = cfg.Metrics.Topic
 }
 
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {

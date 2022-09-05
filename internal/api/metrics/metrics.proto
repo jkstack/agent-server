@@ -52,25 +52,24 @@ message static_user {
 }
 
 message static_data {
-    string                      agent_id = 1;  // agent id
-    google.protobuf.Timestamp       time = 2;  // 上报时间戳
-    string                     host_name = 3;  // 主机名
-    uint64                        uptime = 4;  // 系统启动时长
-    string                       os_name = 5;  // linux,windows
-    string                 platform_name = 6;  // debian,centos,...
-    string              platform_version = 7;  // 7.7.1908
-    google.protobuf.Timestamp    install = 8;  // 系统安装时间
-    google.protobuf.Timestamp    startup = 9;  // 系统启动时间
-    string                kernel_version = 10;  // 3.10.0-1062.el7.x86_64
-    string                          arch = 11; // amd64,i386,...
-    uint64                  physical_cpu = 12; // 物理核心数
-    uint64                   logical_cpu = 13; // 逻辑核心数
-    repeated static_core           cores = 14; // CPU核心列表
-    repeated static_disk           disks = 15; // 磁盘列表
-    repeated static_partition partitions = 16; // 分区列表
-    string                       gateway = 17; // 网关地址
-    repeated static_interface interfaces = 18; // 网卡列表
-    repeated static_user           users = 19; // 用户列表
+    google.protobuf.Timestamp       time = 1;  // 上报时间戳
+    string                     host_name = 2;  // 主机名
+    uint64                        uptime = 3;  // 系统启动时长
+    string                       os_name = 4;  // linux,windows
+    string                 platform_name = 5;  // debian,centos,...
+    string              platform_version = 6;  // 7.7.1908
+    google.protobuf.Timestamp    install = 7;  // 系统安装时间
+    google.protobuf.Timestamp    startup = 8;  // 系统启动时间
+    string                kernel_version = 9;  // 3.10.0-1062.el7.x86_64
+    string                          arch = 10; // amd64,i386,...
+    uint64                  physical_cpu = 11; // 物理核心数
+    uint64                   logical_cpu = 12; // 逻辑核心数
+    repeated static_core           cores = 13; // CPU核心列表
+    repeated static_disk           disks = 14; // 磁盘列表
+    repeated static_partition partitions = 15; // 分区列表
+    string                       gateway = 16; // 网关地址
+    repeated static_interface interfaces = 17; // 网卡列表
+    repeated static_user           users = 18; // 用户列表
 }
 
 message dynamic_partition {
@@ -144,24 +143,19 @@ message dynamic_connections {
 }
 
 message dynamic_data {
-    string                 agent_id = 1; // agent id
-    google.protobuf.Timestamp begin = 2; // 采集开始时间
-    google.protobuf.Timestamp   end = 3; // 采集结束时间
+    google.protobuf.Timestamp begin = 1; // 采集开始时间
+    google.protobuf.Timestamp   end = 2; // 采集结束时间
     oneof payload {
-        dynamic_usage             usage = 4; // usage数据
-        dynamic_processes     processes = 5; // 进程列表
-        dynamic_connections connections = 6; // 连接列表
+        dynamic_usage             usage = 3; // usage数据
+        dynamic_processes     processes = 4; // 进程列表
+        dynamic_connections connections = 5; // 连接列表
     }
 }
 
 message data {
-    enum data_type {
-        dynamic = 0;
-        static  = 1;
-    }
-    data_type type = 1;
+    string agent_id = 1; // agent id
     oneof payload {
-        static_data   static_data = 10;
-        dynamic_data dynamic_data = 11;
+        static_data   static_data = 10; // 静态数据
+        dynamic_data dynamic_data = 11; // 动态数据
     }
 }

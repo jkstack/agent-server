@@ -1,26 +1,17 @@
 package metrics
 
 import (
-	"encoding/json"
 	"strings"
 
-	"github.com/dustin/go-humanize"
+	"github.com/Shopify/sarama"
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/logging"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func percent(a, b int) float64 {
-	if b == 0 {
-		return 0
-	}
-	return float64(a) * 100. / float64(b)
-}
-
 func (h *Handler) saveStaticData(agentID string, data *anet.HMStaticPayload) {
 	var static StaticData
-	static.AgentId = agentID
 	static.Time = timestamppb.New(data.Time)
 	static.HostName = data.Host.Name
 	static.Uptime = uint64(data.Host.UpTime.Seconds())
@@ -89,18 +80,16 @@ func (h *Handler) saveStaticData(agentID string, data *anet.HMStaticPayload) {
 			Gid:  user.GID,
 		})
 	}
-	jBuf, _ := json.Marshal(data)
-	pBuf, _ := proto.Marshal(&static)
-	logging.Info("static data from [%s], json=%s, proto=%s, saved=%.02f%%",
-		agentID,
-		humanize.IBytes(uint64(len(jBuf))),
-		humanize.IBytes(uint64(len(pBuf))),
-		percent(len(jBuf)-len(pBuf), len(jBuf)))
+	sendKafka(h.cli, h.topic, &Data{
+		AgentId: agentID,
+		Payload: &Data_StaticData{
+			StaticData: &static,
+		},
+	})
 }
 
 func (h *Handler) saveUsage(agentID string, data *anet.HMDynamicRep) {
 	var dynamic DynamicData
-	dynamic.AgentId = agentID
 	dynamic.Begin = timestamppb.New(data.Begin)
 	dynamic.End = timestamppb.New(data.End)
 	var usage DynamicUsage
@@ -132,18 +121,16 @@ func (h *Handler) saveUsage(agentID string, data *anet.HMDynamicRep) {
 		})
 	}
 	dynamic.Payload = &DynamicData_Usage{Usage: &usage}
-	jBuf, _ := json.Marshal(data)
-	pBuf, _ := proto.Marshal(&dynamic)
-	logging.Info("dyanmic usage data from [%s], json=%s, proto=%s, saved=%.02f%%",
-		agentID,
-		humanize.IBytes(uint64(len(jBuf))),
-		humanize.IBytes(uint64(len(pBuf))),
-		percent(len(jBuf)-len(pBuf), len(jBuf)))
+	sendKafka(h.cli, h.topic, &Data{
+		AgentId: agentID,
+		Payload: &Data_DynamicData{
+			DynamicData: &dynamic,
+		},
+	})
 }
 
 func (h *Handler) saveProcess(agentID string, data *anet.HMDynamicRep) {
 	var dynamic DynamicData
-	dynamic.AgentId = agentID
 	dynamic.Begin = timestamppb.New(data.Begin)
 	dynamic.End = timestamppb.New(data.End)
 	var processes DynamicProcesses
@@ -163,18 +150,16 @@ func (h *Handler) saveProcess(agentID string, data *anet.HMDynamicRep) {
 		})
 	}
 	dynamic.Payload = &DynamicData_Processes{Processes: &processes}
-	jBuf, _ := json.Marshal(data)
-	pBuf, _ := proto.Marshal(&dynamic)
-	logging.Info("dyanmic process list from [%s], json=%s, proto=%s, saved=%.02f%%",
-		agentID,
-		humanize.IBytes(uint64(len(jBuf))),
-		humanize.IBytes(uint64(len(pBuf))),
-		percent(len(jBuf)-len(pBuf), len(jBuf)))
+	sendKafka(h.cli, h.topic, &Data{
+		AgentId: agentID,
+		Payload: &Data_DynamicData{
+			DynamicData: &dynamic,
+		},
+	})
 }
 
 func (h *Handler) saveConnections(agentID string, data *anet.HMDynamicRep) {
 	var dynamic DynamicData
-	dynamic.AgentId = agentID
 	dynamic.Begin = timestamppb.New(data.Begin)
 	dynamic.End = timestamppb.New(data.End)
 	var connections DynamicConnections
@@ -206,13 +191,12 @@ func (h *Handler) saveConnections(agentID string, data *anet.HMDynamicRep) {
 		})
 	}
 	dynamic.Payload = &DynamicData_Connections{Connections: &connections}
-	jBuf, _ := json.Marshal(data)
-	pBuf, _ := proto.Marshal(&dynamic)
-	logging.Info("dyanmic connections list from [%s], json=%s, proto=%s, saved=%.02f%%",
-		agentID,
-		humanize.IBytes(uint64(len(jBuf))),
-		humanize.IBytes(uint64(len(pBuf))),
-		percent(len(jBuf)-len(pBuf), len(jBuf)))
+	sendKafka(h.cli, h.topic, &Data{
+		AgentId: agentID,
+		Payload: &Data_DynamicData{
+			DynamicData: &dynamic,
+		},
+	})
 }
 
 func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
@@ -222,5 +206,18 @@ func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
 		h.saveProcess(agentID, data)
 	} else {
 		h.saveConnections(agentID, data)
+	}
+}
+
+func sendKafka(cli sarama.AsyncProducer, topic string, data *Data) {
+	bytes, err := proto.Marshal(data)
+	if err != nil {
+		logging.Error("proto marshal for [%s]: %v", data.AgentId, err)
+		return
+	}
+	cli.Input() <- &sarama.ProducerMessage{
+		Topic: topic,
+		Key:   sarama.StringEncoder(data.AgentId),
+		Value: sarama.ByteEncoder(bytes),
 	}
 }
