@@ -98,44 +98,57 @@ func (h *Handler) saveStaticData(agentID string, data *anet.HMStaticPayload) {
 		percent(len(jBuf)-len(pBuf), len(jBuf)))
 }
 
-func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
+func (h *Handler) saveUsage(agentID string, data *anet.HMDynamicRep) {
 	var dynamic DynamicData
 	dynamic.AgentId = agentID
 	dynamic.Begin = timestamppb.New(data.Begin)
 	dynamic.End = timestamppb.New(data.End)
-	dynamic.HasUsage = data.Usage != nil
-	if dynamic.HasUsage {
-		dynamic.Usage = new(DynamicUsage)
-		dynamic.Usage.CpuUsage = float32(data.Usage.Cpu.Usage)
-		dynamic.Usage.MemoryUsed = data.Usage.Memory.Used
-		dynamic.Usage.MemoryFree = data.Usage.Memory.Free
-		dynamic.Usage.MemoryAvailable = data.Usage.Memory.Available
-		dynamic.Usage.MemoryUsage = float32(data.Usage.Memory.Usage)
-		dynamic.Usage.SwapUsed = data.Usage.Memory.SwapUsed
-		dynamic.Usage.SwapFree = data.Usage.Memory.SwapFree
-		for _, parts := range data.Usage.Partitions {
-			dynamic.Usage.Partitions = append(dynamic.Usage.Partitions, &DynamicPartition{
-				Mount:      parts.Name,
-				Used:       parts.Used,
-				Free:       parts.Free,
-				Usage:      float32(parts.Usage),
-				InodeUsed:  parts.InodeUsed,
-				InodeFree:  parts.InodeFree,
-				InodeUsage: float32(parts.InodeUsage),
-			})
-		}
-		for _, intf := range data.Usage.Interface {
-			dynamic.Usage.Interfaces = append(dynamic.Usage.Interfaces, &DynamicInterface{
-				Name:        intf.Name,
-				BytesSent:   intf.BytesSent,
-				BytesRecv:   intf.BytesRecv,
-				PacketsSent: intf.PacketsSent,
-				PacketsRecv: intf.PacketsRecv,
-			})
-		}
+	var usage DynamicUsage
+	usage.CpuUsage = float32(data.Usage.Cpu.Usage)
+	usage.MemoryUsed = data.Usage.Memory.Used
+	usage.MemoryFree = data.Usage.Memory.Free
+	usage.MemoryAvailable = data.Usage.Memory.Available
+	usage.MemoryUsage = float32(data.Usage.Memory.Usage)
+	usage.SwapUsed = data.Usage.Memory.SwapUsed
+	usage.SwapFree = data.Usage.Memory.SwapFree
+	for _, parts := range data.Usage.Partitions {
+		usage.Partitions = append(usage.Partitions, &DynamicPartition{
+			Mount:      parts.Name,
+			Used:       parts.Used,
+			Free:       parts.Free,
+			Usage:      float32(parts.Usage),
+			InodeUsed:  parts.InodeUsed,
+			InodeFree:  parts.InodeFree,
+			InodeUsage: float32(parts.InodeUsage),
+		})
 	}
+	for _, intf := range data.Usage.Interface {
+		usage.Interfaces = append(usage.Interfaces, &DynamicInterface{
+			Name:        intf.Name,
+			BytesSent:   intf.BytesSent,
+			BytesRecv:   intf.BytesRecv,
+			PacketsSent: intf.PacketsSent,
+			PacketsRecv: intf.PacketsRecv,
+		})
+	}
+	dynamic.Payload = &DynamicData_Usage{Usage: &usage}
+	jBuf, _ := json.Marshal(data)
+	pBuf, _ := proto.Marshal(&dynamic)
+	logging.Info("dyanmic usage data from [%s], json=%s, proto=%s, saved=%.02f%%",
+		agentID,
+		humanize.IBytes(uint64(len(jBuf))),
+		humanize.IBytes(uint64(len(pBuf))),
+		percent(len(jBuf)-len(pBuf), len(jBuf)))
+}
+
+func (h *Handler) saveProcess(agentID string, data *anet.HMDynamicRep) {
+	var dynamic DynamicData
+	dynamic.AgentId = agentID
+	dynamic.Begin = timestamppb.New(data.Begin)
+	dynamic.End = timestamppb.New(data.End)
+	var processes DynamicProcesses
 	for _, process := range data.Process {
-		dynamic.Processes = append(dynamic.Processes, &DynamicProcess{
+		processes.Data = append(processes.Data, &DynamicProcess{
 			Id:          uint32(process.ID),
 			ParentId:    uint32(process.ParentID),
 			User:        process.User,
@@ -149,6 +162,22 @@ func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
 			Connections: uint64(process.Connections),
 		})
 	}
+	dynamic.Payload = &DynamicData_Processes{Processes: &processes}
+	jBuf, _ := json.Marshal(data)
+	pBuf, _ := proto.Marshal(&dynamic)
+	logging.Info("dyanmic process list from [%s], json=%s, proto=%s, saved=%.02f%%",
+		agentID,
+		humanize.IBytes(uint64(len(jBuf))),
+		humanize.IBytes(uint64(len(pBuf))),
+		percent(len(jBuf)-len(pBuf), len(jBuf)))
+}
+
+func (h *Handler) saveConnections(agentID string, data *anet.HMDynamicRep) {
+	var dynamic DynamicData
+	dynamic.AgentId = agentID
+	dynamic.Begin = timestamppb.New(data.Begin)
+	dynamic.End = timestamppb.New(data.End)
+	var connections DynamicConnections
 	for _, conn := range data.Connections {
 		var t DynamicConnectionConnectionType
 		switch strings.ToLower(conn.Type) {
@@ -167,7 +196,7 @@ func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
 		default:
 			t = DynamicConnection_unknown
 		}
-		dynamic.Connections = append(dynamic.Connections, &DynamicConnection{
+		connections.Data = append(connections.Data, &DynamicConnection{
 			Fd:     conn.Fd,
 			Pid:    uint32(conn.Pid),
 			Type:   t,
@@ -176,11 +205,22 @@ func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
 			Status: conn.Status,
 		})
 	}
+	dynamic.Payload = &DynamicData_Connections{Connections: &connections}
 	jBuf, _ := json.Marshal(data)
 	pBuf, _ := proto.Marshal(&dynamic)
-	logging.Info("dyanmic data from [%s], json=%s, proto=%s, saved=%.02f%%",
+	logging.Info("dyanmic connections list from [%s], json=%s, proto=%s, saved=%.02f%%",
 		agentID,
 		humanize.IBytes(uint64(len(jBuf))),
 		humanize.IBytes(uint64(len(pBuf))),
 		percent(len(jBuf)-len(pBuf), len(jBuf)))
+}
+
+func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
+	if data.Usage != nil {
+		h.saveUsage(agentID, data)
+	} else if len(data.Process) > 0 {
+		h.saveProcess(agentID, data)
+	} else {
+		h.saveConnections(agentID, data)
+	}
 }

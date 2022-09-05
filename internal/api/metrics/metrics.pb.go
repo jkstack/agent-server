@@ -134,6 +134,52 @@ func (DynamicConnectionConnectionType) EnumDescriptor() ([]byte, []int) {
 	return file_internal_api_metrics_metrics_proto_rawDescGZIP(), []int{10, 0}
 }
 
+type DataDataType int32
+
+const (
+	Data_dynamic DataDataType = 0
+	Data_static  DataDataType = 1
+)
+
+// Enum value maps for DataDataType.
+var (
+	DataDataType_name = map[int32]string{
+		0: "dynamic",
+		1: "static",
+	}
+	DataDataType_value = map[string]int32{
+		"dynamic": 0,
+		"static":  1,
+	}
+)
+
+func (x DataDataType) Enum() *DataDataType {
+	p := new(DataDataType)
+	*p = x
+	return p
+}
+
+func (x DataDataType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DataDataType) Descriptor() protoreflect.EnumDescriptor {
+	return file_internal_api_metrics_metrics_proto_enumTypes[2].Descriptor()
+}
+
+func (DataDataType) Type() protoreflect.EnumType {
+	return &file_internal_api_metrics_metrics_proto_enumTypes[2]
+}
+
+func (x DataDataType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DataDataType.Descriptor instead.
+func (DataDataType) EnumDescriptor() ([]byte, []int) {
+	return file_internal_api_metrics_metrics_proto_rawDescGZIP(), []int{14, 0}
+}
+
 type StaticCore struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1211,24 +1257,120 @@ func (x *DynamicConnection) GetStatus() string {
 	return ""
 }
 
+type DynamicProcesses struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Data []*DynamicProcess `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
+}
+
+func (x *DynamicProcesses) Reset() {
+	*x = DynamicProcesses{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_api_metrics_metrics_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DynamicProcesses) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DynamicProcesses) ProtoMessage() {}
+
+func (x *DynamicProcesses) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_api_metrics_metrics_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DynamicProcesses.ProtoReflect.Descriptor instead.
+func (*DynamicProcesses) Descriptor() ([]byte, []int) {
+	return file_internal_api_metrics_metrics_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *DynamicProcesses) GetData() []*DynamicProcess {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+type DynamicConnections struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Data []*DynamicConnection `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
+}
+
+func (x *DynamicConnections) Reset() {
+	*x = DynamicConnections{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_api_metrics_metrics_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DynamicConnections) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DynamicConnections) ProtoMessage() {}
+
+func (x *DynamicConnections) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_api_metrics_metrics_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DynamicConnections.ProtoReflect.Descriptor instead.
+func (*DynamicConnections) Descriptor() ([]byte, []int) {
+	return file_internal_api_metrics_metrics_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *DynamicConnections) GetData() []*DynamicConnection {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
 type DynamicData struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AgentId     string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`     // agent id
-	Begin       *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=begin,proto3" json:"begin,omitempty"`                        // 采集开始时间
-	End         *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=end,proto3" json:"end,omitempty"`                            // 采集结束时间
-	Usage       *DynamicUsage          `protobuf:"bytes,4,opt,name=usage,proto3" json:"usage,omitempty"`                        // usage数据
-	Processes   []*DynamicProcess      `protobuf:"bytes,5,rep,name=processes,proto3" json:"processes,omitempty"`                // 进程列表
-	Connections []*DynamicConnection   `protobuf:"bytes,6,rep,name=connections,proto3" json:"connections,omitempty"`            // 连接列表
-	HasUsage    bool                   `protobuf:"varint,7,opt,name=has_usage,json=hasUsage,proto3" json:"has_usage,omitempty"` // 是否有usage数据
+	AgentId string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"` // agent id
+	Begin   *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=begin,proto3" json:"begin,omitempty"`                    // 采集开始时间
+	End     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=end,proto3" json:"end,omitempty"`                        // 采集结束时间
+	// Types that are assignable to Payload:
+	//
+	//	*DynamicData_Usage
+	//	*DynamicData_Processes
+	//	*DynamicData_Connections
+	Payload isDynamicData_Payload `protobuf_oneof:"payload"`
 }
 
 func (x *DynamicData) Reset() {
 	*x = DynamicData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_api_metrics_metrics_proto_msgTypes[11]
+		mi := &file_internal_api_metrics_metrics_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1241,7 +1383,7 @@ func (x *DynamicData) String() string {
 func (*DynamicData) ProtoMessage() {}
 
 func (x *DynamicData) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_api_metrics_metrics_proto_msgTypes[11]
+	mi := &file_internal_api_metrics_metrics_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1254,7 +1396,7 @@ func (x *DynamicData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DynamicData.ProtoReflect.Descriptor instead.
 func (*DynamicData) Descriptor() ([]byte, []int) {
-	return file_internal_api_metrics_metrics_proto_rawDescGZIP(), []int{11}
+	return file_internal_api_metrics_metrics_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *DynamicData) GetAgentId() string {
@@ -1278,33 +1420,144 @@ func (x *DynamicData) GetEnd() *timestamppb.Timestamp {
 	return nil
 }
 
+func (m *DynamicData) GetPayload() isDynamicData_Payload {
+	if m != nil {
+		return m.Payload
+	}
+	return nil
+}
+
 func (x *DynamicData) GetUsage() *DynamicUsage {
-	if x != nil {
+	if x, ok := x.GetPayload().(*DynamicData_Usage); ok {
 		return x.Usage
 	}
 	return nil
 }
 
-func (x *DynamicData) GetProcesses() []*DynamicProcess {
-	if x != nil {
+func (x *DynamicData) GetProcesses() *DynamicProcesses {
+	if x, ok := x.GetPayload().(*DynamicData_Processes); ok {
 		return x.Processes
 	}
 	return nil
 }
 
-func (x *DynamicData) GetConnections() []*DynamicConnection {
-	if x != nil {
+func (x *DynamicData) GetConnections() *DynamicConnections {
+	if x, ok := x.GetPayload().(*DynamicData_Connections); ok {
 		return x.Connections
 	}
 	return nil
 }
 
-func (x *DynamicData) GetHasUsage() bool {
-	if x != nil {
-		return x.HasUsage
-	}
-	return false
+type isDynamicData_Payload interface {
+	isDynamicData_Payload()
 }
+
+type DynamicData_Usage struct {
+	Usage *DynamicUsage `protobuf:"bytes,4,opt,name=usage,proto3,oneof"` // usage数据
+}
+
+type DynamicData_Processes struct {
+	Processes *DynamicProcesses `protobuf:"bytes,5,opt,name=processes,proto3,oneof"` // 进程列表
+}
+
+type DynamicData_Connections struct {
+	Connections *DynamicConnections `protobuf:"bytes,6,opt,name=connections,proto3,oneof"` // 连接列表
+}
+
+func (*DynamicData_Usage) isDynamicData_Payload() {}
+
+func (*DynamicData_Processes) isDynamicData_Payload() {}
+
+func (*DynamicData_Connections) isDynamicData_Payload() {}
+
+type Data struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Type DataDataType `protobuf:"varint,1,opt,name=type,proto3,enum=metrics.DataDataType" json:"type,omitempty"`
+	// Types that are assignable to Payload:
+	//
+	//	*Data_StaticData
+	//	*Data_DynamicData
+	Payload isData_Payload `protobuf_oneof:"payload"`
+}
+
+func (x *Data) Reset() {
+	*x = Data{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_api_metrics_metrics_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Data) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Data) ProtoMessage() {}
+
+func (x *Data) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_api_metrics_metrics_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Data.ProtoReflect.Descriptor instead.
+func (*Data) Descriptor() ([]byte, []int) {
+	return file_internal_api_metrics_metrics_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *Data) GetType() DataDataType {
+	if x != nil {
+		return x.Type
+	}
+	return Data_dynamic
+}
+
+func (m *Data) GetPayload() isData_Payload {
+	if m != nil {
+		return m.Payload
+	}
+	return nil
+}
+
+func (x *Data) GetStaticData() *StaticData {
+	if x, ok := x.GetPayload().(*Data_StaticData); ok {
+		return x.StaticData
+	}
+	return nil
+}
+
+func (x *Data) GetDynamicData() *DynamicData {
+	if x, ok := x.GetPayload().(*Data_DynamicData); ok {
+		return x.DynamicData
+	}
+	return nil
+}
+
+type isData_Payload interface {
+	isData_Payload()
+}
+
+type Data_StaticData struct {
+	StaticData *StaticData `protobuf:"bytes,10,opt,name=static_data,json=staticData,proto3,oneof"`
+}
+
+type Data_DynamicData struct {
+	DynamicData *DynamicData `protobuf:"bytes,11,opt,name=dynamic_data,json=dynamicData,proto3,oneof"`
+}
+
+func (*Data_StaticData) isData_Payload() {}
+
+func (*Data_DynamicData) isData_Payload() {}
 
 var File_internal_api_metrics_metrics_proto protoreflect.FileDescriptor
 
@@ -1487,29 +1740,50 @@ var file_internal_api_metrics_metrics_proto_rawDesc = []byte{
 	0x70, 0x34, 0x10, 0x02, 0x12, 0x08, 0x0a, 0x04, 0x75, 0x64, 0x70, 0x36, 0x10, 0x03, 0x12, 0x08,
 	0x0a, 0x04, 0x75, 0x6e, 0x69, 0x78, 0x10, 0x04, 0x12, 0x08, 0x0a, 0x04, 0x66, 0x69, 0x6c, 0x65,
 	0x10, 0x05, 0x12, 0x0b, 0x0a, 0x07, 0x75, 0x6e, 0x6b, 0x6e, 0x6f, 0x77, 0x6e, 0x10, 0x06, 0x22,
-	0xcb, 0x02, 0x0a, 0x0c, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x64, 0x61, 0x74, 0x61,
-	0x12, 0x19, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x07, 0x61, 0x67, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x30, 0x0a, 0x05, 0x62,
-	0x65, 0x67, 0x69, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f,
-	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d,
-	0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x05, 0x62, 0x65, 0x67, 0x69, 0x6e, 0x12, 0x2c, 0x0a,
-	0x03, 0x65, 0x6e, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f,
-	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d,
-	0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x03, 0x65, 0x6e, 0x64, 0x12, 0x2c, 0x0a, 0x05, 0x75,
-	0x73, 0x61, 0x67, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x65, 0x74,
-	0x72, 0x69, 0x63, 0x73, 0x2e, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x75, 0x73, 0x61,
-	0x67, 0x65, 0x52, 0x05, 0x75, 0x73, 0x61, 0x67, 0x65, 0x12, 0x36, 0x0a, 0x09, 0x70, 0x72, 0x6f,
-	0x63, 0x65, 0x73, 0x73, 0x65, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x6d,
-	0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x2e, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x70,
-	0x72, 0x6f, 0x63, 0x65, 0x73, 0x73, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x63, 0x65, 0x73, 0x73, 0x65,
-	0x73, 0x12, 0x3d, 0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73,
-	0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73,
-	0x2e, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74,
-	0x69, 0x6f, 0x6e, 0x52, 0x0b, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73,
-	0x12, 0x1b, 0x0a, 0x09, 0x68, 0x61, 0x73, 0x5f, 0x75, 0x73, 0x61, 0x67, 0x65, 0x18, 0x07, 0x20,
-	0x01, 0x28, 0x08, 0x52, 0x08, 0x68, 0x61, 0x73, 0x55, 0x73, 0x61, 0x67, 0x65, 0x42, 0x0b, 0x5a,
-	0x09, 0x2e, 0x3b, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x41, 0x0a, 0x11, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x70, 0x72, 0x6f, 0x63, 0x65,
+	0x73, 0x73, 0x65, 0x73, 0x12, 0x2c, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x03,
+	0x28, 0x0b, 0x32, 0x18, 0x2e, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x2e, 0x64, 0x79, 0x6e,
+	0x61, 0x6d, 0x69, 0x63, 0x5f, 0x70, 0x72, 0x6f, 0x63, 0x65, 0x73, 0x73, 0x52, 0x04, 0x64, 0x61,
+	0x74, 0x61, 0x22, 0x46, 0x0a, 0x13, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x63, 0x6f,
+	0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x2f, 0x0a, 0x04, 0x64, 0x61, 0x74,
+	0x61, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63,
+	0x73, 0x2e, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0xc2, 0x02, 0x0a, 0x0c, 0x64,
+	0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x64, 0x61, 0x74, 0x61, 0x12, 0x19, 0x0a, 0x08, 0x61,
+	0x67, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61,
+	0x67, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x30, 0x0a, 0x05, 0x62, 0x65, 0x67, 0x69, 0x6e, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x52, 0x05, 0x62, 0x65, 0x67, 0x69, 0x6e, 0x12, 0x2c, 0x0a, 0x03, 0x65, 0x6e, 0x64, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x52, 0x03, 0x65, 0x6e, 0x64, 0x12, 0x2e, 0x0a, 0x05, 0x75, 0x73, 0x61, 0x67, 0x65, 0x18,
+	0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x2e,
+	0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x75, 0x73, 0x61, 0x67, 0x65, 0x48, 0x00, 0x52,
+	0x05, 0x75, 0x73, 0x61, 0x67, 0x65, 0x12, 0x3a, 0x0a, 0x09, 0x70, 0x72, 0x6f, 0x63, 0x65, 0x73,
+	0x73, 0x65, 0x73, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x6d, 0x65, 0x74, 0x72,
+	0x69, 0x63, 0x73, 0x2e, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x70, 0x72, 0x6f, 0x63,
+	0x65, 0x73, 0x73, 0x65, 0x73, 0x48, 0x00, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x63, 0x65, 0x73, 0x73,
+	0x65, 0x73, 0x12, 0x40, 0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+	0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63,
+	0x73, 0x2e, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x48, 0x00, 0x52, 0x0b, 0x63, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x73, 0x42, 0x09, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22,
+	0xd9, 0x01, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x12, 0x2b, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x17, 0x2e, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73,
+	0x2e, 0x64, 0x61, 0x74, 0x61, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x52,
+	0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x37, 0x0a, 0x0b, 0x73, 0x74, 0x61, 0x74, 0x69, 0x63, 0x5f,
+	0x64, 0x61, 0x74, 0x61, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x6d, 0x65, 0x74,
+	0x72, 0x69, 0x63, 0x73, 0x2e, 0x73, 0x74, 0x61, 0x74, 0x69, 0x63, 0x5f, 0x64, 0x61, 0x74, 0x61,
+	0x48, 0x00, 0x52, 0x0a, 0x73, 0x74, 0x61, 0x74, 0x69, 0x63, 0x44, 0x61, 0x74, 0x61, 0x12, 0x3a,
+	0x0a, 0x0c, 0x64, 0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x64, 0x61, 0x74, 0x61, 0x18, 0x0b,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x2e, 0x64,
+	0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x5f, 0x64, 0x61, 0x74, 0x61, 0x48, 0x00, 0x52, 0x0b, 0x64,
+	0x79, 0x6e, 0x61, 0x6d, 0x69, 0x63, 0x44, 0x61, 0x74, 0x61, 0x22, 0x24, 0x0a, 0x09, 0x64, 0x61,
+	0x74, 0x61, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x64, 0x79, 0x6e, 0x61, 0x6d,
+	0x69, 0x63, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x69, 0x63, 0x10, 0x01,
+	0x42, 0x09, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x42, 0x0b, 0x5a, 0x09, 0x2e,
+	0x3b, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1524,48 +1798,57 @@ func file_internal_api_metrics_metrics_proto_rawDescGZIP() []byte {
 	return file_internal_api_metrics_metrics_proto_rawDescData
 }
 
-var file_internal_api_metrics_metrics_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_internal_api_metrics_metrics_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_internal_api_metrics_metrics_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_internal_api_metrics_metrics_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_internal_api_metrics_metrics_proto_goTypes = []interface{}{
 	(StaticDiskDiskType)(0),              // 0: metrics.static_disk.disk_type
 	(DynamicConnectionConnectionType)(0), // 1: metrics.dynamic_connection.connection_type
-	(*StaticCore)(nil),                   // 2: metrics.static_core
-	(*StaticDisk)(nil),                   // 3: metrics.static_disk
-	(*StaticPartition)(nil),              // 4: metrics.static_partition
-	(*StaticInterface)(nil),              // 5: metrics.static_interface
-	(*StaticUser)(nil),                   // 6: metrics.static_user
-	(*StaticData)(nil),                   // 7: metrics.static_data
-	(*DynamicPartition)(nil),             // 8: metrics.dynamic_partition
-	(*DynamicInterface)(nil),             // 9: metrics.dynamic_interface
-	(*DynamicUsage)(nil),                 // 10: metrics.dynamic_usage
-	(*DynamicProcess)(nil),               // 11: metrics.dynamic_process
-	(*DynamicConnection)(nil),            // 12: metrics.dynamic_connection
-	(*DynamicData)(nil),                  // 13: metrics.dynamic_data
-	(*timestamppb.Timestamp)(nil),        // 14: google.protobuf.Timestamp
+	(DataDataType)(0),                    // 2: metrics.data.data_type
+	(*StaticCore)(nil),                   // 3: metrics.static_core
+	(*StaticDisk)(nil),                   // 4: metrics.static_disk
+	(*StaticPartition)(nil),              // 5: metrics.static_partition
+	(*StaticInterface)(nil),              // 6: metrics.static_interface
+	(*StaticUser)(nil),                   // 7: metrics.static_user
+	(*StaticData)(nil),                   // 8: metrics.static_data
+	(*DynamicPartition)(nil),             // 9: metrics.dynamic_partition
+	(*DynamicInterface)(nil),             // 10: metrics.dynamic_interface
+	(*DynamicUsage)(nil),                 // 11: metrics.dynamic_usage
+	(*DynamicProcess)(nil),               // 12: metrics.dynamic_process
+	(*DynamicConnection)(nil),            // 13: metrics.dynamic_connection
+	(*DynamicProcesses)(nil),             // 14: metrics.dynamic_processes
+	(*DynamicConnections)(nil),           // 15: metrics.dynamic_connections
+	(*DynamicData)(nil),                  // 16: metrics.dynamic_data
+	(*Data)(nil),                         // 17: metrics.data
+	(*timestamppb.Timestamp)(nil),        // 18: google.protobuf.Timestamp
 }
 var file_internal_api_metrics_metrics_proto_depIdxs = []int32{
 	0,  // 0: metrics.static_disk.type:type_name -> metrics.static_disk.disk_type
-	14, // 1: metrics.static_data.time:type_name -> google.protobuf.Timestamp
-	14, // 2: metrics.static_data.install:type_name -> google.protobuf.Timestamp
-	14, // 3: metrics.static_data.startup:type_name -> google.protobuf.Timestamp
-	2,  // 4: metrics.static_data.cores:type_name -> metrics.static_core
-	3,  // 5: metrics.static_data.disks:type_name -> metrics.static_disk
-	4,  // 6: metrics.static_data.partitions:type_name -> metrics.static_partition
-	5,  // 7: metrics.static_data.interfaces:type_name -> metrics.static_interface
-	6,  // 8: metrics.static_data.users:type_name -> metrics.static_user
-	8,  // 9: metrics.dynamic_usage.partitions:type_name -> metrics.dynamic_partition
-	9,  // 10: metrics.dynamic_usage.interfaces:type_name -> metrics.dynamic_interface
+	18, // 1: metrics.static_data.time:type_name -> google.protobuf.Timestamp
+	18, // 2: metrics.static_data.install:type_name -> google.protobuf.Timestamp
+	18, // 3: metrics.static_data.startup:type_name -> google.protobuf.Timestamp
+	3,  // 4: metrics.static_data.cores:type_name -> metrics.static_core
+	4,  // 5: metrics.static_data.disks:type_name -> metrics.static_disk
+	5,  // 6: metrics.static_data.partitions:type_name -> metrics.static_partition
+	6,  // 7: metrics.static_data.interfaces:type_name -> metrics.static_interface
+	7,  // 8: metrics.static_data.users:type_name -> metrics.static_user
+	9,  // 9: metrics.dynamic_usage.partitions:type_name -> metrics.dynamic_partition
+	10, // 10: metrics.dynamic_usage.interfaces:type_name -> metrics.dynamic_interface
 	1,  // 11: metrics.dynamic_connection.type:type_name -> metrics.dynamic_connection.connection_type
-	14, // 12: metrics.dynamic_data.begin:type_name -> google.protobuf.Timestamp
-	14, // 13: metrics.dynamic_data.end:type_name -> google.protobuf.Timestamp
-	10, // 14: metrics.dynamic_data.usage:type_name -> metrics.dynamic_usage
-	11, // 15: metrics.dynamic_data.processes:type_name -> metrics.dynamic_process
-	12, // 16: metrics.dynamic_data.connections:type_name -> metrics.dynamic_connection
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	12, // 12: metrics.dynamic_processes.data:type_name -> metrics.dynamic_process
+	13, // 13: metrics.dynamic_connections.data:type_name -> metrics.dynamic_connection
+	18, // 14: metrics.dynamic_data.begin:type_name -> google.protobuf.Timestamp
+	18, // 15: metrics.dynamic_data.end:type_name -> google.protobuf.Timestamp
+	11, // 16: metrics.dynamic_data.usage:type_name -> metrics.dynamic_usage
+	14, // 17: metrics.dynamic_data.processes:type_name -> metrics.dynamic_processes
+	15, // 18: metrics.dynamic_data.connections:type_name -> metrics.dynamic_connections
+	2,  // 19: metrics.data.type:type_name -> metrics.data.data_type
+	8,  // 20: metrics.data.static_data:type_name -> metrics.static_data
+	16, // 21: metrics.data.dynamic_data:type_name -> metrics.dynamic_data
+	22, // [22:22] is the sub-list for method output_type
+	22, // [22:22] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_internal_api_metrics_metrics_proto_init() }
@@ -1707,6 +1990,30 @@ func file_internal_api_metrics_metrics_proto_init() {
 			}
 		}
 		file_internal_api_metrics_metrics_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DynamicProcesses); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_api_metrics_metrics_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DynamicConnections); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_api_metrics_metrics_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DynamicData); i {
 			case 0:
 				return &v.state
@@ -1718,14 +2025,35 @@ func file_internal_api_metrics_metrics_proto_init() {
 				return nil
 			}
 		}
+		file_internal_api_metrics_metrics_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Data); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+	}
+	file_internal_api_metrics_metrics_proto_msgTypes[13].OneofWrappers = []interface{}{
+		(*DynamicData_Usage)(nil),
+		(*DynamicData_Processes)(nil),
+		(*DynamicData_Connections)(nil),
+	}
+	file_internal_api_metrics_metrics_proto_msgTypes[14].OneofWrappers = []interface{}{
+		(*Data_StaticData)(nil),
+		(*Data_DynamicData)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_internal_api_metrics_metrics_proto_rawDesc,
-			NumEnums:      2,
-			NumMessages:   12,
+			NumEnums:      3,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

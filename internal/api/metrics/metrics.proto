@@ -135,12 +135,33 @@ message dynamic_connection {
     string        status = 6; // 连接状态
 }
 
+message dynamic_processes {
+    repeated dynamic_process data = 1;
+}
+
+message dynamic_connections {
+    repeated dynamic_connection data = 1;
+}
+
 message dynamic_data {
-    string                         agent_id = 1; // agent id
-    google.protobuf.Timestamp         begin = 2; // 采集开始时间
-    google.protobuf.Timestamp           end = 3; // 采集结束时间
-    dynamic_usage                     usage = 4; // usage数据
-    repeated dynamic_process      processes = 5; // 进程列表
-    repeated dynamic_connection connections = 6; // 连接列表
-    bool                          has_usage = 7; // 是否有usage数据
+    string                 agent_id = 1; // agent id
+    google.protobuf.Timestamp begin = 2; // 采集开始时间
+    google.protobuf.Timestamp   end = 3; // 采集结束时间
+    oneof payload {
+        dynamic_usage             usage = 4; // usage数据
+        dynamic_processes     processes = 5; // 进程列表
+        dynamic_connections connections = 6; // 连接列表
+    }
+}
+
+message data {
+    enum data_type {
+        dynamic = 0;
+        static  = 1;
+    }
+    data_type type = 1;
+    oneof payload {
+        static_data   static_data = 10;
+        dynamic_data dynamic_data = 11;
+    }
 }
