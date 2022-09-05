@@ -40,6 +40,9 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	h.stCounts = mgr.RawVec("metrics_report_count", []string{"id", "name"})
 	h.cli = cfg.MetricsCli
 	h.topic = cfg.Metrics.Topic
+	if h.cli != nil {
+		go HandleReportError(h.cli)
+	}
 }
 
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
