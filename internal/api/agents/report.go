@@ -1,6 +1,8 @@
 package agents
 
 import (
+	"time"
+
 	"github.com/jkstack/anet"
 	"github.com/prometheus/client_golang/prometheus"
 )
@@ -37,4 +39,5 @@ func (h *Handler) handleReport(id, t string, info *anet.AgentInfo) {
 	setValue(h.stAgentInfo, id, t, "reconnect_count", float64(info.ReconnectCount))
 	setValue(h.stAgentInfo, id, t, "read_chan_size", float64(info.ReadChanSize))
 	setValue(h.stAgentInfo, id, t, "write_chan_size", float64(info.WriteChanSize))
+	setValue(h.stAgentInfo, id, t, "report_time", float64(time.Now().Unix()))
 }
