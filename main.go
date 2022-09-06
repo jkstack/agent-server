@@ -82,6 +82,7 @@ func main() {
 
 	switch *act {
 	case "install":
+		fmt.Printf("service name: %s\n", "agent-server")
 		fmt.Printf("platform: %s\n", sv.Platform())
 		runtime.Assert(sv.Install())
 	case "uninstall":
