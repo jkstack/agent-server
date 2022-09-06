@@ -82,7 +82,7 @@ func main() {
 
 	switch *act {
 	case "install":
-		fmt.Println(sv.Platform())
+		fmt.Printf("platform: %s\n", sv.Platform())
 		runtime.Assert(sv.Install())
 	case "uninstall":
 		runtime.Assert(sv.Uninstall())
