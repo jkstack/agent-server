@@ -5,6 +5,7 @@ import (
 	"server/internal/agent"
 	"server/internal/api"
 	"server/internal/conf"
+	"sync"
 
 	"github.com/Shopify/sarama"
 	"github.com/gin-gonic/gin"
@@ -16,17 +17,28 @@ import (
 
 var allJobs = []string{"static", "usage", "process", "conns"}
 
+type jobStatus struct {
+	running   bool
+	interval  uint64
+	bytesSent uint64
+	count     uint64
+}
+
+type jobs [4]jobStatus
+
 type Handler struct {
-	stJobs      *prometheus.GaugeVec
-	stWarning   *prometheus.GaugeVec
-	stBytesSent *prometheus.GaugeVec
-	stCounts    *prometheus.GaugeVec
-	cli         sarama.AsyncProducer
-	topic       string
+	sync.RWMutex
+	stJobs    *prometheus.GaugeVec
+	stWarning *prometheus.GaugeVec
+	cli       sarama.AsyncProducer
+	topic     string
+	jobs      map[string]jobs
 }
 
 func New() *Handler {
-	return &Handler{}
+	return &Handler{
+		jobs: make(map[string]jobs),
+	}
 }
 
 func (h *Handler) Module() string {
@@ -34,10 +46,9 @@ func (h *Handler) Module() string {
 }
 
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
-	h.stJobs = mgr.RawVec("metrics_jobs", []string{"id", "name"})
+	h.stJobs = mgr.RawVec("metrics_jobs", []string{"id", "name", "bytes_sent", "report_count"})
 	h.stWarning = mgr.RawVec("metrics_warning", []string{"id"})
-	h.stBytesSent = mgr.RawVec("metrics_bytes_sent", []string{"id", "name"})
-	h.stCounts = mgr.RawVec("metrics_report_count", []string{"id", "name"})
+	go h.updateJobs()
 	h.cli = cfg.MetricsCli
 	h.topic = cfg.Metrics.Topic
 	if h.cli != nil {
