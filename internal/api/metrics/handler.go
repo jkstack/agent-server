@@ -46,7 +46,8 @@ func (h *Handler) Module() string {
 }
 
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
-	h.stJobs = mgr.RawVec("metrics_jobs", []string{"id", "name", "bytes_sent", "report_count"})
+	h.stJobs = mgr.RawVec("metrics_jobs", []string{"id", "name",
+		"interval", "bytes_sent", "report_count"})
 	h.stWarning = mgr.RawVec("metrics_warning", []string{"id"})
 	go h.updateJobs()
 	h.cli = cfg.MetricsCli
