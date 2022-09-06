@@ -17,11 +17,8 @@ func (h *Handler) handleReport(id string, data *anet.HMAgentStatus) {
 			"id":   id,
 			"name": job,
 		}
-		h.stJobs.Delete(labels)
 		h.stJobs.With(labels).Set(float64(running[job]))
-		h.stBytesSent.Delete(labels)
 		h.stBytesSent.With(labels).Set(float64(data.ReportBytes[job]))
-		h.stCounts.Delete(labels)
 		h.stCounts.With(labels).Set(float64(data.ReportCount[job]))
 	}
 	h.stWarning.With(prometheus.Labels{"id": id}).Set(float64(data.Warnings))
