@@ -11,18 +11,22 @@ import (
 )
 
 func (h *Handler) handleReport(id string, data *anet.HMAgentStatus) {
-	running := make(map[string]bool)
-	for _, job := range data.Jobs {
-		running[job] = true
-	}
 	var jobs jobs
-	for i, job := range allJobs {
-		var status jobStatus
-		status.running = running[job]
-		status.interval = 0 // TODO
-		status.bytesSent = data.ReportBytes[job]
-		status.count = data.ReportCount[job]
-		jobs[i] = status
+	for _, job := range data.Jobs {
+		idx := -1
+		for i, j := range allJobs {
+			if job.Name == j {
+				idx = i
+				break
+			}
+		}
+		if idx == -1 {
+			continue
+		}
+		jobs[idx].running = true
+		jobs[idx].interval = job.Interval
+		jobs[idx].bytesSent = job.BytesSent
+		jobs[idx].count = job.Count
 	}
 	h.Lock()
 	h.jobs[id] = jobs

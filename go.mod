@@ -7,7 +7,7 @@ require (
 	github.com/dustin/go-humanize v1.0.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/gorilla/websocket v1.5.0
-	github.com/jkstack/anet v0.0.0-20220902094756-01577713a50a
+	github.com/jkstack/anet v0.0.0-20220906102831-1008d5bb8608
 	github.com/jkstack/jkframe v1.0.8
 	github.com/kardianos/service v1.2.1
 	github.com/prometheus/client_golang v1.12.2

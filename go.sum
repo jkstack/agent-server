@@ -210,6 +210,8 @@ github.com/jcmturner/rpc/v2 v2.0.3 h1:7FXXj8Ti1IaVFpSAziCZWNzbNuZmnvw/i6CqLNdWfZ
 github.com/jcmturner/rpc/v2 v2.0.3/go.mod h1:VUJYCIDm3PVOEHw8sgt091/20OJjskO/YJki3ELg/Hc=
 github.com/jkstack/anet v0.0.0-20220902094756-01577713a50a h1:DCqWM4AASqrQ9Uoj9HA1p+viHnZPN/c4VL/EWj2XEsg=
 github.com/jkstack/anet v0.0.0-20220902094756-01577713a50a/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
+github.com/jkstack/anet v0.0.0-20220906102831-1008d5bb8608 h1:dYOHFm/1YQEEQfyOm6zEOWAKr9I+dwTdsm+xl8gCvfE=
+github.com/jkstack/anet v0.0.0-20220906102831-1008d5bb8608/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
 github.com/jkstack/jkframe v1.0.8 h1:+hrdYFs7OnwJB3QiYoqfsH3laXYKR/gI56Xc5k88zDs=
 github.com/jkstack/jkframe v1.0.8/go.mod h1:Nvs/TgkQD3OA324+ljCzBlfhd1tvCxhESBXywRB9l/c=
 github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=
