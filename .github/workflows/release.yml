@@ -6,18 +6,21 @@ on:
 
 jobs:
 
-  build:
+  setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: build
-        uses: jkstack/smartagent-build@1.19.1
-
-  release:
+  build:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - name: release
-        uses: jkstack/smartagent-release@master
+      - uses: jkstack/smartagent-build@1.19.1
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jkstack/smartagent-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
