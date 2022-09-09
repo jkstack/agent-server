@@ -72,22 +72,45 @@ func main() {
 	dir, err = os.Executable()
 	runtime.Assert(err)
 
-	cfg := conf.Load(*cf, filepath.Join(filepath.Dir(dir), "/../"))
-
-	app := app.New(cfg, version)
-	sv, err := service.New(app, appCfg)
-	runtime.Assert(err)
-
 	docs.SwaggerInfo.Version = version
+
+	var sv service.Service
+	if *act == "install" || *act == "uninstall" {
+		sv, err = service.New(&dummy{}, appCfg)
+		runtime.Assert(err)
+	} else {
+		cfg := conf.Load(*cf, filepath.Join(filepath.Dir(dir), "/../"))
+
+		app := app.New(cfg, version)
+		sv, err = service.New(app, appCfg)
+		runtime.Assert(err)
+	}
 
 	switch *act {
 	case "install":
 		fmt.Printf("service name: %s\n", "agent-server")
 		fmt.Printf("platform: %s\n", sv.Platform())
-		runtime.Assert(sv.Install())
+		err := sv.Install()
+		if err != nil {
+			fmt.Printf("Install failed: %v\n", err)
+		}
 	case "uninstall":
-		runtime.Assert(sv.Uninstall())
+		sv.Stop()
+		err := sv.Uninstall()
+		if err != nil {
+			fmt.Printf("Uninstall failed: %v\n", err)
+		}
 	default:
 		runtime.Assert(sv.Run())
 	}
+}
+
+type dummy struct{}
+
+func (*dummy) Start(s service.Service) error {
+	return nil
+}
+
+func (*dummy) Stop(s service.Service) error {
+	return nil
 }

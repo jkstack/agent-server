@@ -2,7 +2,7 @@
 
 OUTDIR=release
 
-VERSION=1.0.0
+VERSION=1.0.1
 TIMESTAMP=`date +%s`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
@@ -16,7 +16,6 @@ LDFLAGS="-X 'main.gitBranch=$(BRANCH)' \
 -X 'main.version=$(VERSION)'"
 
 all:
-	go mod vendor
 	rm -fr $(OUTDIR)/$(VERSION)
 	mkdir -p $(OUTDIR)/$(VERSION)/opt/agent-server/bin \
 		$(OUTDIR)/$(VERSION)/opt/agent-server/conf
@@ -26,6 +25,10 @@ all:
 	echo $(VERSION) > $(OUTDIR)/$(VERSION)/opt/agent-server/.version
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf agent-server_$(VERSION).tar.gz \
 		--warning=no-file-changed opt
+	go run contrib/release.go -o $(OUTDIR)/$(VERSION) \
+		-conf contrib/release.yaml \
+		-name agent-server -version $(VERSION) \
+		-workdir $(OUTDIR)/$(VERSION)
 	rm -fr $(OUTDIR)/$(VERSION)/opt
 	cp CHANGELOG.md $(OUTDIR)/CHANGELOG.md
 clean:
