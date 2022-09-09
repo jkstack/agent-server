@@ -6,13 +6,8 @@ on:
 
 jobs:
 
-  setup:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-  build:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
       - uses: jkstack/smartagent-build@1.19.1
