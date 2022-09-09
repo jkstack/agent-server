@@ -20,7 +20,7 @@ import (
 	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/stat"
 	runtime "github.com/jkstack/jkframe/utils"
-	"github.com/kardianos/service"
+	"github.com/lwch/service"
 	"github.com/shirou/gopsutil/v3/disk"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
