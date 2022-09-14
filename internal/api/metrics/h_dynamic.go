@@ -14,9 +14,10 @@ import (
 )
 
 type dynamicInfo struct {
-	Usage       *usage       `json:"usage,omitempty"`       // usage数据
-	Process     []process    `json:"process,omitempty"`     // 进程列表
-	Connections []connection `json:"connections,omitempty"` // 连接列表
+	Usage       *usage       `json:"usage,omitempty"`        // usage数据
+	Process     []process    `json:"process,omitempty"`      // 进程列表
+	Connections []connection `json:"connections,omitempty"`  // 连接列表
+	Temps       []temp       `json:"temperatures,omitempty"` // 传感器温度列表
 }
 
 // static 获取节点的所有动态数据
@@ -81,5 +82,6 @@ func (h *Handler) dynamic(gin *gin.Context) {
 	ret.Usage = transDynamicUsage(msg.HMDynamicRep.Usage)
 	ret.Process = transDynamicProcess(msg.HMDynamicRep.Process)
 	ret.Connections = transDynamicConnections(msg.HMDynamicRep.Connections)
+	ret.Temps = transSensorsTemperatures(msg.HMDynamicRep.SensorsTemperatures)
 	g.OK(ret)
 }
