@@ -33,7 +33,7 @@ func showVersion() {
 func main() {
 	cf := flag.String("conf", "", "config file dir")
 	ver := flag.Bool("version", false, "show version info")
-	act := flag.String("action", "", "install or uninstall")
+	act := flag.String("action", "", "install, uninstall, start, stop")
 	flag.Parse()
 
 	if *ver {
@@ -41,9 +41,13 @@ func main() {
 		return
 	}
 
-	if len(*cf) == 0 {
-		fmt.Println("缺少-conf参数")
-		os.Exit(1)
+	switch *act {
+	case "uninstall", "start", "stop":
+	default:
+		if len(*cf) == 0 {
+			fmt.Println("missing -conf argument")
+			os.Exit(1)
+		}
 	}
 
 	var user string
@@ -75,10 +79,11 @@ func main() {
 	docs.SwaggerInfo.Version = version
 
 	var sv service.Service
-	if *act == "install" || *act == "uninstall" {
+	switch *act {
+	case "install", "uninstall", "start", "stop":
 		sv, err = service.New(&dummy{}, appCfg)
 		runtime.Assert(err)
-	} else {
+	default:
 		cfg := conf.Load(*cf, filepath.Join(filepath.Dir(dir), "/../"))
 
 		app := app.New(cfg, version)
@@ -92,14 +97,30 @@ func main() {
 		fmt.Printf("platform: %s\n", sv.Platform())
 		err := sv.Install()
 		if err != nil {
-			fmt.Printf("Install failed: %v\n", err)
+			fmt.Printf("can not register service: %v\n", err)
 		}
+		fmt.Println("register service success")
 	case "uninstall":
 		sv.Stop()
 		err := sv.Uninstall()
 		if err != nil {
-			fmt.Printf("Uninstall failed: %v\n", err)
+			fmt.Printf("can not unregister service: %v\n", err)
 		}
+		fmt.Println("unregister service success")
+	case "start":
+		err := sv.Start()
+		if err != nil {
+			fmt.Printf("can not start service: %v\n", err)
+			return
+		}
+		fmt.Println("start service success")
+	case "stop":
+		err := sv.Stop()
+		if err != nil {
+			fmt.Printf("can not stop service: %v\n", err)
+			return
+		}
+		fmt.Println("stop service success")
 	default:
 		runtime.Assert(sv.Run())
 	}

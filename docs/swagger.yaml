@@ -251,6 +251,11 @@ definitions:
         items:
           $ref: '#/definitions/metrics.process'
         type: array
+      temperatures:
+        description: 传感器温度列表
+        items:
+          $ref: '#/definitions/metrics.temp'
+        type: array
       usage:
         $ref: '#/definitions/metrics.usage'
         description: usage数据
