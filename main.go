@@ -79,10 +79,11 @@ func main() {
 	docs.SwaggerInfo.Version = version
 
 	var sv service.Service
-	if *act == "install" || *act == "uninstall" {
+	switch *act {
+	case "install", "uninstall", "start", "stop":
 		sv, err = service.New(&dummy{}, appCfg)
 		runtime.Assert(err)
-	} else {
+	default:
 		cfg := conf.Load(*cf, filepath.Join(filepath.Dir(dir), "/../"))
 
 		app := app.New(cfg, version)
