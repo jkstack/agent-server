@@ -14,4 +14,6 @@
 ## 1.0.2
 
 1. 增加/metrics/dynamic/temps接口
-2. /metrics/dynamic接口中增加传感器温度数据逻辑
+2. /metrics/dynamic接口中增加传感器温度数据
+3. 增加传感器温度上报逻辑
+4. 修正未配置kafka地址时的崩溃问题

@@ -237,6 +237,9 @@ func sendKafka(cli sarama.AsyncProducer, topic string, data *Data) {
 		logging.Error("proto marshal for [%s]: %v", data.AgentId, err)
 		return
 	}
+	if cli == nil {
+		return
+	}
 	cli.Input() <- &sarama.ProducerMessage{
 		Topic: topic,
 		Key:   sarama.StringEncoder(data.AgentId),
