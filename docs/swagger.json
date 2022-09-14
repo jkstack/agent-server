@@ -409,6 +409,50 @@
                 }
             }
         },
+        "/metrics/{id}/dynamic/temps": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "获取节点的传感器温度数据",
+                "operationId": "/api/metrics/dynamic/temps",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/metrics.temp"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/metrics/{id}/dynamic/usage": {
             "get": {
                 "produces": [
@@ -1427,6 +1471,25 @@
                     "items": {
                         "$ref": "#/definitions/metrics.job"
                     }
+                }
+            }
+        },
+        "metrics.temp": {
+            "type": "object",
+            "required": [
+                "name",
+                "temp"
+            ],
+            "properties": {
+                "name": {
+                    "description": "名称",
+                    "type": "string",
+                    "example": "coretemp_core_0"
+                },
+                "temp": {
+                    "description": "温度",
+                    "type": "number",
+                    "example": 38
                 }
             }
         },

@@ -36,4 +36,3 @@ clean:
 version:
 	@echo $(VERSION)
 distclean: clean
-	rm -fr vendor

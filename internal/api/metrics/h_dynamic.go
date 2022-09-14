@@ -55,7 +55,8 @@ func (h *Handler) dynamic(gin *gin.Context) {
 	}
 
 	taskID, err := cli.SendHMDynamicReq([]anet.HMDynamicReqType{
-		anet.HMReqUsage, anet.HMReqProcess, anet.HMReqConnections,
+		anet.HMReqUsage, anet.HMReqProcess,
+		anet.HMReqConnections, anet.HMReqSensorsTemperatures,
 	}, int(top), kinds)
 	runtime.Assert(err)
 	defer cli.ChanClose(id)

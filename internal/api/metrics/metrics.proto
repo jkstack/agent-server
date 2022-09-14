@@ -134,6 +134,11 @@ message dynamic_connection {
     string        status = 6; // 连接状态
 }
 
+message dynamic_sensor_temperature {
+    string name = 1; // 名称
+    float  temp = 2; // 温度
+}
+
 message dynamic_processes {
     repeated dynamic_process data = 1;
 }
@@ -142,13 +147,18 @@ message dynamic_connections {
     repeated dynamic_connection data = 1;
 }
 
+message dynamic_sensors_temperatures {
+    repeated dynamic_sensor_temperature data = 1;
+}
+
 message dynamic_data {
     google.protobuf.Timestamp begin = 1; // 采集开始时间
     google.protobuf.Timestamp   end = 2; // 采集结束时间
     oneof payload {
-        dynamic_usage             usage = 3; // usage数据
-        dynamic_processes     processes = 4; // 进程列表
-        dynamic_connections connections = 5; // 连接列表
+        dynamic_usage                usage = 3; // usage数据
+        dynamic_processes        processes = 4; // 进程列表
+        dynamic_connections    connections = 5; // 连接列表
+        dynamic_sensors_temperatures temps = 6; // 传感器温度
     }
 }
 

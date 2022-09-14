@@ -15,7 +15,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-var allJobs = []string{"static", "usage", "process", "conns"}
+var allJobs = []string{"static", "usage", "process", "conns", "temps"}
 
 type jobStatus struct {
 	running   bool
@@ -24,7 +24,7 @@ type jobStatus struct {
 	count     uint64
 }
 
-type jobs [4]jobStatus
+type jobs [5]jobStatus
 
 type Handler struct {
 	sync.RWMutex
@@ -64,6 +64,7 @@ func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 		api.MakeRoute(http.MethodGet, "/:id/dynamic/usage"):       h.dynamicUsage,
 		api.MakeRoute(http.MethodGet, "/:id/dynamic/process"):     h.dynamicProcess,
 		api.MakeRoute(http.MethodGet, "/:id/dynamic/connections"): h.dynamicConnections,
+		api.MakeRoute(http.MethodGet, "/:id/dynamic/temps"):       h.dynamicTemps,
 		api.MakeRoute(http.MethodGet, "/:id/status"):              h.getStatus,
 		api.MakeRoute(http.MethodPut, "/:id/status"):              h.setStatus,
 		api.MakeRoute(http.MethodPut, "/status"):                  h.batchSetStatus,

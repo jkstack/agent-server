@@ -661,6 +661,20 @@ definitions:
           $ref: '#/definitions/metrics.job'
         type: array
     type: object
+  metrics.temp:
+    properties:
+      name:
+        description: 名称
+        example: coretemp_core_0
+        type: string
+      temp:
+        description: 温度
+        example: 38
+        type: number
+    required:
+    - name
+    - temp
+    type: object
   metrics.usage:
     properties:
       cpu:
@@ -970,6 +984,32 @@ paths:
                   type: array
               type: object
       summary: 获取节点的所有进程列表数据
+      tags:
+      - metrics
+  /metrics/{id}/dynamic/temps:
+    get:
+      operationId: /api/metrics/dynamic/temps
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/metrics.temp'
+                  type: array
+              type: object
+      summary: 获取节点的传感器温度数据
       tags:
       - metrics
   /metrics/{id}/dynamic/usage:

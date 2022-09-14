@@ -199,13 +199,35 @@ func (h *Handler) saveConnections(agentID string, data *anet.HMDynamicRep) {
 	})
 }
 
+func (h *Handler) saveSensorsTemperatures(agentID string, data *anet.HMDynamicRep) {
+	var dynamic DynamicData
+	dynamic.Begin = timestamppb.New(data.Begin)
+	dynamic.End = timestamppb.New(data.End)
+	var temps DynamicSensorsTemperatures
+	for _, temp := range data.SensorsTemperatures {
+		temps.Data = append(temps.Data, &DynamicSensorTemperature{
+			Name: temp.Name,
+			Temp: float32(temp.Temperature),
+		})
+	}
+	dynamic.Payload = &DynamicData_Temps{Temps: &temps}
+	sendKafka(h.cli, h.topic, &Data{
+		AgentId: agentID,
+		Payload: &Data_DynamicData{
+			DynamicData: &dynamic,
+		},
+	})
+}
+
 func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
 	if data.Usage != nil {
 		h.saveUsage(agentID, data)
 	} else if len(data.Process) > 0 {
 		h.saveProcess(agentID, data)
-	} else {
+	} else if len(data.Connections) > 0 {
 		h.saveConnections(agentID, data)
+	} else {
+		h.saveSensorsTemperatures(agentID, data)
 	}
 }
 

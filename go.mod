@@ -8,7 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/goreleaser/nfpm/v2 v2.18.1
 	github.com/gorilla/websocket v1.5.0
-	github.com/jkstack/anet v0.0.0-20220906102831-1008d5bb8608
+	github.com/jkstack/anet v0.0.0-20220914031259-662a503d0cb1
 	github.com/jkstack/jkframe v1.0.8
 	github.com/lwch/runtime v1.0.0
 	github.com/lwch/service v1.99.99
