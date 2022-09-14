@@ -10,3 +10,8 @@
 
 1. 修正默认配置文件无法启动问题
 2. 实现deb和rpm打包
+
+## 1.0.2
+
+1. 增加/metrics/dynamic/temps接口
+2. /metrics/dynamic接口中增加传感器温度数据逻辑
