@@ -944,6 +944,13 @@ const docTemplate = `{
                         "$ref": "#/definitions/metrics.process"
                     }
                 },
+                "temperatures": {
+                    "description": "传感器温度列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/metrics.temp"
+                    }
+                },
                 "usage": {
                     "description": "usage数据",
                     "$ref": "#/definitions/metrics.usage"
