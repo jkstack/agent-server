@@ -10,7 +10,7 @@ import (
 	"github.com/goreleaser/nfpm/v2"
 	_ "github.com/goreleaser/nfpm/v2/deb"
 	_ "github.com/goreleaser/nfpm/v2/rpm"
-	"github.com/lwch/runtime"
+	"github.com/jkstack/jkframe/utils"
 	"gopkg.in/yaml.v3"
 )
 
@@ -20,6 +20,7 @@ func main() {
 	name := flag.String("name", "smartagent", "project name")
 	version := flag.String("version", "1.0", "version")
 	workdir := flag.String("workdir", "", "work dir")
+	epoch := flag.Int("epoch", 1, "build epoch")
 	flag.Parse()
 
 	if len(*conf) <= 1 {
@@ -44,11 +45,12 @@ func main() {
 
 	var info nfpm.Info
 	f, err := os.Open(*conf)
-	runtime.Assert(err)
+	utils.Assert(err)
 	defer f.Close()
-	runtime.Assert(yaml.NewDecoder(f).Decode(&info))
+	utils.Assert(yaml.NewDecoder(f).Decode(&info))
 
 	info.Version = *version
+	info.Epoch = fmt.Sprintf("%d", *epoch)
 
 	for i, ct := range info.Contents {
 		ct.Source = strings.ReplaceAll(ct.Source, "$WORKDIR", *workdir)
@@ -59,16 +61,16 @@ func main() {
 	dir := path.Join(*out, *name+"_"+info.Version+"_"+info.Arch)
 
 	deb, err := nfpm.Get("deb")
-	runtime.Assert(err)
+	utils.Assert(err)
 	debFile, err := os.Create(dir + ".deb")
-	runtime.Assert(err)
+	utils.Assert(err)
 	defer debFile.Close()
-	runtime.Assert(deb.Package(&info, debFile))
+	utils.Assert(deb.Package(&info, debFile))
 
 	rpm, err := nfpm.Get("rpm")
-	runtime.Assert(err)
+	utils.Assert(err)
 	rpmFile, err := os.Create(dir + ".rpm")
-	runtime.Assert(err)
+	utils.Assert(err)
 	defer rpmFile.Close()
-	runtime.Assert(rpm.Package(&info, rpmFile))
+	utils.Assert(rpm.Package(&info, rpmFile))
 }

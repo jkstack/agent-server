@@ -28,7 +28,8 @@ all:
 	go run contrib/release.go -o $(OUTDIR)/$(VERSION) \
 		-conf contrib/release.yaml \
 		-name agent-server -version $(VERSION) \
-		-workdir $(OUTDIR)/$(VERSION)
+		-workdir $(OUTDIR)/$(VERSION) \
+		-epoch $(REVERSION)
 	rm -fr $(OUTDIR)/$(VERSION)/opt
 	cp CHANGELOG.md $(OUTDIR)/CHANGELOG.md
 clean:
