@@ -24,7 +24,7 @@ func (h *Handler) handleReport(id, t string, info *anet.AgentInfo) {
 	}
 	h.mVersion.RUnlock()
 
-	h.stAgentInfo.Delete(oldLabels)
+	h.stAgentVersion.Delete(oldLabels)
 
 	h.mVersion.Lock()
 	h.oldVersion[id] = info.Version
