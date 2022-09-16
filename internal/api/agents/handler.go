@@ -5,6 +5,7 @@ import (
 	"server/internal/agent"
 	"server/internal/api"
 	"server/internal/conf"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
@@ -15,10 +16,16 @@ import (
 type Handler struct {
 	stAgentVersion *prometheus.GaugeVec
 	stAgentInfo    *prometheus.GaugeVec
+	mVersion       sync.RWMutex
+	oldVersion     map[string]string
+	oldGoVersion   map[string]string
 }
 
 func New() *Handler {
-	return &Handler{}
+	return &Handler{
+		oldVersion:   make(map[string]string),
+		oldGoVersion: make(map[string]string),
+	}
 }
 
 func (h *Handler) Module() string {

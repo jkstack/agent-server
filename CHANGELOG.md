@@ -26,3 +26,4 @@
 ## TODO
 
 1. 修改/metrics/dynamic下的进程列表返回内容，忽略一些空值
+2. 修正agent升级后agent版本号和go版本号的埋点数据问题
