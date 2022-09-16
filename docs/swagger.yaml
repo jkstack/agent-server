@@ -471,16 +471,10 @@ definitions:
         example: 26754
         type: integer
     required:
-    - cmd
     - conns
-    - cpu_usage
     - id
-    - memory_usage
     - pid
-    - rss
-    - swap
     - user
-    - vms
     type: object
   metrics.setArgs:
     properties:
