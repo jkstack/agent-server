@@ -13,9 +13,12 @@ jkstack agent统一管理服务，与同类产品相比有以下优势：
 
 ## 功能描述
 
-1. 已连接agent的列表和基本信息获取
-2. 服务器端状态获取
+1. 支持已连接agent的列表和基本信息获取
+2. 支持服务器端状态获取
 3. 主机监控信息采集，需依赖[metrics-agent](https://github.com/jkstack/metrics-agent)
+   - 采集任务的批量启动/停止
+   - 采集节点的动态更改任务配置
+4. 支持agent节点状态监控和grafana展示
 
 ## 快速部署
 
