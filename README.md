@@ -36,4 +36,5 @@ jkstack agent统一管理服务，与同类产品相比有以下优势：
 
 ## restful接口
 
-在部署完成后可通过`http://<服务端IP>:<端口号(默认13081)>/docs/index.html`插件接口文档，也可下载`http://<服务端IP>:<端口号(默认13081)>/docs/doc.json`文件后导入到apifox或postman进行调试
+* 在部署完成后可通过`http://<服务端IP>:<端口号(默认13081)>/docs/index.html`插件接口文档
+* 也可下载`http://<服务端IP>:<端口号(默认13081)>/docs/doc.json`文件后导入到apifox或postman进行调试
