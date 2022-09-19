@@ -2,7 +2,7 @@
 
 OUTDIR=release
 
-VERSION=1.0.3
+VERSION=1.0.4
 TIMESTAMP=`date +%s`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
@@ -28,7 +28,8 @@ all:
 	go run contrib/release.go -o $(OUTDIR)/$(VERSION) \
 		-conf contrib/release.yaml \
 		-name agent-server -version $(VERSION) \
-		-workdir $(OUTDIR)/$(VERSION)
+		-workdir $(OUTDIR)/$(VERSION) \
+		-epoch $(REVERSION)
 	rm -fr $(OUTDIR)/$(VERSION)/opt
 	cp CHANGELOG.md $(OUTDIR)/CHANGELOG.md
 clean:

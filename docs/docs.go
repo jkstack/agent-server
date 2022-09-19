@@ -1163,16 +1163,10 @@ const docTemplate = `{
         "metrics.process": {
             "type": "object",
             "required": [
-                "cmd",
                 "conns",
-                "cpu_usage",
                 "id",
-                "memory_usage",
                 "pid",
-                "rss",
-                "swap",
-                "user",
-                "vms"
+                "user"
             ],
             "properties": {
                 "cmd": {

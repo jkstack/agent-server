@@ -16,6 +16,21 @@ func setValue(vec *prometheus.GaugeVec, id, t, tag string, n float64) {
 }
 
 func (h *Handler) handleReport(id, t string, info *anet.AgentInfo) {
+	h.mVersion.RLock()
+	oldLabels := prometheus.Labels{
+		"id":         id,
+		"version":    h.oldVersion[id],
+		"go_version": h.oldGoVersion[id],
+	}
+	h.mVersion.RUnlock()
+
+	h.stAgentVersion.Delete(oldLabels)
+
+	h.mVersion.Lock()
+	h.oldVersion[id] = info.Version
+	h.oldGoVersion[id] = info.GoVersion
+	h.mVersion.Unlock()
+
 	h.stAgentVersion.With(prometheus.Labels{
 		"id":         id,
 		"version":    info.Version,
