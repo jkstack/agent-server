@@ -29,10 +29,10 @@ jkstack agent统一管理服务，与同类产品相比有以下优势：
 3. 按需修改配置文件，配置文件将被安装在`/opt/agent-server/conf/server.conf`目录下
 4. 使用以下命令启动服务器端程序
 
-    /opt/agent-server/bin/agent-server -action start
+       /opt/agent-server/bin/agent-server -action start
 5. 检查当前服务启动状态
 
-    curl http://<服务端IP>:<端口号(默认13081)>/api/info/server
+       curl http://<服务端IP>:<端口号(默认13081)>/api/info/server
 
 ## restful接口
 
