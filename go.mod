@@ -2,6 +2,8 @@ module server
 
 go 1.18
 
+replace github.com/kardianos/service => github.com/lwch/service v1.2.1-1
+
 require (
 	github.com/Shopify/sarama v1.36.0
 	github.com/dustin/go-humanize v1.0.0
