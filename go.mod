@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/jkstack/anet v0.0.0-20220914031259-662a503d0cb1
 	github.com/jkstack/jkframe v1.0.8
-	github.com/lwch/service v1.99.99
+	github.com/kardianos/service v1.2.1
 	github.com/prometheus/client_golang v1.12.2
 	github.com/shirou/gopsutil/v3 v3.22.7
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
