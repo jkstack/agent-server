@@ -58,11 +58,18 @@ definitions:
   api.Success:
     properties:
       code:
+        description: 状态码
         example: 200
         type: integer
-      payload: {}
+      extime:
+        description: 耗时(毫秒)
+        example: 70
+        type: integer
+      payload:
+        description: 内容
     required:
     - code
+    - extime
     type: object
   info.serverInfo:
     properties:

@@ -694,14 +694,23 @@ const docTemplate = `{
         "api.Success": {
             "type": "object",
             "required": [
-                "code"
+                "code",
+                "extime"
             ],
             "properties": {
                 "code": {
+                    "description": "状态码",
                     "type": "integer",
                     "example": 200
                 },
-                "payload": {}
+                "extime": {
+                    "description": "耗时(毫秒)",
+                    "type": "integer",
+                    "example": 70
+                },
+                "payload": {
+                    "description": "内容"
+                }
             }
         },
         "info.serverInfo": {
