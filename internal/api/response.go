@@ -69,3 +69,8 @@ func (ctx *GContext) Timeout() {
 func (ctx *GContext) HttpError(code int, msg string) {
 	ctx.String(code, msg)
 }
+
+func (ctx *GContext) HttpData(data []byte) {
+	ct := http.DetectContentType(data)
+	ctx.Data(http.StatusOK, ct, data)
+}

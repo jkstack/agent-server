@@ -71,6 +71,121 @@ definitions:
     - code
     - extime
     type: object
+  exec.result:
+    properties:
+      code:
+        description: 任务的返回状态
+        example: 0
+        type: integer
+      data:
+        description: 返回内容（base64编码）
+        type: string
+      end:
+        description: 任务结束时间
+        example: 1663816771
+        type: integer
+      running:
+        description: 任务是否还在执行中
+        example: true
+        type: boolean
+    required:
+    - code
+    - running
+    type: object
+  exec.runArgs:
+    properties:
+      args:
+        description: 参数
+        example:
+        - hello world
+        items:
+          type: string
+        type: array
+      auth:
+        description: 提权方式，仅linux有效
+        enum:
+        - ""
+        - sudo
+        - su
+        example: sudo
+        type: string
+      cmd:
+        description: 命令
+        example: echo
+        type: string
+      env:
+        description: 环境变量
+        example:
+        - DB_HOST=127.0.0.1
+        - DB_NAME=jkstack
+        items:
+          type: string
+        type: array
+      result:
+        default: true
+        description: 是否直接返回数据
+        example: true
+        type: boolean
+      timeout:
+        default: 60
+        description: 超时时间
+        example: 3600
+        type: integer
+      user:
+        description: 运行身份，仅linux有效
+        example: nobody
+        type: string
+      workdir:
+        description: 工作目录
+        example: /var/log
+        type: string
+    required:
+    - cmd
+    type: object
+  exec.runPayload:
+    properties:
+      begin:
+        description: 开始时间戳
+        example: 1663816771
+        type: integer
+      id:
+        description: 任务ID
+        example: 20220922-00001-4bc99720760771f6
+        type: string
+      pid:
+        description: 进程ID
+        example: 9655
+        type: integer
+      stauts:
+        $ref: '#/definitions/exec.result'
+        description: 任务状态，仅当result参数为true时返回
+    required:
+    - begin
+    - id
+    - pid
+    type: object
+  exec.status:
+    properties:
+      begin:
+        description: 任务开始时间
+        example: 1663816771
+        type: integer
+      code:
+        description: 运行结果状态码
+        example: 0
+        type: integer
+      done:
+        description: 该任务是否已执行完毕
+        example: false
+        type: boolean
+      end:
+        description: 结束时间，仅当running=false时返回
+        example: 1663816771
+        type: integer
+    required:
+    - begin
+    - done
+    type: object
   info.serverInfo:
     properties:
       agents:
@@ -836,6 +951,97 @@ paths:
       summary: 获取某个节点信息
       tags:
       - agents
+  /exec/{id}/pty/{pid}:
+    get:
+      operationId: /api/exec/pty
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 进程号
+        in: path
+        name: pid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 输出内容
+          schema:
+            type: string
+        "404":
+          description: <what> not found
+          schema:
+            type: string
+        "500":
+          description: 错误内容
+          schema:
+            type: string
+      summary: 获取返回内容
+      tags:
+      - exec
+  /exec/{id}/run:
+    post:
+      operationId: /api/exec/run
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 需启动的任务列表
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/exec.runArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/exec.runPayload'
+              type: object
+      summary: 执行命令或脚本
+      tags:
+      - exec
+  /exec/{id}/status/{pid}:
+    get:
+      operationId: /api/exec/status
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 进程号
+        in: path
+        name: pid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/exec.status'
+              type: object
+      summary: 获取运行状态
+      tags:
+      - exec
   /foo/{id}:
     get:
       operationId: /api/foo
