@@ -966,18 +966,18 @@ paths:
         required: true
         type: string
       produces:
-      - application/json
+      - text/plain
       responses:
         "200":
           description: 输出内容
           schema:
             type: string
         "404":
-          description: <what> not found
+          description: \<what\> not found
           schema:
             type: string
         "500":
-          description: 错误内容
+          description: 出错原因
           schema:
             type: string
       summary: 获取返回内容

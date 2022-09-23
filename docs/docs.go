@@ -137,7 +137,7 @@ const docTemplate = `{
         "/exec/{id}/pty/{pid}": {
             "get": {
                 "produces": [
-                    "application/json"
+                    "text/plain"
                 ],
                 "tags": [
                     "exec"
@@ -168,13 +168,13 @@ const docTemplate = `{
                         }
                     },
                     "404": {
-                        "description": "\u003cwhat\u003e not found",
+                        "description": "\\\u003cwhat\\\u003e not found",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "500": {
-                        "description": "错误内容",
+                        "description": "出错原因",
                         "schema": {
                             "type": "string"
                         }
