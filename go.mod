@@ -18,6 +18,7 @@ require (
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
 	github.com/swaggo/gin-swagger v1.5.2
 	github.com/swaggo/swag v1.8.1
+	golang.org/x/text v0.3.7
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -106,7 +107,6 @@ require (
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/net v0.0.0-20220809184613-07c6da5e1ced // indirect
 	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
-	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
