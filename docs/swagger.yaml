@@ -71,6 +71,25 @@ definitions:
     - code
     - extime
     type: object
+  exec.info:
+    properties:
+      begin:
+        description: 启动时间
+        example: 1665219359
+        type: integer
+      pid:
+        description: 进程号
+        example: 11186
+        type: integer
+      task_id:
+        description: 任务ID
+        example: 20221008-00001-7a390a60f759aab5
+        type: string
+    required:
+    - begin
+    - pid
+    - task_id
+    type: object
   exec.result:
     properties:
       code:
@@ -186,7 +205,7 @@ definitions:
     - begin
     - done
     type: object
-  file.File:
+  file.info:
     properties:
       auth:
         description: 文件权限（10进制）
@@ -1018,6 +1037,32 @@ paths:
       summary: 结束进程
       tags:
       - exec
+  /exec/{id}/ps:
+    get:
+      operationId: /api/exec/ps
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/exec.info'
+                  type: array
+              type: object
+      summary: 列出正在运行中的任务
+      tags:
+      - exec
   /exec/{id}/pty/{pid}:
     get:
       operationId: /api/exec/pty
@@ -1134,7 +1179,7 @@ paths:
             - properties:
                 payload:
                   items:
-                    $ref: '#/definitions/file.File'
+                    $ref: '#/definitions/file.info'
                   type: array
               type: object
       summary: 查询文件列表

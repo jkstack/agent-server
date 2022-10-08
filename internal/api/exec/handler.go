@@ -6,7 +6,6 @@ import (
 	"server/internal/api"
 	"server/internal/conf"
 	"sync"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
@@ -16,15 +15,13 @@ import (
 type Handler struct {
 	sync.RWMutex
 	cfg   *conf.Configure
-	tasks map[int]*task
+	tasks map[string]*tasks // agent id => tasks
 }
 
 func New() *Handler {
-	h := &Handler{
-		tasks: make(map[int]*task),
+	return &Handler{
+		tasks: make(map[string]*tasks),
 	}
-	go h.clean()
-	return h
 }
 
 func (h *Handler) Module() string {
@@ -41,6 +38,7 @@ func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 		api.MakeRoute(http.MethodGet, "/:id/status/:pid"):  h.status,
 		api.MakeRoute(http.MethodGet, "/:id/pty/:pid"):     h.pty,
 		api.MakeRoute(http.MethodDelete, "/:id/kill/:pid"): h.kill,
+		api.MakeRoute(http.MethodGet, "/:id/ps"):           h.ps,
 	}
 }
 
@@ -53,26 +51,19 @@ func (h *Handler) OnClose(string) {
 func (h *Handler) OnMessage(*agent.Agent, *anet.Msg) {
 }
 
-func (h *Handler) clean() {
-	fetch := func() []*task {
-		ret := make([]*task, 0, len(h.tasks))
-		now := time.Now()
-		h.RLock()
-		defer h.RUnlock()
-		for _, t := range h.tasks {
-			if now.After(t.clean) {
-				ret = append(ret, t)
-			}
-		}
-		return ret
+func (h *Handler) getTasksOrCreate(id string) *tasks {
+	h.Lock()
+	defer h.Unlock()
+	if ts, ok := h.tasks[id]; ok {
+		return ts
 	}
-	for {
-		for _, task := range fetch() {
-			task.close()
-			h.Lock()
-			delete(h.tasks, task.pid)
-			h.Unlock()
-		}
-		time.Sleep(time.Minute)
-	}
+	ts := newTasks(id)
+	h.tasks[id] = ts
+	return ts
+}
+
+func (h *Handler) getTasks(id string) *tasks {
+	h.RLock()
+	defer h.RUnlock()
+	return h.tasks[id]
 }

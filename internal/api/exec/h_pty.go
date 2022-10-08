@@ -38,10 +38,7 @@ func (h *Handler) pty(gin *gin.Context) {
 		return
 	}
 
-	h.RLock()
-	task := h.tasks[int(pid)]
-	h.RUnlock()
-
+	task := h.getTasksOrCreate(id).get(int(pid))
 	if task == nil {
 		g.HttpError(http.StatusNotFound, "task not found")
 		return

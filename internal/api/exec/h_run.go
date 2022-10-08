@@ -134,9 +134,7 @@ func (h *Handler) run(gin *gin.Context) {
 		return
 	}
 
-	h.Lock()
-	h.tasks[task.pid] = task
-	h.Unlock()
+	h.getTasksOrCreate(id).add(task)
 
 	g.OK(runPayload{
 		TaskID: taskID,

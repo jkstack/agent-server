@@ -170,6 +170,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/exec/{id}/ps": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exec"
+                ],
+                "summary": "列出正在运行中的任务",
+                "operationId": "/api/exec/ps",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/exec.info"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/exec/{id}/pty/{pid}": {
             "get": {
                 "produces": [
@@ -356,7 +400,7 @@ const docTemplate = `{
                                         "payload": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/file.File"
+                                                "$ref": "#/definitions/file.info"
                                             }
                                         }
                                     }
@@ -946,6 +990,31 @@ const docTemplate = `{
                 }
             }
         },
+        "exec.info": {
+            "type": "object",
+            "required": [
+                "begin",
+                "pid",
+                "task_id"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "启动时间",
+                    "type": "integer",
+                    "example": 1665219359
+                },
+                "pid": {
+                    "description": "进程号",
+                    "type": "integer",
+                    "example": 11186
+                },
+                "task_id": {
+                    "description": "任务ID",
+                    "type": "string",
+                    "example": "20221008-00001-7a390a60f759aab5"
+                }
+            }
+        },
         "exec.result": {
             "type": "object",
             "required": [
@@ -1098,7 +1167,7 @@ const docTemplate = `{
                 }
             }
         },
-        "file.File": {
+        "file.info": {
             "type": "object",
             "required": [
                 "auth",

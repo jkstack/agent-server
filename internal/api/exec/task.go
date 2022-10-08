@@ -18,9 +18,9 @@ const (
 
 type task struct {
 	remote *agent.Agent
-	id     string
-	pid    int
-	clean  time.Time
+	id     string    // task id
+	pid    int       // process id
+	clean  time.Time // clean timeout
 	// runtime
 	cache    *l2cache.Cache
 	done     chan struct{}
@@ -104,4 +104,8 @@ func (t *task) wait() {
 
 func (t *task) data() ([]byte, error) {
 	return io.ReadAll(t.cache)
+}
+
+func (t *task) isDone() bool {
+	return t.doneFlag
 }
