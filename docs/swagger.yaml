@@ -186,6 +186,49 @@ definitions:
     - begin
     - done
     type: object
+  file.File:
+    properties:
+      auth:
+        description: 文件权限（10进制）
+        example: 777
+        type: integer
+      group:
+        description: 所属组
+        example: root
+        type: string
+      is_dir:
+        description: 是否是目录
+        example: true
+        type: boolean
+      is_link:
+        description: 是否是软链
+        example: false
+        type: boolean
+      link_dir:
+        description: 连接路径
+        example: /usr/bin
+        type: string
+      name:
+        description: 文件名
+        example: bin
+        type: string
+      size:
+        description: 文件大小
+        example: 155
+        type: integer
+      user:
+        description: 所属用户
+        example: root
+        type: string
+    required:
+    - auth
+    - group
+    - is_dir
+    - is_link
+    - name
+    - size
+    - user
+    type: object
   info.serverInfo:
     properties:
       agents:
@@ -951,6 +994,30 @@ paths:
       summary: 获取某个节点信息
       tags:
       - agents
+  /exec/{id}/kill/{pid}:
+    delete:
+      operationId: /api/exec/kill
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 进程号
+        in: path
+        name: pid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Success'
+      summary: 结束进程
+      tags:
+      - exec
   /exec/{id}/pty/{pid}:
     get:
       operationId: /api/exec/pty
@@ -964,7 +1031,7 @@ paths:
         in: path
         name: pid
         required: true
-        type: string
+        type: integer
       produces:
       - text/plain
       responses:
@@ -1026,7 +1093,7 @@ paths:
         in: path
         name: pid
         required: true
-        type: string
+        type: integer
       produces:
       - application/json
       responses:
@@ -1042,6 +1109,37 @@ paths:
       summary: 获取运行状态
       tags:
       - exec
+  /file/{id}/ls:
+    get:
+      operationId: /api/file/ls
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 查询路径
+        in: query
+        name: path
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/file.File'
+                  type: array
+              type: object
+      summary: 查询文件列表
+      tags:
+      - file
   /foo/{id}:
     get:
       operationId: /api/foo

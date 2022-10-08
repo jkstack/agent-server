@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"server/internal/api"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +15,7 @@ import (
 // @Tags exec
 // @Produce plain
 // @Param   id  path string true "节点ID"
-// @Param   pid path string true "进程号"
+// @Param   pid path int    true "进程号"
 // @Success 200 {string}    "输出内容"
 // @Failure 404 {string}    "\<what\> not found"
 // @Failure 500 {string}    "出错原因"
@@ -23,7 +24,11 @@ func (h *Handler) pty(gin *gin.Context) {
 	g := api.GetG(gin)
 
 	id := g.Param("id")
-	pid := g.GetInt("pid")
+	pid, err := strconv.ParseInt(g.Param("pid"), 10, 64)
+	if err != nil {
+		api.BadParamErr("pid")
+		return
+	}
 
 	agents := g.GetAgents()
 
@@ -34,7 +39,7 @@ func (h *Handler) pty(gin *gin.Context) {
 	}
 
 	h.RLock()
-	task := h.tasks[pid]
+	task := h.tasks[int(pid)]
 	h.RUnlock()
 
 	if task == nil {

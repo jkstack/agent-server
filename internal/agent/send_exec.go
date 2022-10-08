@@ -33,3 +33,18 @@ func (agent *Agent) SendExecRun(
 	agent.chWrite <- &msg
 	return id, nil
 }
+
+func (agent *Agent) SendExecKill(pid int) error {
+	id, err := utils.TaskID()
+	if err != nil {
+		return err
+	}
+	var msg anet.Msg
+	msg.Type = anet.TypeExecKill
+	msg.ExecKill = &anet.ExecKill{
+		Pid: pid,
+	}
+	msg.TaskID = id
+	agent.chWrite <- &msg
+	return nil
+}

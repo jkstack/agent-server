@@ -134,6 +134,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/exec/{id}/kill/{pid}": {
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exec"
+                ],
+                "summary": "结束进程",
+                "operationId": "/api/exec/kill",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "进程号",
+                        "name": "pid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/exec/{id}/pty/{pid}": {
             "get": {
                 "produces": [
@@ -153,7 +189,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "进程号",
                         "name": "pid",
                         "in": "path",
@@ -251,7 +287,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "进程号",
                         "name": "pid",
                         "in": "path",
@@ -271,6 +307,57 @@ const docTemplate = `{
                                     "properties": {
                                         "payload": {
                                             "$ref": "#/definitions/exec.status"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/file/{id}/ls": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "file"
+                ],
+                "summary": "查询文件列表",
+                "operationId": "/api/file/ls",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询路径",
+                        "name": "path",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/file.File"
+                                            }
                                         }
                                     }
                                 }
@@ -1008,6 +1095,60 @@ const docTemplate = `{
                     "description": "结束时间，仅当running=false时返回",
                     "type": "integer",
                     "example": 1663816771
+                }
+            }
+        },
+        "file.File": {
+            "type": "object",
+            "required": [
+                "auth",
+                "group",
+                "is_dir",
+                "is_link",
+                "name",
+                "size",
+                "user"
+            ],
+            "properties": {
+                "auth": {
+                    "description": "文件权限（10进制）",
+                    "type": "integer",
+                    "example": 777
+                },
+                "group": {
+                    "description": "所属组",
+                    "type": "string",
+                    "example": "root"
+                },
+                "is_dir": {
+                    "description": "是否是目录",
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_link": {
+                    "description": "是否是软链",
+                    "type": "boolean",
+                    "example": false
+                },
+                "link_dir": {
+                    "description": "连接路径",
+                    "type": "string",
+                    "example": "/usr/bin"
+                },
+                "name": {
+                    "description": "文件名",
+                    "type": "string",
+                    "example": "bin"
+                },
+                "size": {
+                    "description": "文件大小",
+                    "type": "integer",
+                    "example": 155
+                },
+                "user": {
+                    "description": "所属用户",
+                    "type": "string",
+                    "example": "root"
                 }
             }
         },

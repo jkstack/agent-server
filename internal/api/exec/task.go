@@ -39,6 +39,7 @@ func newTask(remote *agent.Agent, id string, pid int, cacheDir string,
 	t := &task{
 		remote: remote,
 		id:     id,
+		pid:    pid,
 		clean:  time.Now().Add(timeout + time.Hour),
 		done:   make(chan struct{}),
 		cache:  cache,

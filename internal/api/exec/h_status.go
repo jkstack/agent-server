@@ -2,6 +2,7 @@ package exec
 
 import (
 	"server/internal/api"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,14 +20,18 @@ type status struct {
 // @Tags exec
 // @Produce json
 // @Param   id  path string true "节点ID"
-// @Param   pid path string true "进程号"
+// @Param   pid path int    true "进程号"
 // @Success 200 {object}    api.Success{payload=status}
 // @Router /exec/{id}/status/{pid} [get]
 func (h *Handler) status(gin *gin.Context) {
 	g := api.GetG(gin)
 
 	id := g.Param("id")
-	pid := g.GetInt("pid")
+	pid, err := strconv.ParseInt(g.Param("pid"), 10, 64)
+	if err != nil {
+		api.BadParamErr("pid")
+		return
+	}
 
 	agents := g.GetAgents()
 
@@ -37,7 +42,7 @@ func (h *Handler) status(gin *gin.Context) {
 	}
 
 	h.RLock()
-	task := h.tasks[pid]
+	task := h.tasks[int(pid)]
 	h.RUnlock()
 
 	if task == nil {
