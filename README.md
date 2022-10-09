@@ -20,6 +20,12 @@ jkstack agent统一管理服务，与同类产品相比有以下优势：
    - 采集节点的动态更改任务配置
 4. 支持agent节点状态监控和grafana展示
 
+## 已支持agent
+
+1. [example-agent](https://github.com/jkstack/example-agent): 一个agent的示例
+2. [metrics-agent](https://github.com/jkstack/metrics-agent): 主机监控信息采集
+3. [exec-agent](https://github.com/jkstack/exec-agent): 远程执行脚本或上传下载文件
+
 ## 快速部署
 
 服务端程序推荐使用`linux`系统进行部署
