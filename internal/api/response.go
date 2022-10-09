@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/jkstack/jkframe/logging"
 )
@@ -10,17 +11,19 @@ import (
 // OK response api caller ok
 func (ctx *GContext) OK(payload any) {
 	ctx.JSON(http.StatusOK, Success{
-		Code:    http.StatusOK,
-		Payload: payload,
+		Code:          http.StatusOK,
+		Payload:       payload,
+		ExecutionTime: time.Since(ctx.begin).Milliseconds(),
 	})
 }
 
 // ERR response api caller error
 func (ctx *GContext) ERR(code int, msg string) {
 	ctx.JSON(http.StatusOK, Failure{
-		Code:      code,
-		Msg:       msg,
-		RequestID: ctx.reqID,
+		Code:          code,
+		Msg:           msg,
+		RequestID:     ctx.reqID,
+		ExecutionTime: time.Since(ctx.begin).Milliseconds(),
 	})
 }
 
@@ -65,4 +68,9 @@ func (ctx *GContext) Timeout() {
 // HttpError response http error
 func (ctx *GContext) HttpError(code int, msg string) {
 	ctx.String(code, msg)
+}
+
+func (ctx *GContext) HttpData(data []byte) {
+	ct := http.DetectContentType(data)
+	ctx.Data(http.StatusOK, ct, data)
 }

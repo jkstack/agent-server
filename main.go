@@ -11,7 +11,7 @@ import (
 	"server/internal/conf"
 
 	runtime "github.com/jkstack/jkframe/utils"
-	"github.com/lwch/service"
+	"github.com/kardianos/service"
 )
 
 var (

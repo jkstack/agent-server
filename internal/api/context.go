@@ -16,6 +16,7 @@ type GContext struct {
 	*gin.Context
 	agents *agent.Agents
 
+	begin   time.Time
 	reqID   string
 	qryArgs any
 	reqBody any
@@ -42,6 +43,7 @@ func New(g *gin.Context, agents *agent.Agents) *GContext {
 	return &GContext{
 		Context: g,
 		agents:  agents,
+		begin:   time.Now(),
 		reqID: fmt.Sprintf("%s-%08d-%s",
 			time.Now().Format("20060102"), next%99999999, uid),
 	}

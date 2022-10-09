@@ -58,11 +58,195 @@ definitions:
   api.Success:
     properties:
       code:
+        description: 状态码
         example: 200
         type: integer
-      payload: {}
+      extime:
+        description: 耗时(毫秒)
+        example: 70
+        type: integer
+      payload:
+        description: 内容
     required:
     - code
+    - extime
+    type: object
+  exec.info:
+    properties:
+      begin:
+        description: 启动时间
+        example: 1665219359
+        type: integer
+      pid:
+        description: 进程号
+        example: 11186
+        type: integer
+      task_id:
+        description: 任务ID
+        example: 20221008-00001-7a390a60f759aab5
+        type: string
+    required:
+    - begin
+    - pid
+    - task_id
+    type: object
+  exec.result:
+    properties:
+      code:
+        description: 任务的返回状态
+        example: 0
+        type: integer
+      data:
+        description: 返回内容（base64编码）
+        type: string
+      end:
+        description: 任务结束时间
+        example: 1663816771
+        type: integer
+      running:
+        description: 任务是否还在执行中
+        example: true
+        type: boolean
+    required:
+    - code
+    - running
+    type: object
+  exec.runArgs:
+    properties:
+      args:
+        description: 参数
+        example:
+        - hello world
+        items:
+          type: string
+        type: array
+      auth:
+        description: 提权方式，仅linux有效
+        enum:
+        - ""
+        - sudo
+        - su
+        example: sudo
+        type: string
+      cmd:
+        description: 命令
+        example: echo
+        type: string
+      env:
+        description: 环境变量
+        example:
+        - DB_HOST=127.0.0.1
+        - DB_NAME=jkstack
+        items:
+          type: string
+        type: array
+      result:
+        default: true
+        description: 是否直接返回数据
+        example: true
+        type: boolean
+      timeout:
+        default: 60
+        description: 超时时间
+        example: 3600
+        type: integer
+      user:
+        description: 运行身份，仅linux有效
+        example: nobody
+        type: string
+      workdir:
+        description: 工作目录
+        example: /var/log
+        type: string
+    required:
+    - cmd
+    type: object
+  exec.runPayload:
+    properties:
+      begin:
+        description: 开始时间戳
+        example: 1663816771
+        type: integer
+      id:
+        description: 任务ID
+        example: 20220922-00001-4bc99720760771f6
+        type: string
+      pid:
+        description: 进程ID
+        example: 9655
+        type: integer
+      stauts:
+        $ref: '#/definitions/exec.result'
+        description: 任务状态，仅当result参数为true时返回
+    required:
+    - begin
+    - id
+    - pid
+    type: object
+  exec.status:
+    properties:
+      begin:
+        description: 任务开始时间
+        example: 1663816771
+        type: integer
+      code:
+        description: 运行结果状态码
+        example: 0
+        type: integer
+      done:
+        description: 该任务是否已执行完毕
+        example: false
+        type: boolean
+      end:
+        description: 结束时间，仅当running=false时返回
+        example: 1663816771
+        type: integer
+    required:
+    - begin
+    - done
+    type: object
+  file.info:
+    properties:
+      auth:
+        description: 文件权限（10进制）
+        example: 777
+        type: integer
+      group:
+        description: 所属组
+        example: root
+        type: string
+      is_dir:
+        description: 是否是目录
+        example: true
+        type: boolean
+      is_link:
+        description: 是否是软链
+        example: false
+        type: boolean
+      link_dir:
+        description: 连接路径
+        example: /usr/bin
+        type: string
+      name:
+        description: 文件名
+        example: bin
+        type: string
+      size:
+        description: 文件大小
+        example: 155
+        type: integer
+      user:
+        description: 所属用户
+        example: root
+        type: string
+    required:
+    - auth
+    - group
+    - is_dir
+    - is_link
+    - name
+    - size
+    - user
     type: object
   info.serverInfo:
     properties:
@@ -829,6 +1013,178 @@ paths:
       summary: 获取某个节点信息
       tags:
       - agents
+  /exec/{id}/kill/{pid}:
+    delete:
+      operationId: /api/exec/kill
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 进程号
+        in: path
+        name: pid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Success'
+      summary: 结束进程
+      tags:
+      - exec
+  /exec/{id}/ps:
+    get:
+      operationId: /api/exec/ps
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/exec.info'
+                  type: array
+              type: object
+      summary: 列出正在运行中的任务
+      tags:
+      - exec
+  /exec/{id}/pty/{pid}:
+    get:
+      operationId: /api/exec/pty
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 进程号
+        in: path
+        name: pid
+        required: true
+        type: integer
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: 输出内容
+          schema:
+            type: string
+        "404":
+          description: \<what\> not found
+          schema:
+            type: string
+        "500":
+          description: 出错原因
+          schema:
+            type: string
+      summary: 获取返回内容
+      tags:
+      - exec
+  /exec/{id}/run:
+    post:
+      operationId: /api/exec/run
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 需启动的任务列表
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/exec.runArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/exec.runPayload'
+              type: object
+      summary: 执行命令或脚本
+      tags:
+      - exec
+  /exec/{id}/status/{pid}:
+    get:
+      operationId: /api/exec/status
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 进程号
+        in: path
+        name: pid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/exec.status'
+              type: object
+      summary: 获取运行状态
+      tags:
+      - exec
+  /file/{id}/ls:
+    get:
+      operationId: /api/file/ls
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 查询路径
+        in: query
+        name: path
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/file.info'
+                  type: array
+              type: object
+      summary: 查询文件列表
+      tags:
+      - file
   /foo/{id}:
     get:
       operationId: /api/foo

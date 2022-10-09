@@ -126,6 +126,283 @@
                 }
             }
         },
+        "/exec/{id}/kill/{pid}": {
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exec"
+                ],
+                "summary": "结束进程",
+                "operationId": "/api/exec/kill",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "进程号",
+                        "name": "pid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/exec/{id}/ps": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exec"
+                ],
+                "summary": "列出正在运行中的任务",
+                "operationId": "/api/exec/ps",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/exec.info"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/exec/{id}/pty/{pid}": {
+            "get": {
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "exec"
+                ],
+                "summary": "获取返回内容",
+                "operationId": "/api/exec/pty",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "进程号",
+                        "name": "pid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "输出内容",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "\\\u003cwhat\\\u003e not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "出错原因",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/exec/{id}/run": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exec"
+                ],
+                "summary": "执行命令或脚本",
+                "operationId": "/api/exec/run",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "需启动的任务列表",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/exec.runArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/exec.runPayload"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/exec/{id}/status/{pid}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "exec"
+                ],
+                "summary": "获取运行状态",
+                "operationId": "/api/exec/status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "进程号",
+                        "name": "pid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/exec.status"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/file/{id}/ls": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "file"
+                ],
+                "summary": "查询文件列表",
+                "operationId": "/api/file/ls",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "查询路径",
+                        "name": "path",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/file.info"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/foo/{id}": {
             "get": {
                 "produces": [
@@ -686,14 +963,254 @@
         "api.Success": {
             "type": "object",
             "required": [
-                "code"
+                "code",
+                "extime"
             ],
             "properties": {
                 "code": {
+                    "description": "状态码",
                     "type": "integer",
                     "example": 200
                 },
-                "payload": {}
+                "extime": {
+                    "description": "耗时(毫秒)",
+                    "type": "integer",
+                    "example": 70
+                },
+                "payload": {
+                    "description": "内容"
+                }
+            }
+        },
+        "exec.info": {
+            "type": "object",
+            "required": [
+                "begin",
+                "pid",
+                "task_id"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "启动时间",
+                    "type": "integer",
+                    "example": 1665219359
+                },
+                "pid": {
+                    "description": "进程号",
+                    "type": "integer",
+                    "example": 11186
+                },
+                "task_id": {
+                    "description": "任务ID",
+                    "type": "string",
+                    "example": "20221008-00001-7a390a60f759aab5"
+                }
+            }
+        },
+        "exec.result": {
+            "type": "object",
+            "required": [
+                "code",
+                "running"
+            ],
+            "properties": {
+                "code": {
+                    "description": "任务的返回状态",
+                    "type": "integer",
+                    "example": 0
+                },
+                "data": {
+                    "description": "返回内容（base64编码）",
+                    "type": "string"
+                },
+                "end": {
+                    "description": "任务结束时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "running": {
+                    "description": "任务是否还在执行中",
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "exec.runArgs": {
+            "type": "object",
+            "required": [
+                "cmd"
+            ],
+            "properties": {
+                "args": {
+                    "description": "参数",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "hello world"
+                    ]
+                },
+                "auth": {
+                    "description": "提权方式，仅linux有效",
+                    "type": "string",
+                    "enum": [
+                        "",
+                        "sudo",
+                        "su"
+                    ],
+                    "example": "sudo"
+                },
+                "cmd": {
+                    "description": "命令",
+                    "type": "string",
+                    "example": "echo"
+                },
+                "env": {
+                    "description": "环境变量",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "DB_HOST=127.0.0.1",
+                        "DB_NAME=jkstack"
+                    ]
+                },
+                "result": {
+                    "description": "是否直接返回数据",
+                    "type": "boolean",
+                    "default": true,
+                    "example": true
+                },
+                "timeout": {
+                    "description": "超时时间",
+                    "type": "integer",
+                    "default": 60,
+                    "example": 3600
+                },
+                "user": {
+                    "description": "运行身份，仅linux有效",
+                    "type": "string",
+                    "example": "nobody"
+                },
+                "workdir": {
+                    "description": "工作目录",
+                    "type": "string",
+                    "example": "/var/log"
+                }
+            }
+        },
+        "exec.runPayload": {
+            "type": "object",
+            "required": [
+                "begin",
+                "id",
+                "pid"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "开始时间戳",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "id": {
+                    "description": "任务ID",
+                    "type": "string",
+                    "example": "20220922-00001-4bc99720760771f6"
+                },
+                "pid": {
+                    "description": "进程ID",
+                    "type": "integer",
+                    "example": 9655
+                },
+                "stauts": {
+                    "description": "任务状态，仅当result参数为true时返回",
+                    "$ref": "#/definitions/exec.result"
+                }
+            }
+        },
+        "exec.status": {
+            "type": "object",
+            "required": [
+                "begin",
+                "done"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "任务开始时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "code": {
+                    "description": "运行结果状态码",
+                    "type": "integer",
+                    "example": 0
+                },
+                "done": {
+                    "description": "该任务是否已执行完毕",
+                    "type": "boolean",
+                    "example": false
+                },
+                "end": {
+                    "description": "结束时间，仅当running=false时返回",
+                    "type": "integer",
+                    "example": 1663816771
+                }
+            }
+        },
+        "file.info": {
+            "type": "object",
+            "required": [
+                "auth",
+                "group",
+                "is_dir",
+                "is_link",
+                "name",
+                "size",
+                "user"
+            ],
+            "properties": {
+                "auth": {
+                    "description": "文件权限（10进制）",
+                    "type": "integer",
+                    "example": 777
+                },
+                "group": {
+                    "description": "所属组",
+                    "type": "string",
+                    "example": "root"
+                },
+                "is_dir": {
+                    "description": "是否是目录",
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_link": {
+                    "description": "是否是软链",
+                    "type": "boolean",
+                    "example": false
+                },
+                "link_dir": {
+                    "description": "连接路径",
+                    "type": "string",
+                    "example": "/usr/bin"
+                },
+                "name": {
+                    "description": "文件名",
+                    "type": "string",
+                    "example": "bin"
+                },
+                "size": {
+                    "description": "文件大小",
+                    "type": "integer",
+                    "example": 155
+                },
+                "user": {
+                    "description": "所属用户",
+                    "type": "string",
+                    "example": "root"
+                }
             }
         },
         "info.serverInfo": {

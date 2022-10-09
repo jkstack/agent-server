@@ -7,6 +7,7 @@ import (
 	"server/internal/agent"
 	"server/internal/api"
 	"server/internal/api/agents"
+	"server/internal/api/exec"
 	"server/internal/api/foo"
 	"server/internal/api/info"
 	"server/internal/api/metrics"
@@ -20,7 +21,7 @@ import (
 	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/stat"
 	runtime "github.com/jkstack/jkframe/utils"
-	"github.com/lwch/service"
+	"github.com/kardianos/service"
 	"github.com/shirou/gopsutil/v3/disk"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -96,6 +97,7 @@ func (app *App) Start(s service.Service) error {
 		apis = append(apis, foo.New())
 		apis = append(apis, info.New(app.version, &app.blocked))
 		apis = append(apis, metrics.New())
+		apis = append(apis, exec.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)
