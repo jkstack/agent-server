@@ -18,7 +18,9 @@ jkstack agent统一管理服务，与同类产品相比有以下优势：
 3. 主机监控信息采集，需依赖[metrics-agent](https://github.com/jkstack/metrics-agent)
    - 采集任务的批量启动/停止
    - 采集节点的动态更改任务配置
-4. 支持agent节点状态监控和grafana展示
+4. 远程脚本执行，需依赖[exec-agent](https://github.com/jkstack/metrics-agent)
+5. 远程文件列表和上传/下载，需依赖[exec-agent](https://github.com/jkstack/exec-agent)
+6. 支持agent节点状态监控和grafana展示
 
 ## 已支持agent
 
