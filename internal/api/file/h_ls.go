@@ -61,6 +61,7 @@ func (h *Handler) ls(gin *gin.Context) {
 
 	taskID, err := cli.SendFileLs(args.Dir)
 	utils.Assert(err)
+	defer cli.ChanClose(taskID)
 
 	var msg *anet.Msg
 	select {

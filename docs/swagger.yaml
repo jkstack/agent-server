@@ -1157,6 +1157,48 @@ paths:
       summary: 获取运行状态
       tags:
       - exec
+  /file/{id}/download:
+    get:
+      operationId: /api/file/download
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 文件路径
+        in: query
+        name: dir
+        required: true
+        type: string
+      - default: 600
+        description: 超时时间
+        in: query
+        minimum: 1
+        name: timeout
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 输出内容
+          schema:
+            type: string
+        "404":
+          description: file not found
+          schema:
+            type: string
+        "500":
+          description: 出错原因
+          schema:
+            type: string
+        "503":
+          description: 出错原因
+          schema:
+            type: string
+      summary: 下载文件
+      tags:
+      - file
   /file/{id}/ls:
     get:
       operationId: /api/file/ls
