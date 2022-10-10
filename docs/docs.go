@@ -381,7 +381,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "查询路径",
-                        "name": "path",
+                        "name": "dir",
                         "in": "query",
                         "required": true
                     }
@@ -1171,12 +1171,11 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "auth",
-                "group",
                 "is_dir",
                 "is_link",
+                "mod_time",
                 "name",
-                "size",
-                "user"
+                "size"
             ],
             "properties": {
                 "auth": {
@@ -1203,6 +1202,11 @@ const docTemplate = `{
                     "description": "连接路径",
                     "type": "string",
                     "example": "/usr/bin"
+                },
+                "mod_time": {
+                    "description": "更新时间",
+                    "type": "integer",
+                    "example": 1663816771
                 },
                 "name": {
                     "description": "文件名",

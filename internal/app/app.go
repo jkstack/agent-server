@@ -8,6 +8,7 @@ import (
 	"server/internal/api"
 	"server/internal/api/agents"
 	"server/internal/api/exec"
+	"server/internal/api/file"
 	"server/internal/api/foo"
 	"server/internal/api/info"
 	"server/internal/api/metrics"
@@ -98,12 +99,13 @@ func (app *App) Start(s service.Service) error {
 		apis = append(apis, info.New(app.version, &app.blocked))
 		apis = append(apis, metrics.New())
 		apis = append(apis, exec.New())
+		apis = append(apis, file.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)
 			g := apiGroup.Group("/" + api.Module())
 			for route, cb := range api.HandleFuncs() {
-				logging.Info("route => %s /api/%s%s", route.Method, api.Module(), route.Uri)
+				logging.Info("route => %6s /api/%s%s", route.Method, api.Module(), route.Uri)
 				g.Handle(route.Method, route.Uri, cb)
 			}
 		}

@@ -227,6 +227,10 @@ definitions:
         description: 连接路径
         example: /usr/bin
         type: string
+      mod_time:
+        description: 更新时间
+        example: 1663816771
+        type: integer
       name:
         description: 文件名
         example: bin
@@ -241,12 +245,11 @@ definitions:
         type: string
     required:
     - auth
-    - group
     - is_dir
     - is_link
+    - mod_time
     - name
     - size
-    - user
     type: object
   info.serverInfo:
     properties:
@@ -1165,7 +1168,7 @@ paths:
         type: string
       - description: 查询路径
         in: query
-        name: path
+        name: dir
         required: true
         type: string
       produces:
