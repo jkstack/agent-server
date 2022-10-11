@@ -1178,7 +1178,7 @@ paths:
         name: timeout
         type: integer
       produces:
-      - application/json
+      - text/plain
       responses:
         "200":
           description: 输出内容
@@ -1228,6 +1228,57 @@ paths:
                   type: array
               type: object
       summary: 查询文件列表
+      tags:
+      - file
+  /file/{id}/upload:
+    post:
+      operationId: /api/file/upload
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 保存路径
+        in: formData
+        name: dir
+        required: true
+        type: string
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: md5校验码
+        in: formData
+        name: md5
+        type: string
+      - default: 644
+        description: 文件权限（8进制）
+        in: formData
+        name: mod
+        type: integer
+      - description: 文件所属用户
+        in: formData
+        name: own_user
+        type: string
+      - description: 文件所属分组
+        in: formData
+        name: own_group
+        type: string
+      - default: 60
+        description: 超时时间
+        in: formData
+        name: timeout
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Success'
+      summary: 上传文件
       tags:
       - file
   /foo/{id}:

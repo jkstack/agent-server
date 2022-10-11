@@ -45,7 +45,7 @@ func (h *Handler) dynamicConnections(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeMetrics {

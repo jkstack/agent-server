@@ -29,7 +29,7 @@ func (h *Handler) foo(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 	}
 	if cli.Type() != agent.TypeExample {
 		g.InvalidType(agent.TypeExample, cli.Type())

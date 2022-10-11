@@ -31,7 +31,7 @@ func (h *Handler) list(gin *gin.Context) {
 
 	var args listArgs
 	if err := g.ShouldBindQuery(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 

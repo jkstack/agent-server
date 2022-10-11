@@ -42,7 +42,7 @@ func (h *Handler) ls(gin *gin.Context) {
 
 	var args lsArgs
 	if err := g.ShouldBindQuery(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 

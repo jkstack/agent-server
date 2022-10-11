@@ -1,15 +1,10 @@
 package file
 
 import (
-	"bytes"
-	"compress/gzip"
 	"crypto/md5"
-	"encoding/base64"
-	"fmt"
 	"io"
-	"net/http"
 	"os"
-	"strings"
+	"server/internal/utils"
 
 	"github.com/jkstack/anet"
 )
@@ -43,50 +38,11 @@ func writeFile(f *os.File, data *anet.DownloadData) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	dec, err := decodeData(data.Data)
+	dec, err := utils.DecodeData(data.Data)
 	if err != nil {
 		return 0, err
 	}
 	return f.Write(dec)
-}
-
-func encodeData(data []byte) string {
-	var str string
-	if strings.Contains(http.DetectContentType(data), "text/plain") {
-		var buf bytes.Buffer
-		w := gzip.NewWriter(&buf)
-		if _, err := w.Write(data); err == nil {
-			w.Close()
-			str = "$1$" + base64.StdEncoding.EncodeToString(buf.Bytes())
-		}
-	}
-	if len(str) == 0 {
-		str = "$0$" + base64.StdEncoding.EncodeToString(data)
-	}
-	return str
-}
-
-func decodeData(str string) ([]byte, error) {
-	switch {
-	case strings.HasPrefix(str, "$0$"):
-		str := strings.TrimPrefix(str, "$0$")
-		return base64.StdEncoding.DecodeString(str)
-	case strings.HasPrefix(str, "$1$"):
-		str := strings.TrimPrefix(str, "$1$")
-		b64 := base64.NewDecoder(base64.StdEncoding, strings.NewReader(str))
-		r, err := gzip.NewReader(b64)
-		if err != nil {
-			return nil, err
-		}
-		var buf bytes.Buffer
-		_, err = io.Copy(&buf, r)
-		if err != nil {
-			return nil, err
-		}
-		return buf.Bytes(), nil
-	default:
-		return nil, fmt.Errorf("invalid data: %s", str)
-	}
 }
 
 func md5From(r io.Reader) ([md5.Size]byte, error) {

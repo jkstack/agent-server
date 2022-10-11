@@ -40,7 +40,7 @@ func (h *Handler) getStatus(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeMetrics {
@@ -97,7 +97,7 @@ func (h *Handler) setStatus(gin *gin.Context) {
 	id := g.Param("id")
 	var args setArgs
 	if err := g.ShouldBindJson(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 
@@ -105,7 +105,7 @@ func (h *Handler) setStatus(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeMetrics {
@@ -142,7 +142,7 @@ func (h *Handler) batchSetStatus(gin *gin.Context) {
 
 	var args batchSetArgs
 	if err := g.ShouldBindJson(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 	switch args.OS {

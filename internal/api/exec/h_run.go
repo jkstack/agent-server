@@ -58,7 +58,7 @@ func (h *Handler) run(gin *gin.Context) {
 		Timeout: 60,
 	}
 	if err := g.ShouldBindJson(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 
@@ -72,7 +72,7 @@ func (h *Handler) run(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeExec {

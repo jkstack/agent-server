@@ -2,17 +2,30 @@ package file
 
 import (
 	"net/http"
+	"os"
 	"server/internal/agent"
 	"server/internal/api"
 	"server/internal/conf"
+	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/anet"
+	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/stat"
 )
 
+type uploadInfo struct {
+	token   string
+	dir     string
+	rm      bool
+	timeout time.Time
+}
+
 type Handler struct {
-	cfg *conf.Configure
+	sync.RWMutex
+	cfg         *conf.Configure
+	uploadCache map[string]*uploadInfo
 }
 
 func New() *Handler {
@@ -33,6 +46,8 @@ func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
 		api.MakeRoute(http.MethodGet, "/:id/ls"):       h.ls,
 		api.MakeRoute(http.MethodGet, "/:id/download"): h.download,
+		api.MakeRoute(http.MethodPost, "/:id/upload"):  h.upload,
+		api.MakeRoute(http.MethodGet, "/upload"):       h.uploadHandle,
 	}
 }
 
@@ -46,4 +61,32 @@ func (h *Handler) OnMessage(*agent.Agent, *anet.Msg) {
 }
 
 func (h *Handler) clean() {
+}
+
+func (h *Handler) logUploadCache(taskID, dir, token string,
+	deadline time.Time, rm bool) {
+	h.Lock()
+	h.uploadCache[taskID] = &uploadInfo{
+		token:   token,
+		dir:     dir,
+		rm:      rm,
+		timeout: deadline,
+	}
+	h.Unlock()
+	logging.Info("log cache: %s", taskID)
+}
+
+func (h *Handler) removeUploadCache(id string) bool {
+	h.Lock()
+	cache := h.uploadCache[id]
+	delete(h.uploadCache, id)
+	h.Unlock()
+	if cache == nil {
+		return false
+	}
+	logging.Info("removed cache: %s", id)
+	if cache.rm {
+		os.Remove(cache.dir)
+	}
+	return true
 }

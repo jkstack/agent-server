@@ -27,7 +27,7 @@ type downloadArgs struct {
 // @ID /api/file/download
 // @Summary 下载文件
 // @Tags file
-// @Produce json
+// @Produce plain
 // @Param   id      path  string true  "节点ID"
 // @Param   dir     query string true  "文件路径"
 // @Param   timeout query int    false "超时时间" default(600)  minimum(1)
@@ -41,7 +41,7 @@ func (h *Handler) download(gin *gin.Context) {
 
 	var args downloadArgs
 	if err := g.ShouldBindQuery(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 

@@ -34,7 +34,7 @@ func (h *Handler) info(gin *gin.Context) {
 
 	agent := agents.Get(id)
 	if agent == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	a := agent.Info()

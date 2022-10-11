@@ -355,7 +355,7 @@
         "/file/{id}/download": {
             "get": {
                 "produces": [
-                    "application/json"
+                    "text/plain"
                 ],
                 "tags": [
                     "file"
@@ -460,6 +460,81 @@
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/file/{id}/upload": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "file"
+                ],
+                "summary": "上传文件",
+                "operationId": "/api/file/upload",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "保存路径",
+                        "name": "dir",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "文件",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "md5校验码",
+                        "name": "md5",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 644,
+                        "description": "文件权限（8进制）",
+                        "name": "mod",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "文件所属用户",
+                        "name": "own_user",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "文件所属分组",
+                        "name": "own_group",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 60,
+                        "description": "超时时间",
+                        "name": "timeout",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
                         }
                     }
                 }

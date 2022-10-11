@@ -26,7 +26,7 @@ func (h *Handler) pty(gin *gin.Context) {
 	id := g.Param("id")
 	pid, err := strconv.ParseInt(g.Param("pid"), 10, 64)
 	if err != nil {
-		api.BadParamErr("pid")
+		g.BadParam("pid")
 		return
 	}
 

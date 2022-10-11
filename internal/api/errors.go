@@ -11,18 +11,10 @@ func (e BadParam) Error() string {
 	return "bad param"
 }
 
-func BadParamErr(param string) {
-	panic(BadParam(param))
-}
-
 type Notfound string
 
 func (e Notfound) Error() string {
 	return fmt.Sprintf("not found: %s", string(e))
-}
-
-func NotfoundErr(what string) {
-	panic(Notfound(what))
 }
 
 // MissingParam missing param error

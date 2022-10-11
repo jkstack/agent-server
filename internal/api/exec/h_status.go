@@ -29,7 +29,7 @@ func (h *Handler) status(gin *gin.Context) {
 	id := g.Param("id")
 	pid, err := strconv.ParseInt(g.Param("pid"), 10, 64)
 	if err != nil {
-		api.BadParamErr("pid")
+		g.BadParam("pid")
 		return
 	}
 
@@ -37,13 +37,13 @@ func (h *Handler) status(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 
 	task := h.getTasksOrCreate(id).get(int(pid))
 	if task == nil {
-		g.NotFound("pid")
+		g.Notfound("pid")
 		return
 	}
 

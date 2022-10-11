@@ -50,11 +50,6 @@ func (ctx *GContext) ErrAndLog(code int, msg string) {
 	logging.Error(format, args...)
 }
 
-// NotFound not found error
-func (ctx *GContext) NotFound(what string) {
-	panic(Notfound(what))
-}
-
 // InvalidType invalid type error
 func (ctx *GContext) InvalidType(want, got string) {
 	panic(InvalidType{want: want, got: got})
@@ -63,6 +58,21 @@ func (ctx *GContext) InvalidType(want, got string) {
 // Timeout timeout error
 func (ctx *GContext) Timeout() {
 	panic(Timeout{})
+}
+
+// Notfound not found error
+func (ctx *GContext) Notfound(what string) {
+	panic(Notfound(what))
+}
+
+// BadParam bad param error
+func (ctx *GContext) BadParam(param string) {
+	panic(BadParam(param))
+}
+
+// MissingParam missing param error
+func (ctx *GContext) MissingParam(what string) {
+	panic(MissingParam(what))
 }
 
 // HttpError response http error
