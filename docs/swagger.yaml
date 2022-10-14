@@ -945,6 +945,8 @@ info:
 paths:
   /agents:
     get:
+      consumes:
+      - application/json
       operationId: /api/agents
       parameters:
       - description: 节点类型,不指定则为所有
@@ -994,6 +996,8 @@ paths:
       - agents
   /agents/{id}:
     get:
+      consumes:
+      - application/json
       operationId: /api/agents/info
       parameters:
       - description: 节点ID
@@ -1018,6 +1022,8 @@ paths:
       - agents
   /exec/{id}/kill/{pid}:
     delete:
+      consumes:
+      - application/json
       operationId: /api/exec/kill
       parameters:
       - description: 节点ID
@@ -1042,6 +1048,8 @@ paths:
       - exec
   /exec/{id}/ps:
     get:
+      consumes:
+      - application/json
       operationId: /api/exec/ps
       parameters:
       - description: 节点ID
@@ -1068,6 +1076,8 @@ paths:
       - exec
   /exec/{id}/pty/{pid}:
     get:
+      consumes:
+      - application/json
       operationId: /api/exec/pty
       parameters:
       - description: 节点ID
@@ -1100,6 +1110,8 @@ paths:
       - exec
   /exec/{id}/run:
     post:
+      consumes:
+      - application/json
       operationId: /api/exec/run
       parameters:
       - description: 节点ID
@@ -1130,6 +1142,8 @@ paths:
       - exec
   /exec/{id}/status/{pid}:
     get:
+      consumes:
+      - application/json
       operationId: /api/exec/status
       parameters:
       - description: 节点ID
@@ -1159,6 +1173,8 @@ paths:
       - exec
   /file/{id}/download:
     get:
+      consumes:
+      - application/json
       operationId: /api/file/download
       parameters:
       - description: 节点ID
@@ -1201,6 +1217,8 @@ paths:
       - file
   /file/{id}/ls:
     get:
+      consumes:
+      - application/json
       operationId: /api/file/ls
       parameters:
       - description: 节点ID
@@ -1232,6 +1250,8 @@ paths:
       - file
   /file/{id}/upload:
     post:
+      consumes:
+      - multipart/form-data
       operationId: /api/file/upload
       parameters:
       - description: 节点ID
@@ -1283,6 +1303,8 @@ paths:
       - file
   /foo/{id}:
     get:
+      consumes:
+      - application/json
       operationId: /api/foo
       parameters:
       - description: 节点ID
@@ -1302,6 +1324,8 @@ paths:
       - foo
   /info/server:
     get:
+      consumes:
+      - application/json
       operationId: /api/info/server
       produces:
       - application/json
@@ -1320,6 +1344,8 @@ paths:
       - info
   /metrics/{id}/dynamic:
     get:
+      consumes:
+      - application/json
       description: |-
         1. 当指定top参数时将会获取CPU占用率最高的n个进程数据
         2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置
@@ -1366,6 +1392,8 @@ paths:
       - metrics
   /metrics/{id}/dynamic/connections:
     get:
+      consumes:
+      - application/json
       description: |-
         1. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置
         2. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接
@@ -1409,6 +1437,8 @@ paths:
       - metrics
   /metrics/{id}/dynamic/process:
     get:
+      consumes:
+      - application/json
       operationId: /api/metrics/dynamic/process
       parameters:
       - description: 节点ID
@@ -1439,6 +1469,8 @@ paths:
       - metrics
   /metrics/{id}/dynamic/temps:
     get:
+      consumes:
+      - application/json
       operationId: /api/metrics/dynamic/temps
       parameters:
       - description: 节点ID
@@ -1465,6 +1497,8 @@ paths:
       - metrics
   /metrics/{id}/dynamic/usage:
     get:
+      consumes:
+      - application/json
       operationId: /api/metrics/dynamic/usage
       parameters:
       - description: 节点ID
@@ -1489,6 +1523,8 @@ paths:
       - metrics
   /metrics/{id}/static:
     get:
+      consumes:
+      - application/json
       operationId: /api/metrics/static
       parameters:
       - description: 节点ID
@@ -1513,6 +1549,8 @@ paths:
       - metrics
   /metrics/{id}/status:
     get:
+      consumes:
+      - application/json
       operationId: /api/metrics/status_get
       parameters:
       - description: 节点ID
@@ -1536,6 +1574,8 @@ paths:
       tags:
       - metrics
     put:
+      consumes:
+      - application/json
       operationId: /api/metrics/status_set
       parameters:
       - description: 节点ID

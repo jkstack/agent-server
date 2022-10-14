@@ -28,6 +28,7 @@ const uploadLimit = 1024 * 1024
 // @ID /api/file/upload
 // @Summary 上传文件
 // @Tags file
+// @Accept mpfd
 // @Produce json
 // @Param   id        path     string true  "节点ID"
 // @Param   dir       formData string true  "保存路径"
@@ -138,7 +139,7 @@ func (h *Handler) upload(gin *gin.Context) {
 		utils.Assert(err)
 		taskID, err = lutils.TaskID()
 		utils.Assert(err)
-		uri := "/file/upload/" + taskID
+		uri := "/api/file/upload/" + taskID
 		h.logUploadCache(taskID, tmpDir, token,
 			time.Now().Add(time.Duration(timeout)*time.Second), true)
 		defer h.removeUploadCache(taskID)

@@ -18,6 +18,7 @@ type status struct {
 // @ID /api/exec/status
 // @Summary 获取运行状态
 // @Tags exec
+// @Accept  json
 // @Produce json
 // @Param   id  path string true "节点ID"
 // @Param   pid path int    true "进程号"

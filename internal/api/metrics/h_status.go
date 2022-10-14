@@ -27,6 +27,7 @@ type status struct {
 // @ID /api/metrics/status_get
 // @Summary 获取节点自动采集状态
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true "节点ID"
 // @Success 200  {object}     api.Success{payload=status}
@@ -86,6 +87,7 @@ type setArgs struct {
 // @ID /api/metrics/status_set
 // @Summary 设置节点自动采集状态
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true "节点ID"
 // @Param   jobs body setArgs true "需启动的任务列表"

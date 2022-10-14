@@ -29,7 +29,9 @@ type Handler struct {
 }
 
 func New() *Handler {
-	h := &Handler{}
+	h := &Handler{
+		uploadCache: make(map[string]*uploadInfo),
+	}
 	go h.clean()
 	return h
 }
@@ -47,7 +49,7 @@ func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 		api.MakeRoute(http.MethodGet, "/:id/ls"):       h.ls,
 		api.MakeRoute(http.MethodGet, "/:id/download"): h.download,
 		api.MakeRoute(http.MethodPost, "/:id/upload"):  h.upload,
-		api.MakeRoute(http.MethodGet, "/upload"):       h.uploadHandle,
+		api.MakeRoute(http.MethodGet, "/upload/:id"):   h.uploadHandle,
 	}
 }
 

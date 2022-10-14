@@ -63,7 +63,7 @@ func (agent *Agent) read(ctx context.Context, cancel context.CancelFunc, remoteA
 		case <-ctx.Done():
 			return
 		case ch <- msg:
-		case <-time.After(10 * time.Second):
+		case <-time.After(10 * time.Minute):
 			return
 		}
 	}

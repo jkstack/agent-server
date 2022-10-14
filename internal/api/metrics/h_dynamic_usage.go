@@ -50,6 +50,7 @@ type interfaceUsage struct {
 // @ID /api/metrics/dynamic/usage
 // @Summary 获取节点的usage动态数据
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true "节点ID"
 // @Success 200  {object}     api.Success{payload=usage}

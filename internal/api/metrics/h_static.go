@@ -88,6 +88,7 @@ type staticInfo struct {
 // @ID /api/metrics/static
 // @Summary 获取节点的静态数据
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true "节点ID"
 // @Success 200  {object}     api.Success{payload=staticInfo}

@@ -3,7 +3,6 @@ package file
 import (
 	"net/http"
 	"server/internal/api"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +10,8 @@ import (
 func (h *Handler) uploadHandle(gin *gin.Context) {
 	g := api.GetG(gin)
 
-	id := strings.TrimPrefix(g.Request.RequestURI, "/file/upload/")
+	id := g.Param("id")
+
 	h.RLock()
 	cache := h.uploadCache[id]
 	h.RUnlock()

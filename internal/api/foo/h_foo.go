@@ -16,6 +16,7 @@ import (
 // @ID /api/foo
 // @Summary 调用example类型的agent
 // @Tags foo
+// @Accept  json
 // @Produce json
 // @Param   id    path string  true "节点ID"
 // @Success 200   {object}     api.Success

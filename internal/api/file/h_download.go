@@ -27,14 +27,15 @@ type downloadArgs struct {
 // @ID /api/file/download
 // @Summary 下载文件
 // @Tags file
+// @Accept  json
 // @Produce plain
 // @Param   id      path  string true  "节点ID"
 // @Param   dir     query string true  "文件路径"
 // @Param   timeout query int    false "超时时间" default(600)  minimum(1)
-// @Success 200 {string}    "输出内容"
-// @Failure 404 {string}    "file not found"
-// @Failure 500 {string}    "出错原因"
-// @Failure 503 {string}    "出错原因"
+// @Success 200 {string}  string "输出内容"
+// @Failure 404 {string}  string "file not found"
+// @Failure 500 {string}  string "出错原因"
+// @Failure 503 {string}  string "出错原因"
 // @Router /file/{id}/download [get]
 func (h *Handler) download(gin *gin.Context) {
 	g := api.GetG(gin)

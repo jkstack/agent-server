@@ -31,6 +31,7 @@ type process struct {
 // @ID /api/metrics/dynamic/process
 // @Summary 获取节点的所有进程列表数据
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id   path  string  true  "节点ID"
 // @Param   top  query integer false "数量限制"

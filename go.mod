@@ -11,7 +11,7 @@ require (
 	github.com/goreleaser/nfpm/v2 v2.19.2
 	github.com/gorilla/websocket v1.5.0
 	github.com/jkstack/anet v0.0.0-20221010100306-9a88844af68f
-	github.com/jkstack/jkframe v1.0.9
+	github.com/jkstack/jkframe v1.1.0
 	github.com/kardianos/service v1.2.1
 	github.com/prometheus/client_golang v1.13.0
 	github.com/shirou/gopsutil/v3 v3.22.9

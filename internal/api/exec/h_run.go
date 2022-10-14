@@ -44,6 +44,7 @@ type runPayload struct {
 // @ID /api/exec/run
 // @Summary 执行命令或脚本
 // @Tags exec
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true  "节点ID"
 // @Param   args body runArgs true "需启动的任务列表"

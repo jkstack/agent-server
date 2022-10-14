@@ -13,6 +13,7 @@ import (
 // @ID /api/exec/kill
 // @Summary 结束进程
 // @Tags exec
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true  "节点ID"
 // @Param   pid  path int     true  "进程号"

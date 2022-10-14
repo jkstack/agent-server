@@ -4,9 +4,9 @@ import (
 	"crypto/md5"
 	"io"
 	"os"
-	"server/internal/utils"
 
 	"github.com/jkstack/anet"
+	"github.com/jkstack/jkframe/compress"
 )
 
 const blockSize = 4096
@@ -38,7 +38,7 @@ func writeFile(f *os.File, data *anet.DownloadData) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	dec, err := utils.DecodeData(data.Data)
+	dec, err := compress.Decompress(data.Data)
 	if err != nil {
 		return 0, err
 	}

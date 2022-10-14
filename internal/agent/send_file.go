@@ -6,6 +6,7 @@ import (
 	"server/internal/utils"
 
 	"github.com/jkstack/anet"
+	"github.com/jkstack/jkframe/compress"
 )
 
 func (agent *Agent) SendFileLs(dir string) (string, error) {
@@ -77,7 +78,7 @@ func (agent *Agent) SendUpload(ctx UploadContext, id string) (string, error) {
 		MD5:      ctx.Md5,
 	}
 	if len(ctx.Data) > 0 {
-		msg.Upload.Data = utils.EncodeData(ctx.Data)
+		msg.Upload.Data = compress.Compress(ctx.Data)
 	} else if len(ctx.Uri) > 0 {
 		msg.Upload.URI = ctx.Uri
 		msg.Upload.Token = ctx.Token
