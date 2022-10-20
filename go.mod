@@ -8,7 +8,7 @@ require (
 	github.com/Shopify/sarama v1.37.2
 	github.com/dustin/go-humanize v1.0.0
 	github.com/gin-gonic/gin v1.8.1
-	github.com/goreleaser/nfpm/v2 v2.19.2
+	github.com/goreleaser/nfpm/v2 v2.20.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/jkstack/anet v0.0.0-20221010100306-9a88844af68f
 	github.com/jkstack/jkframe v1.1.0
@@ -17,8 +17,8 @@ require (
 	github.com/shirou/gopsutil/v3 v3.22.9
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
 	github.com/swaggo/gin-swagger v1.5.3
-	github.com/swaggo/swag v1.8.6
-	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af
+	github.com/swaggo/swag v1.8.7
+	golang.org/x/time v0.1.0
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -91,7 +91,7 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.17 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/power-devops/perfstat v0.0.0-20220216144756-c35f1ee13d7c // indirect
-	github.com/prometheus/client_model v0.2.0 // indirect
+	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
@@ -101,11 +101,11 @@ require (
 	github.com/xanzy/ssh-agent v0.3.2 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	gitlab.com/digitalxero/go-conventional-commit v1.0.7 // indirect
-	golang.org/x/crypto v0.0.0-20221012134737-56aed061732a // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
-	golang.org/x/net v0.0.0-20221012135044-0b7e1fb9d458 // indirect
-	golang.org/x/sys v0.0.0-20221010170243-090e33056c14 // indirect
-	golang.org/x/text v0.3.8 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/mod v0.6.0 // indirect
+	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
