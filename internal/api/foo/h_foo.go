@@ -16,6 +16,7 @@ import (
 // @ID /api/foo
 // @Summary 调用example类型的agent
 // @Tags foo
+// @Accept  json
 // @Produce json
 // @Param   id    path string  true "节点ID"
 // @Success 200   {object}     api.Success
@@ -29,7 +30,7 @@ func (h *Handler) foo(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 	}
 	if cli.Type() != agent.TypeExample {
 		g.InvalidType(agent.TypeExample, cli.Type())

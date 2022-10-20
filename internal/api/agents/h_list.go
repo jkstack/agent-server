@@ -19,6 +19,7 @@ type listArgs struct {
 // @ID /api/agents
 // @Summary 获取节点列表
 // @Tags agents
+// @Accept  json
 // @Produce json
 // @Param   type  query string  false "节点类型,不指定则为所有" enums(example-agent,container-agent,metrics-agent,...)
 // @Param   os    query string  false "节点操作系统,不指定则为所有" enums(linux,windows)
@@ -31,7 +32,7 @@ func (h *Handler) list(gin *gin.Context) {
 
 	var args listArgs
 	if err := g.ShouldBindQuery(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 

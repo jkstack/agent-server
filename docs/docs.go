@@ -20,6 +20,9 @@ const docTemplate = `{
     "paths": {
         "/agents": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -95,6 +98,9 @@ const docTemplate = `{
         },
         "/agents/{id}": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -136,6 +142,9 @@ const docTemplate = `{
         },
         "/exec/{id}/kill/{pid}": {
             "delete": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -172,6 +181,9 @@ const docTemplate = `{
         },
         "/exec/{id}/ps": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -216,6 +228,9 @@ const docTemplate = `{
         },
         "/exec/{id}/pty/{pid}": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "text/plain"
                 ],
@@ -264,6 +279,9 @@ const docTemplate = `{
         },
         "/exec/{id}/run": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -314,6 +332,9 @@ const docTemplate = `{
         },
         "/exec/{id}/status/{pid}": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -360,8 +381,76 @@ const docTemplate = `{
                 }
             }
         },
+        "/file/{id}/download": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "file"
+                ],
+                "summary": "下载文件",
+                "operationId": "/api/file/download",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "文件路径",
+                        "name": "dir",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 600,
+                        "description": "超时时间",
+                        "name": "timeout",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "输出内容",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "file not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "出错原因",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "503": {
+                        "description": "出错原因",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/file/{id}/ls": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -381,7 +470,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "查询路径",
-                        "name": "path",
+                        "name": "dir",
                         "in": "query",
                         "required": true
                     }
@@ -411,8 +500,89 @@ const docTemplate = `{
                 }
             }
         },
+        "/file/{id}/upload": {
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "file"
+                ],
+                "summary": "上传文件",
+                "operationId": "/api/file/upload",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "保存路径",
+                        "name": "dir",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "文件",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "md5校验码",
+                        "name": "md5",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 644,
+                        "description": "文件权限（8进制）",
+                        "name": "mod",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "文件所属用户",
+                        "name": "own_user",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "文件所属分组",
+                        "name": "own_group",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 60,
+                        "description": "超时时间",
+                        "name": "timeout",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/foo/{id}": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -442,6 +612,9 @@ const docTemplate = `{
         },
         "/info/server": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -518,6 +691,9 @@ const docTemplate = `{
         "/metrics/{id}/dynamic": {
             "get": {
                 "description": "1. 当指定top参数时将会获取CPU占用率最高的n个进程数据\n2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置\n3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -584,6 +760,9 @@ const docTemplate = `{
         "/metrics/{id}/dynamic/connections": {
             "get": {
                 "description": "1. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置\n2. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -646,6 +825,9 @@ const docTemplate = `{
         },
         "/metrics/{id}/dynamic/process": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -696,6 +878,9 @@ const docTemplate = `{
         },
         "/metrics/{id}/dynamic/temps": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -740,6 +925,9 @@ const docTemplate = `{
         },
         "/metrics/{id}/dynamic/usage": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -781,6 +969,9 @@ const docTemplate = `{
         },
         "/metrics/{id}/static": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -822,6 +1013,9 @@ const docTemplate = `{
         },
         "/metrics/{id}/status": {
             "get": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -861,6 +1055,9 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -1171,12 +1368,11 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "auth",
-                "group",
                 "is_dir",
                 "is_link",
+                "mod_time",
                 "name",
-                "size",
-                "user"
+                "size"
             ],
             "properties": {
                 "auth": {
@@ -1203,6 +1399,11 @@ const docTemplate = `{
                     "description": "连接路径",
                     "type": "string",
                     "example": "/usr/bin"
+                },
+                "mod_time": {
+                    "description": "更新时间",
+                    "type": "integer",
+                    "example": 1663816771
                 },
                 "name": {
                     "description": "文件名",

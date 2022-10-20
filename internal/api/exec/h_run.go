@@ -44,6 +44,7 @@ type runPayload struct {
 // @ID /api/exec/run
 // @Summary 执行命令或脚本
 // @Tags exec
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true  "节点ID"
 // @Param   args body runArgs true "需启动的任务列表"
@@ -58,7 +59,7 @@ func (h *Handler) run(gin *gin.Context) {
 		Timeout: 60,
 	}
 	if err := g.ShouldBindJson(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 
@@ -72,7 +73,7 @@ func (h *Handler) run(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeExec {

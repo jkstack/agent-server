@@ -13,6 +13,7 @@ import (
 // @ID /api/exec/kill
 // @Summary 结束进程
 // @Tags exec
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true  "节点ID"
 // @Param   pid  path int     true  "进程号"
@@ -24,7 +25,7 @@ func (h *Handler) kill(gin *gin.Context) {
 	id := g.Param("id")
 	pid, err := strconv.ParseInt(g.Param("pid"), 10, 64)
 	if err != nil {
-		api.BadParamErr("pid")
+		g.BadParam("pid")
 		return
 	}
 
@@ -32,7 +33,7 @@ func (h *Handler) kill(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeExec {

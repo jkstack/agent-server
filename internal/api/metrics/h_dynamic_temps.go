@@ -21,6 +21,7 @@ type temp struct {
 // @ID /api/metrics/dynamic/temps
 // @Summary 获取节点的传感器温度数据
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id   path  string  true  "节点ID"
 // @Success 200  {object}     api.Success{payload=[]temp}
@@ -34,7 +35,7 @@ func (h *Handler) dynamicTemps(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeMetrics {

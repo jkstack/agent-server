@@ -17,6 +17,7 @@ type info struct {
 // @ID /api/exec/ps
 // @Summary 列出正在运行中的任务
 // @Tags exec
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true  "节点ID"
 // @Success 200  {object}     api.Success{payload=[]info}
@@ -30,7 +31,7 @@ func (h *Handler) ps(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeExec {

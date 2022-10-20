@@ -27,6 +27,7 @@ type dynamicInfo struct {
 // @description 3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接
 // @Summary 获取节点的所有动态数据
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id    path  string   true  "节点ID"
 // @Param   top   query integer  false "获取进程列表时的数量限制"
@@ -48,7 +49,7 @@ func (h *Handler) dynamic(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeMetrics {

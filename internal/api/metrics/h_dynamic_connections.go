@@ -27,6 +27,7 @@ type connection struct {
 // @description 2. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接
 // @Summary 获取节点的连接列表数据
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id    path string    true  "节点ID"
 // @Param   kinds query []string false "获取连接类型" Enums(tcp,tcp4,tcp6,udp,udp4,udp6,unix)
@@ -45,7 +46,7 @@ func (h *Handler) dynamicConnections(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeMetrics {

@@ -27,6 +27,7 @@ type status struct {
 // @ID /api/metrics/status_get
 // @Summary 获取节点自动采集状态
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true "节点ID"
 // @Success 200  {object}     api.Success{payload=status}
@@ -40,7 +41,7 @@ func (h *Handler) getStatus(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeMetrics {
@@ -86,6 +87,7 @@ type setArgs struct {
 // @ID /api/metrics/status_set
 // @Summary 设置节点自动采集状态
 // @Tags metrics
+// @Accept  json
 // @Produce json
 // @Param   id   path string  true "节点ID"
 // @Param   jobs body setArgs true "需启动的任务列表"
@@ -97,7 +99,7 @@ func (h *Handler) setStatus(gin *gin.Context) {
 	id := g.Param("id")
 	var args setArgs
 	if err := g.ShouldBindJson(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 
@@ -105,7 +107,7 @@ func (h *Handler) setStatus(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	if cli.Type() != agent.TypeMetrics {
@@ -142,7 +144,7 @@ func (h *Handler) batchSetStatus(gin *gin.Context) {
 
 	var args batchSetArgs
 	if err := g.ShouldBindJson(&args); err != nil {
-		api.BadParamErr(err.Error())
+		g.BadParam(err.Error())
 		return
 	}
 	switch args.OS {

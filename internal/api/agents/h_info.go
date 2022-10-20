@@ -21,6 +21,7 @@ type info struct {
 // @ID /api/agents/info
 // @Summary 获取某个节点信息
 // @Tags agents
+// @Accept  json
 // @Produce json
 // @Param   id    path string  true "节点ID"
 // @Success 200   {object}     api.Success{payload=info}
@@ -34,7 +35,7 @@ func (h *Handler) info(gin *gin.Context) {
 
 	agent := agents.Get(id)
 	if agent == nil {
-		g.NotFound("agent")
+		g.Notfound("agent")
 		return
 	}
 	a := agent.Info()
