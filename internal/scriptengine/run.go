@@ -68,6 +68,12 @@ func (e *Engine) run() bool {
 		e.Err = fmt.Errorf("invalid message type: %d", msg.Type)
 		return false
 	}
+
+	if !msg.Execd.OK {
+		e.Err = errors.New(msg.Execd.Msg)
+		return false
+	}
+
 	e.Pid = msg.Execd.Pid
 
 	ch := e.cli.ChanRead(taskID)

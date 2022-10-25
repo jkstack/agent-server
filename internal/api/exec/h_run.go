@@ -104,6 +104,11 @@ func (h *Handler) run(gin *gin.Context) {
 		return
 	}
 
+	if !msg.Execd.OK {
+		g.ERR(http.StatusServiceUnavailable, msg.Execd.Msg)
+		return
+	}
+
 	task, err := newTask(cli, taskID, msg.Execd.Pid, filepath.Join(h.cfg.CacheDir, "exec"),
 		time.Duration(args.Timeout)*time.Second, msg.Execd.Time)
 	if err != nil {
