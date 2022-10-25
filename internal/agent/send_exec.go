@@ -10,7 +10,7 @@ func (agent *Agent) SendExecRun(
 	cmd string, args []string,
 	auth, user string,
 	workDir string, env []string,
-	timeout int) (string, error) {
+	timeout int, deferRm ...string) (string, error) {
 	id, err := utils.TaskID()
 	if err != nil {
 		return "", err
@@ -25,6 +25,9 @@ func (agent *Agent) SendExecRun(
 		WorkDir: workDir,
 		Env:     env,
 		Timeout: timeout,
+	}
+	if len(deferRm) > 0 {
+		msg.Exec.DeferRM = deferRm[0]
 	}
 	msg.TaskID = id
 	agent.Lock()
