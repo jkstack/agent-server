@@ -34,9 +34,7 @@ type context struct {
 // run 批量执行脚本
 // @ID /api/layout/run
 // @description 分组示例:
-// @description 当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时
-// @description exec-01和exec-02节点为第一分组并发执行，
-// @description 当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务
+// @description 当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务
 // @Summary 批量执行脚本
 // @Tags layout
 // @Accept  mpfd

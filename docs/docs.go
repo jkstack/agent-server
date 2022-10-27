@@ -647,7 +647,7 @@ const docTemplate = `{
         },
         "/layout/run": {
             "post": {
-                "description": "分组示例:\n当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时\nexec-01和exec-02节点为第一分组并发执行，\n当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务",
+                "description": "分组示例:\n当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务",
                 "consumes": [
                     "multipart/form-data"
                 ],
