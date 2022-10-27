@@ -18,18 +18,12 @@ import (
 	"github.com/jkstack/jkframe/utils"
 )
 
-type result struct {
-	Running bool   `json:"running" example:"true" validate:"required"` // 任务是否还在执行中
-	Code    int    `json:"code" example:"0" validate:"required"`       // 任务的返回状态
-	End     int64  `json:"end,omitempty" example:"1663816771"`         // 任务结束时间
-	Data    string `json:"data,omitempty"`                             // 返回内容（base64编码）
-}
-
 type runPayload struct {
-	TaskID string  `json:"id" example:"20220922-00001-4bc99720760771f6" validate:"required"` // 任务ID
-	Begin  int64   `json:"begin" example:"1663816771" validate:"required"`                   // 开始时间戳
-	Pid    int     `json:"pid" example:"9655" validate:"required"`                           // 进程ID
-	Result *result `json:"result,omitempty"`                                                 // 任务状态，仅当result参数为true时返回
+	TaskID string `json:"id" example:"20220922-00001-4bc99720760771f6" validate:"required"` // 任务ID
+	Begin  int64  `json:"begin" example:"1663816771" validate:"required"`                   // 开始时间戳
+	End    int64  `json:"end,omitempty" example:"1663816771"`                               // 任务结束时间
+	Code   int    `json:"code" example:"0" validate:"required"`                             // 任务的返回状态
+	Data   string `json:"data,omitempty"`                                                   // 返回内容（base64编码）
 }
 
 // run 执行脚本
@@ -43,7 +37,6 @@ type runPayload struct {
 // @Param  type    formData string   true  "脚本类型" enums(sh,bash,python,python3,bat,powershell,php,lua)
 // @Param  args    formData []string false "参数"
 // @Param  md5     formData string   false "md5校验码"
-// @Param  result  formData bool     false "是否直接返回数据" default(true)
 // @Param  auth    formData string   false "提权方式，仅linux有效" enums(,sudo,su)
 // @Param  user    formData string   false "运行身份，仅linux有效"
 // @Param  workdir formData string   false "工作目录"
@@ -68,14 +61,6 @@ func (h *Handler) run(gin *gin.Context) {
 	t := g.PostForm("type")
 	args := g.PostFormArray("args")
 	md5sum := g.PostForm("md5")
-	r := true
-	str := g.PostForm("result")
-	if len(str) > 0 {
-		r, err = strconv.ParseBool(str)
-		if err != nil {
-			g.BadParam("result:" + err.Error())
-		}
-	}
 	auth := g.PostForm("auth")
 	switch auth {
 	case "", "sudo", "su":
@@ -86,7 +71,7 @@ func (h *Handler) run(gin *gin.Context) {
 	workDir := g.PostForm("workdir")
 	env := g.PostFormArray("env")
 	timeout := 60
-	str = g.PostForm("timeout")
+	str := g.PostForm("timeout")
 	if len(str) > 0 {
 		n, err := strconv.ParseUint(str, 10, 64)
 		if err != nil {
@@ -170,16 +155,11 @@ func (h *Handler) run(gin *gin.Context) {
 	var ret runPayload
 	ret.TaskID = taskID
 	ret.Begin = e.Begin.Unix()
-	ret.Pid = e.Pid
+	ret.End = e.End.Unix()
+	ret.Code = e.Code
+	data, err = io.ReadAll(cache)
+	utils.Assert(err)
+	ret.Data = base64.StdEncoding.EncodeToString(data)
 
-	if r {
-		ret.Result = new(result)
-		ret.Result.Running = false
-		ret.Result.Code = e.Code
-		ret.Result.End = e.End.Unix()
-		data, err = io.ReadAll(cache)
-		utils.Assert(err)
-		ret.Result.Data = base64.StdEncoding.EncodeToString(data)
-	}
 	g.OK(ret)
 }
