@@ -12,6 +12,7 @@ import (
 	"server/internal/api/file"
 	"server/internal/api/foo"
 	"server/internal/api/info"
+	"server/internal/api/layout"
 	"server/internal/api/metrics"
 	"server/internal/api/script"
 	"server/internal/conf"
@@ -103,6 +104,7 @@ func (app *App) Start(s service.Service) error {
 		apis = append(apis, exec.New())
 		apis = append(apis, file.New())
 		apis = append(apis, script.New())
+		apis = append(apis, layout.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)

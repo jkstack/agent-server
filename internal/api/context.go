@@ -64,3 +64,11 @@ func (ctx *GContext) ShouldBindJson(obj any) error {
 	ctx.reqBody = obj
 	return err
 }
+
+func (ctx *GContext) PostFormArray(key string) []string {
+	value := ctx.Context.PostFormArray(key)
+	if len(value) == 1 && len(value[0]) == 0 {
+		value = nil
+	}
+	return value
+}
