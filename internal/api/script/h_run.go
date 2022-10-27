@@ -144,6 +144,7 @@ func (h *Handler) run(gin *gin.Context) {
 
 	cache, err := l2cache.New(102400, filepath.Join(h.cfg.CacheDir, "script"))
 	utils.Assert(err)
+	defer cache.Close()
 
 	e := scriptengine.New(cli, sArgs)
 	e.SetDataHandleFunc(func(data []byte) error {
