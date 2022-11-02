@@ -30,7 +30,7 @@ type status struct {
 // @Produce json
 // @Param   id   query string  true  "任务ID"
 // @Success 200  {object}      api.Success{payload=status}
-// @Router /layout/status/{id} [get]
+// @Router /layout/{id} [get]
 func (h *Handler) status(gin *gin.Context) {
 	g := api.GetG(gin)
 

@@ -37,8 +37,8 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
-		api.MakeRoute(http.MethodPost, "/run"):       h.run,
-		api.MakeRoute(http.MethodGet, "/status/:id"): h.status,
+		api.MakeRoute(http.MethodPost, "/run"): h.run,
+		api.MakeRoute(http.MethodGet, "/:id"):  h.status,
 	}
 }
 
