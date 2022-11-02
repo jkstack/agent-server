@@ -270,6 +270,65 @@ definitions:
     - is_blocking
     - version
     type: object
+  layout.nodeStatus:
+    properties:
+      begin:
+        description: 开始时间
+        example: 1663816771
+        type: integer
+      end:
+        description: 仅当status=done时返回
+        example: 1663816771
+        type: integer
+      err:
+        description: 错误信息
+        example: xxx not found
+        type: string
+      id:
+        description: 节点ID
+        example: exec-01
+        type: string
+      status:
+        description: 当前状态
+        enum:
+        - waiting
+        - running
+        - done
+        example: waiting
+        type: string
+    required:
+    - begin
+    - id
+    - status
+    type: object
+  layout.status:
+    properties:
+      begin:
+        description: 开始时间
+        example: 1663816771
+        type: integer
+      done:
+        description: 该任务是否已执行完毕
+        example: false
+        type: boolean
+      end:
+        description: 结束时间，仅当done=true时返回
+        example: 1663816771
+        type: integer
+      index:
+        description: 当前正在运行的批次号
+        example: 0
+        type: integer
+      nodes:
+        description: 节点状态列表
+        items:
+          $ref: '#/definitions/layout.nodeStatus'
+        type: array
+    required:
+    - begin
+    - done
+    - index
+    type: object
   metrics.batchSetArgs:
     properties:
       os:
@@ -1468,6 +1527,32 @@ paths:
                   type: string
               type: object
       summary: 批量执行脚本
+      tags:
+      - layout
+  /layout/status/{id}:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/layout/status
+      parameters:
+      - description: 任务ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/layout.status'
+              type: object
+      summary: 获取批量任务状态
       tags:
       - layout
   /metrics/{id}/dynamic:

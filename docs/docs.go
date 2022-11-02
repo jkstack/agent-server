@@ -792,6 +792,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/layout/status/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "layout"
+                ],
+                "summary": "获取批量任务状态",
+                "operationId": "/api/layout/status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "任务ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/layout.status"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/metrics/status": {
             "put": {
                 "produces": [
@@ -1713,6 +1757,83 @@ const docTemplate = `{
                     "description": "服务端版本号",
                     "type": "string",
                     "example": "1.0.0"
+                }
+            }
+        },
+        "layout.nodeStatus": {
+            "type": "object",
+            "required": [
+                "begin",
+                "id",
+                "status"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "开始时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "end": {
+                    "description": "仅当status=done时返回",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "err": {
+                    "description": "错误信息",
+                    "type": "string",
+                    "example": "xxx not found"
+                },
+                "id": {
+                    "description": "节点ID",
+                    "type": "string",
+                    "example": "exec-01"
+                },
+                "status": {
+                    "description": "当前状态",
+                    "type": "string",
+                    "enum": [
+                        "waiting",
+                        "running",
+                        "done"
+                    ],
+                    "example": "waiting"
+                }
+            }
+        },
+        "layout.status": {
+            "type": "object",
+            "required": [
+                "begin",
+                "done",
+                "index"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "开始时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "done": {
+                    "description": "该任务是否已执行完毕",
+                    "type": "boolean",
+                    "example": false
+                },
+                "end": {
+                    "description": "结束时间，仅当done=true时返回",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "index": {
+                    "description": "当前正在运行的批次号",
+                    "type": "integer",
+                    "example": 0
+                },
+                "nodes": {
+                    "description": "节点状态列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/layout.nodeStatus"
+                    }
                 }
             }
         },

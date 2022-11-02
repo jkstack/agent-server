@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
+	"errors"
 	"io"
 	"server/internal/agent"
 	"server/internal/api"
@@ -13,6 +13,7 @@ import (
 	"sort"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jkstack/jkframe/utils"
@@ -22,6 +23,9 @@ const (
 	onErrExit = iota
 	onErrContinue
 )
+
+var errNotfound = errors.New("agent not found")
+var errInvalidType = errors.New("invalid agent type")
 
 type context struct {
 	agents *agent.Agents
@@ -205,6 +209,7 @@ func (h *Handler) run(gin *gin.Context) {
 			}
 		}
 		t.Done = true
+		t.End = time.Now()
 	}(agents, tk)
 
 	g.OK(taskID)
@@ -214,21 +219,33 @@ func (h *Handler) batch(ctx context) bool {
 	ok := true
 	run := func(wg *sync.WaitGroup, id string) bool {
 		defer wg.Done()
+		defer ctx.task.OnDone(id)
+		ctx.task.OnRunning(id)
 		cli := ctx.agents.Get(id)
 		if cli == nil {
 			ok = false
-			ctx.task.Err = fmt.Errorf("agent %s not found", id)
+			ctx.task.OnErr(id, errNotfound)
 			return false
 		}
 		if cli.Type() != agent.TypeExec {
 			ok = false
-			ctx.task.Err = fmt.Errorf("invalid agent type of %s", id)
+			ctx.task.OnErr(id, errInvalidType)
 			return false
 		}
 		e := scriptengine.New(cli, ctx.args)
 		e.SetDataHandleFunc(func(b []byte) error {
 			return nil
 		})
+		e.Run()
+		if e.Err != nil {
+			ok = false
+			ctx.task.OnErr(id, e.Err)
+			return false
+		}
+		if e.Code != 0 {
+			ok = false
+			ctx.task.OnErr(id, errors.New("")) // TODO: error message
+		}
 		return true
 	}
 	var wg sync.WaitGroup
