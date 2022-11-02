@@ -25,7 +25,6 @@ all:
 	echo $(VERSION) > $(OUTDIR)/$(VERSION)/opt/agent-server/.version
 	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf agent-server_$(VERSION).tar.gz \
 		--warning=no-file-changed opt
-	echo $(REVERSION)
 	go run contrib/release.go -o $(OUTDIR)/$(VERSION) \
 		-conf contrib/release.yaml \
 		-name agent-server -version $(VERSION) \
