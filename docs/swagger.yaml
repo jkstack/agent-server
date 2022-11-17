@@ -1427,6 +1427,32 @@ paths:
       summary: 获取当前服务器状态
       tags:
       - info
+  /layout/{id}:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/layout/status
+      parameters:
+      - description: 任务ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/layout.status'
+              type: object
+      summary: 获取批量任务状态
+      tags:
+      - layout
   /layout/run:
     post:
       consumes:
@@ -1527,32 +1553,6 @@ paths:
                   type: string
               type: object
       summary: 批量执行脚本
-      tags:
-      - layout
-  /layout/status/{id}:
-    get:
-      consumes:
-      - application/json
-      operationId: /api/layout/status
-      parameters:
-      - description: 任务ID
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/api.Success'
-            - properties:
-                payload:
-                  $ref: '#/definitions/layout.status'
-              type: object
-      summary: 获取批量任务状态
       tags:
       - layout
   /metrics/{id}/dynamic:

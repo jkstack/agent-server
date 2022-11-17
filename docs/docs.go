@@ -792,7 +792,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/layout/status/{id}": {
+        "/layout/{id}": {
             "get": {
                 "consumes": [
                     "application/json"

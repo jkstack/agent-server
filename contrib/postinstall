@@ -1,2 +1,2 @@
 #!/bin/sh
-/opt/agent-server/bin/agent-server -action install -conf /opt/agent-server/conf/server.conf
+/opt/agent-server/bin/agent-server install --conf /opt/agent-server/conf/server.conf
