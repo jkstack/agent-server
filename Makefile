@@ -31,6 +31,7 @@ all:
 		-workdir $(OUTDIR)/$(VERSION) \
 		-epoch $(REVERSION)
 	rm -fr $(OUTDIR)/$(VERSION)/opt
+	cp conf/manifest.yaml $(OUTDIR)/$(VERSION)/manifest.yaml
 	cp CHANGELOG.md $(OUTDIR)/CHANGELOG.md
 clean:
 	rm -fr $(OUTDIR)
