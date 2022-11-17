@@ -1,0 +1,74 @@
+- key: listen
+  type: uint
+  name:
+    zh: 监听端口号
+  desc:
+    zh: 监听端口号
+  default: 13081
+
+- key: cache_dir
+  type: path
+  name:
+    zh: 缓存文件路径
+  desc:
+    zh: 缓存文件路径
+  default: /opt/agent-server/cache
+  allow_relative: false
+
+- key: cache_threshold
+  type: uint
+  name:
+    zh: 缓存阈值
+  desc:
+    zh: 缓存阈值，超过该值时将开始限流
+  default: 80
+  min: 0
+  max: 100
+
+- key: log_dir
+  type: path
+  name:
+    zh: 日志保存路径
+  desc:
+    zh: 日志保存路径
+  default: /opt/agent-server/logs
+  allow_relative: false
+
+- key: log_size
+  type: bytes
+  name:
+    zh: 日志文件大小
+  desc:
+    zh: 日志文件滚动分割时的文件大小
+
+- key: log_rotate
+  type: uint
+  name:
+    zh: 日志文件份数
+  desc:
+    zh: 日志文件滚动分割时保留的份数
+  default: 7
+
+- key: connect_limit
+  type: uint
+  name:
+    zh: Agent连接限制
+  desc:
+    zh: 每秒允许连接的Agent数量
+  default: 100
+
+- key: metrics.kafka_addr
+  type: naddr
+  name:
+    zh: kafka地址
+  desc:
+    zh: MetricsAgent采集数据上报kafka地址
+  category: metrics
+
+- key: metrics.kafka_topic
+  type: string
+  name:
+    zh: kafka的topic名称
+  desc:
+    zh: MetricsAgent采集数据上报topic名称
+  category: metrics
