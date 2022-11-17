@@ -175,7 +175,7 @@ definitions:
         description: 进程ID
         example: 9655
         type: integer
-      stauts:
+      result:
         $ref: '#/definitions/exec.result'
         description: 任务状态，仅当result参数为true时返回
     required:
@@ -269,6 +269,65 @@ definitions:
     - agents
     - is_blocking
     - version
+    type: object
+  layout.nodeStatus:
+    properties:
+      begin:
+        description: 开始时间
+        example: 1663816771
+        type: integer
+      end:
+        description: 仅当status=done时返回
+        example: 1663816771
+        type: integer
+      err:
+        description: 错误信息
+        example: xxx not found
+        type: string
+      id:
+        description: 节点ID
+        example: exec-01
+        type: string
+      status:
+        description: 当前状态
+        enum:
+        - waiting
+        - running
+        - done
+        example: waiting
+        type: string
+    required:
+    - begin
+    - id
+    - status
+    type: object
+  layout.status:
+    properties:
+      begin:
+        description: 开始时间
+        example: 1663816771
+        type: integer
+      done:
+        description: 该任务是否已执行完毕
+        example: false
+        type: boolean
+      end:
+        description: 结束时间，仅当done=true时返回
+        example: 1663816771
+        type: integer
+      index:
+        description: 当前正在运行的批次号
+        example: 0
+        type: integer
+      nodes:
+        description: 节点状态列表
+        items:
+          $ref: '#/definitions/layout.nodeStatus'
+        type: array
+    required:
+    - begin
+    - done
+    - index
     type: object
   metrics.batchSetArgs:
     properties:
@@ -936,6 +995,32 @@ definitions:
     - id
     - name
     type: object
+  script.runPayload:
+    properties:
+      begin:
+        description: 开始时间戳
+        example: 1663816771
+        type: integer
+      code:
+        description: 任务的返回状态
+        example: 0
+        type: integer
+      data:
+        description: 返回内容（base64编码）
+        type: string
+      end:
+        description: 任务结束时间
+        example: 1663816771
+        type: integer
+      id:
+        description: 任务ID
+        example: 20220922-00001-4bc99720760771f6
+        type: string
+    required:
+    - begin
+    - code
+    - id
+    type: object
 info:
   contact:
     url: https://www.jkstack.com
@@ -1342,6 +1427,134 @@ paths:
       summary: 获取当前服务器状态
       tags:
       - info
+  /layout/{id}:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/layout/status
+      parameters:
+      - description: 任务ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/layout.status'
+              type: object
+      summary: 获取批量任务状态
+      tags:
+      - layout
+  /layout/run:
+    post:
+      consumes:
+      - multipart/form-data
+      description: |-
+        分组示例:
+        当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务
+      operationId: /api/layout/run
+      parameters:
+      - description: 节点ID列表
+        in: formData
+        items:
+          type: string
+        name: ids
+        required: true
+        type: array
+      - description: 分组列表
+        in: formData
+        items:
+          type: integer
+        name: group
+        required: true
+        type: array
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: 脚本类型
+        enum:
+        - sh
+        - bash
+        - python
+        - python3
+        - bat
+        - powershell
+        - php
+        - lua
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: 参数
+        in: formData
+        items:
+          type: string
+        name: args
+        type: array
+      - description: md5校验码
+        in: formData
+        name: md5
+        type: string
+      - description: 提权方式，仅linux有效
+        enum:
+        - ""
+        - sudo
+        - su
+        in: formData
+        name: auth
+        type: string
+      - description: 运行身份，仅linux有效
+        in: formData
+        name: user
+        type: string
+      - description: 工作目录
+        in: formData
+        name: workdir
+        type: string
+      - description: 环境变量
+        in: formData
+        items:
+          type: string
+        name: env
+        type: array
+      - default: 60
+        description: 单个节点的超时时间
+        in: formData
+        name: timeout
+        type: integer
+      - default: exit
+        description: 执行失败时的后续操作
+        enum:
+        - exit
+        - continue
+        in: formData
+        name: onerror
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: payload为任务ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  type: string
+              type: object
+      summary: 批量执行脚本
+      tags:
+      - layout
   /metrics/{id}/dynamic:
     get:
       consumes:
@@ -1624,4 +1837,86 @@ paths:
       summary: 批量启动或停止采集
       tags:
       - metrics
+  /script/{id}/run:
+    post:
+      consumes:
+      - multipart/form-data
+      operationId: /api/script/run
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: 脚本类型
+        enum:
+        - sh
+        - bash
+        - python
+        - python3
+        - bat
+        - powershell
+        - php
+        - lua
+        in: formData
+        name: type
+        required: true
+        type: string
+      - description: 参数
+        in: formData
+        items:
+          type: string
+        name: args
+        type: array
+      - description: md5校验码
+        in: formData
+        name: md5
+        type: string
+      - description: 提权方式，仅linux有效
+        enum:
+        - ""
+        - sudo
+        - su
+        in: formData
+        name: auth
+        type: string
+      - description: 运行身份，仅linux有效
+        in: formData
+        name: user
+        type: string
+      - description: 工作目录
+        in: formData
+        name: workdir
+        type: string
+      - description: 环境变量
+        in: formData
+        items:
+          type: string
+        name: env
+        type: array
+      - default: 60
+        description: 超时时间
+        in: formData
+        name: timeout
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/script.runPayload'
+              type: object
+      summary: 执行脚本
+      tags:
+      - script
 swagger: "2.0"

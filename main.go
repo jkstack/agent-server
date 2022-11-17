@@ -1,18 +1,68 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"os"
-	"path/filepath"
 	rt "runtime"
 	"server/docs"
-	"server/internal/app"
-	"server/internal/conf"
+	"server/internal"
 
-	runtime "github.com/jkstack/jkframe/utils"
-	"github.com/kardianos/service"
+	"github.com/jkstack/jkframe/utils"
+	"github.com/spf13/cobra"
 )
+
+var rootCmd = &cobra.Command{
+	Use:  "metrics-agent",
+	Long: "jkstack metrics agent",
+	Run:  internal.Run,
+}
+
+var installCmd = &cobra.Command{
+	Use:   "install",
+	Short: "register service",
+	Run:   internal.Install,
+}
+
+var uninstallCmd = &cobra.Command{
+	Use:   "uninstall",
+	Short: "unregister service",
+	Run:   internal.Uninstall,
+}
+
+var runCmd = &cobra.Command{
+	Use:   "run",
+	Short: "run program",
+	Run:   internal.Run,
+}
+
+var startCmd = &cobra.Command{
+	Use:   "start",
+	Short: "start service",
+	Run:   internal.Start,
+}
+
+var stopCmd = &cobra.Command{
+	Use:   "stop",
+	Short: "stop service",
+	Run:   internal.Stop,
+}
+
+var restartCmd = &cobra.Command{
+	Use:   "restart",
+	Short: "restart service",
+	Run:   internal.Restart,
+}
+
+var statusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "show service status",
+	Run:   internal.Status,
+}
+
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "show version info",
+	Run:   showVersion,
+}
 
 var (
 	version      string = "0.0.0"
@@ -22,7 +72,7 @@ var (
 	buildTime    string = "0000-00-00 00:00:00"
 )
 
-func showVersion() {
+func showVersion(*cobra.Command, []string) {
 	fmt.Printf("version: %s\ncode version: %s.%s.%s\nbuild time: %s\ngo version: %s\n",
 		version,
 		gitBranch, gitHash, gitReversion,
@@ -31,107 +81,17 @@ func showVersion() {
 }
 
 func main() {
-	cf := flag.String("conf", "", "config file dir")
-	ver := flag.Bool("version", false, "show version info")
-	act := flag.String("action", "", "install, uninstall, start, stop")
-	flag.Parse()
-
-	if *ver {
-		showVersion()
-		return
-	}
-
-	switch *act {
-	case "uninstall", "start", "stop":
-	default:
-		if len(*cf) == 0 {
-			fmt.Println("missing -conf argument")
-			os.Exit(1)
-		}
-	}
-
-	var user string
-	var depends []string
-	if rt.GOOS != "windows" {
-		user = "root"
-		depends = append(depends, "After=network.target")
-	}
-
-	dir, err := filepath.Abs(*cf)
-	runtime.Assert(err)
-
-	opt := make(service.KeyValue)
-	opt["LimitNOFILE"] = 65535
-
-	appCfg := &service.Config{
-		Name:         "agent-server",
-		DisplayName:  "agent-server",
-		Description:  "agent server",
-		UserName:     user,
-		Arguments:    []string{"-conf", dir},
-		Dependencies: depends,
-		Option:       opt,
-	}
-
-	dir, err = os.Executable()
-	runtime.Assert(err)
-
+	internal.Version = version
 	docs.SwaggerInfo.Version = version
 
-	var sv service.Service
-	switch *act {
-	case "install", "uninstall", "start", "stop":
-		sv, err = service.New(&dummy{}, appCfg)
-		runtime.Assert(err)
-	default:
-		cfg := conf.Load(*cf, filepath.Join(filepath.Dir(dir), "/../"))
+	installCmd.Flags().StringVar(&internal.ConfDir, "conf", "", "configure file dir")
+	runCmd.Flags().StringVar(&internal.ConfDir, "conf", "", "configure file dir")
+	rootCmd.AddCommand(installCmd, uninstallCmd)
+	rootCmd.AddCommand(runCmd)
+	rootCmd.AddCommand(startCmd, stopCmd, restartCmd, statusCmd)
+	rootCmd.AddCommand(versionCmd)
 
-		app := app.New(cfg, version)
-		sv, err = service.New(app, appCfg)
-		runtime.Assert(err)
-	}
-
-	switch *act {
-	case "install":
-		fmt.Printf("service name: %s\n", "agent-server")
-		fmt.Printf("platform: %s\n", sv.Platform())
-		err := sv.Install()
-		if err != nil {
-			fmt.Printf("can not register service: %v\n", err)
-		}
-		fmt.Println("register service success")
-	case "uninstall":
-		sv.Stop()
-		err := sv.Uninstall()
-		if err != nil {
-			fmt.Printf("can not unregister service: %v\n", err)
-		}
-		fmt.Println("unregister service success")
-	case "start":
-		err := sv.Start()
-		if err != nil {
-			fmt.Printf("can not start service: %v\n", err)
-			return
-		}
-		fmt.Println("start service success")
-	case "stop":
-		err := sv.Stop()
-		if err != nil {
-			fmt.Printf("can not stop service: %v\n", err)
-			return
-		}
-		fmt.Println("stop service success")
-	default:
-		runtime.Assert(sv.Run())
-	}
-}
-
-type dummy struct{}
-
-func (*dummy) Start(s service.Service) error {
-	return nil
-}
-
-func (*dummy) Stop(s service.Service) error {
-	return nil
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
+	rootCmd.Flags().StringVar(&internal.ConfDir, "conf", "", "configure file dir")
+	utils.Assert(rootCmd.Execute())
 }

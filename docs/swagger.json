@@ -637,6 +637,197 @@
                 }
             }
         },
+        "/layout/run": {
+            "post": {
+                "description": "分组示例:\n当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "layout"
+                ],
+                "summary": "批量执行脚本",
+                "operationId": "/api/layout/run",
+                "parameters": [
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "节点ID列表",
+                        "name": "ids",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "description": "分组列表",
+                        "name": "group",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "文件",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "sh",
+                            "bash",
+                            "python",
+                            "python3",
+                            "bat",
+                            "powershell",
+                            "php",
+                            "lua"
+                        ],
+                        "type": "string",
+                        "description": "脚本类型",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "参数",
+                        "name": "args",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "md5校验码",
+                        "name": "md5",
+                        "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "",
+                            "sudo",
+                            "su"
+                        ],
+                        "type": "string",
+                        "description": "提权方式，仅linux有效",
+                        "name": "auth",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "运行身份，仅linux有效",
+                        "name": "user",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "工作目录",
+                        "name": "workdir",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "环境变量",
+                        "name": "env",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 60,
+                        "description": "单个节点的超时时间",
+                        "name": "timeout",
+                        "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "exit",
+                            "continue"
+                        ],
+                        "type": "string",
+                        "default": "exit",
+                        "description": "执行失败时的后续操作",
+                        "name": "onerror",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "payload为任务ID",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/layout/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "layout"
+                ],
+                "summary": "获取批量任务状态",
+                "operationId": "/api/layout/status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "任务ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/layout.status"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/metrics/status": {
             "put": {
                 "produces": [
@@ -1085,6 +1276,128 @@
                     }
                 }
             }
+        },
+        "/script/{id}/run": {
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "script"
+                ],
+                "summary": "执行脚本",
+                "operationId": "/api/script/run",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "文件",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "sh",
+                            "bash",
+                            "python",
+                            "python3",
+                            "bat",
+                            "powershell",
+                            "php",
+                            "lua"
+                        ],
+                        "type": "string",
+                        "description": "脚本类型",
+                        "name": "type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "参数",
+                        "name": "args",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "md5校验码",
+                        "name": "md5",
+                        "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "",
+                            "sudo",
+                            "su"
+                        ],
+                        "type": "string",
+                        "description": "提权方式，仅linux有效",
+                        "name": "auth",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "运行身份，仅linux有效",
+                        "name": "user",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "工作目录",
+                        "name": "workdir",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "环境变量",
+                        "name": "env",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 60,
+                        "description": "超时时间",
+                        "name": "timeout",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/script.runPayload"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1321,7 +1634,7 @@
                     "type": "integer",
                     "example": 9655
                 },
-                "stauts": {
+                "result": {
                     "description": "任务状态，仅当result参数为true时返回",
                     "$ref": "#/definitions/exec.result"
                 }
@@ -1436,6 +1749,83 @@
                     "description": "服务端版本号",
                     "type": "string",
                     "example": "1.0.0"
+                }
+            }
+        },
+        "layout.nodeStatus": {
+            "type": "object",
+            "required": [
+                "begin",
+                "id",
+                "status"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "开始时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "end": {
+                    "description": "仅当status=done时返回",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "err": {
+                    "description": "错误信息",
+                    "type": "string",
+                    "example": "xxx not found"
+                },
+                "id": {
+                    "description": "节点ID",
+                    "type": "string",
+                    "example": "exec-01"
+                },
+                "status": {
+                    "description": "当前状态",
+                    "type": "string",
+                    "enum": [
+                        "waiting",
+                        "running",
+                        "done"
+                    ],
+                    "example": "waiting"
+                }
+            }
+        },
+        "layout.status": {
+            "type": "object",
+            "required": [
+                "begin",
+                "done",
+                "index"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "开始时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "done": {
+                    "description": "该任务是否已执行完毕",
+                    "type": "boolean",
+                    "example": false
+                },
+                "end": {
+                    "description": "结束时间，仅当done=true时返回",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "index": {
+                    "description": "当前正在运行的批次号",
+                    "type": "integer",
+                    "example": 0
+                },
+                "nodes": {
+                    "description": "节点状态列表",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/layout.nodeStatus"
+                    }
                 }
             }
         },
@@ -2309,6 +2699,40 @@
                     "description": "用户名",
                     "type": "string",
                     "example": "root"
+                }
+            }
+        },
+        "script.runPayload": {
+            "type": "object",
+            "required": [
+                "begin",
+                "code",
+                "id"
+            ],
+            "properties": {
+                "begin": {
+                    "description": "开始时间戳",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "code": {
+                    "description": "任务的返回状态",
+                    "type": "integer",
+                    "example": 0
+                },
+                "data": {
+                    "description": "返回内容（base64编码）",
+                    "type": "string"
+                },
+                "end": {
+                    "description": "任务结束时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "id": {
+                    "description": "任务ID",
+                    "type": "string",
+                    "example": "20220922-00001-4bc99720760771f6"
                 }
             }
         }

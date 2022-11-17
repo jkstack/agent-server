@@ -37,7 +37,7 @@ type runPayload struct {
 	TaskID string  `json:"id" example:"20220922-00001-4bc99720760771f6" validate:"required"` // 任务ID
 	Begin  int64   `json:"begin" example:"1663816771" validate:"required"`                   // 开始时间戳
 	Pid    int     `json:"pid" example:"9655" validate:"required"`                           // 进程ID
-	Result *result `json:"stauts,omitempty"`                                                 // 任务状态，仅当result参数为true时返回
+	Result *result `json:"result,omitempty"`                                                 // 任务状态，仅当result参数为true时返回
 }
 
 // run 执行命令或脚本
@@ -101,6 +101,11 @@ func (h *Handler) run(gin *gin.Context) {
 		return
 	case msg.Type != anet.TypeExecd:
 		g.ERR(http.StatusInternalServerError, fmt.Sprintf("invalid message type: %d", msg.Type))
+		return
+	}
+
+	if !msg.Execd.OK {
+		g.ERR(http.StatusServiceUnavailable, msg.Execd.Msg)
 		return
 	}
 

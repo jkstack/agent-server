@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"net/http"
 	"server/internal/agent"
 	"server/internal/api"
 	"server/internal/api/agents"
@@ -11,7 +12,9 @@ import (
 	"server/internal/api/file"
 	"server/internal/api/foo"
 	"server/internal/api/info"
+	"server/internal/api/layout"
 	"server/internal/api/metrics"
+	"server/internal/api/script"
 	"server/internal/conf"
 	"server/internal/utils"
 	"sync"
@@ -100,6 +103,8 @@ func (app *App) Start(s service.Service) error {
 		apis = append(apis, metrics.New())
 		apis = append(apis, exec.New())
 		apis = append(apis, file.New())
+		apis = append(apis, script.New())
+		apis = append(apis, layout.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)
@@ -110,15 +115,15 @@ func (app *App) Start(s service.Service) error {
 			}
 		}
 
-		logging.Info("route => GET /metrics")
+		logging.Info("route => %6s /metrics", http.MethodGet)
 		g.GET("/metrics", func(g *gin.Context) {
 			app.stats.ServeHTTP(g.Writer, g.Request)
 		})
-		logging.Info("route => GET /ws/agent")
+		logging.Info("route => %6s /ws/agent", http.MethodGet)
 		g.GET("/ws/agent", func(g *gin.Context) {
 			app.handleWS(g, apis)
 		})
-		logging.Info("route => GET /docs/*any")
+		logging.Info("route => %6s /docs/*any", http.MethodGet)
 		g.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 		logging.Info("http listen on %d", app.cfg.Listen)
