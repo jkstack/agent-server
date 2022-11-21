@@ -58,7 +58,7 @@ func main() {
 	}
 
 	os.MkdirAll(*out, 0755)
-	dir := path.Join(*out, *name+"_"+info.Version+"_"+info.Arch)
+	dir := path.Join(*out, *name+"_"+info.Version+"_linux_"+info.Arch)
 
 	deb, err := nfpm.Get("deb")
 	utils.Assert(err)

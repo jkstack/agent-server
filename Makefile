@@ -2,7 +2,7 @@
 
 OUTDIR=release
 
-VERSION=1.1.1
+VERSION=1.1.2
 TIMESTAMP=`date +%s`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
@@ -23,7 +23,7 @@ all:
 		-o $(OUTDIR)/$(VERSION)/opt/agent-server/bin/agent-server main.go
 	cp conf/server.conf $(OUTDIR)/$(VERSION)/opt/agent-server/conf/server.conf
 	echo $(VERSION) > $(OUTDIR)/$(VERSION)/opt/agent-server/.version
-	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf agent-server_$(VERSION).tar.gz \
+	cd $(OUTDIR)/$(VERSION) && fakeroot tar -czvf agent-server_$(VERSION)_linux_amd64.tar.gz \
 		--warning=no-file-changed opt
 	go run contrib/release.go -o $(OUTDIR)/$(VERSION) \
 		-conf contrib/release.yaml \
