@@ -4,8 +4,6 @@ package metrics;
 
 option go_package = ".;metrics";
 
-import "google/protobuf/timestamp.proto";
-
 message static_core {
     uint32 processor = 1; // 第几个核心
     string     model = 2; // Intel(R) Xeon(R) CPU E5-2620 v2 @ 2.10GHz
@@ -52,14 +50,14 @@ message static_user {
 }
 
 message static_data {
-    google.protobuf.Timestamp       time = 1;  // 上报时间戳
+    int64                           time = 1;  // 上报时间戳
     string                     host_name = 2;  // 主机名
     uint64                        uptime = 3;  // 系统启动时长
     string                       os_name = 4;  // linux,windows
     string                 platform_name = 5;  // debian,centos,...
     string              platform_version = 6;  // 7.7.1908
-    google.protobuf.Timestamp    install = 7;  // 系统安装时间
-    google.protobuf.Timestamp    startup = 8;  // 系统启动时间
+    int64                        install = 7;  // 系统安装时间
+    int64                        startup = 8;  // 系统启动时间
     string                kernel_version = 9;  // 3.10.0-1062.el7.x86_64
     string                          arch = 10; // amd64,i386,...
     uint64                  physical_cpu = 11; // 物理核心数
@@ -152,20 +150,30 @@ message dynamic_sensors_temperatures {
 }
 
 message dynamic_data {
-    google.protobuf.Timestamp begin = 1; // 采集开始时间
-    google.protobuf.Timestamp   end = 2; // 采集结束时间
-    oneof payload {
-        dynamic_usage                usage = 3; // usage数据
-        dynamic_processes        processes = 4; // 进程列表
-        dynamic_connections    connections = 5; // 连接列表
-        dynamic_sensors_temperatures temps = 6; // 传感器温度
+    enum dynamic_data_type {
+        usage       = 0;
+        process     = 1;
+        connections = 2;
+        temps       = 3;
     }
+    int64            begin = 1; // 采集开始时间
+    int64              end = 2; // 采集结束时间
+    dynamic_data_type type = 3; // 数据类型
+    // 内容
+    dynamic_usage                usage_data = 10; // usage数据
+    dynamic_processes        processes_data = 11; // 进程列表
+    dynamic_connections    connections_data = 12; // 连接列表
+    dynamic_sensors_temperatures temps_data = 13; // 传感器温度
 }
 
 message data {
-    string agent_id = 1; // agent id
-    oneof payload {
-        static_data   static_data = 10; // 静态数据
-        dynamic_data dynamic_data = 11; // 动态数据
+    enum data_type {
+        static  = 0;
+        dynamic = 1;
     }
+    string           agent_id = 1; // agent id
+    data_type            type = 2; // 数据类型
+    // 内容
+    static_data   static_data = 10; // 静态数据
+    dynamic_data dynamic_data = 11; // 动态数据
 }
