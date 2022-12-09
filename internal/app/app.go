@@ -41,6 +41,7 @@ type apiHandler interface {
 	OnMessage(*agent.Agent, *anet.Msg)
 }
 
+// App application
 type App struct {
 	cfg     *conf.Configure
 	version string
@@ -110,8 +111,8 @@ func (app *App) Start(s service.Service) error {
 			api.Init(app.cfg, app.stats)
 			g := apiGroup.Group("/" + api.Module())
 			for route, cb := range api.HandleFuncs() {
-				logging.Info("route => %6s /api/%s%s", route.Method, api.Module(), route.Uri)
-				g.Handle(route.Method, route.Uri, cb)
+				logging.Info("route => %6s /api/%s%s", route.Method, api.Module(), route.URI)
+				g.Handle(route.Method, route.URI, cb)
 			}
 		}
 
@@ -145,6 +146,7 @@ func (app *App) Start(s service.Service) error {
 	return nil
 }
 
+// Stop stop service
 func (app *App) Stop(s service.Service) error {
 	return nil
 }

@@ -12,26 +12,31 @@ import (
 	"github.com/jkstack/jkframe/stat"
 )
 
+// Handler api handler
 type Handler struct {
 	sync.RWMutex
 	cfg   *conf.Configure
 	tasks map[string]*tasks // agent id => tasks
 }
 
+// New create api handler
 func New() *Handler {
 	return &Handler{
 		tasks: make(map[string]*tasks),
 	}
 }
 
+// Module get module name
 func (h *Handler) Module() string {
 	return "exec"
 }
 
+// Init initialize module
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	h.cfg = cfg
 }
 
+// HandleFuncs get funcs
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
 		api.MakeRoute(http.MethodPost, "/:id/run"):         h.run,
@@ -42,12 +47,15 @@ func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	}
 }
 
+// OnConnect agent connect callback
 func (h *Handler) OnConnect(*agent.Agent) {
 }
 
+// OnClose agent connection closed callback
 func (h *Handler) OnClose(string) {
 }
 
+// OnMessage received agent message callback
 func (h *Handler) OnMessage(*agent.Agent, *anet.Msg) {
 }
 

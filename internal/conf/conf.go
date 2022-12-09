@@ -23,7 +23,9 @@ const (
 	defaultConnectLimit   = 100
 )
 
+// Configure configure object
 type Configure struct {
+	ID             string      `kv:"id"`
 	Listen         uint16      `kv:"listen"`
 	CacheDir       string      `kv:"cache_dir"`
 	CacheThreshold uint        `kv:"cache_threshold"`
@@ -32,14 +34,18 @@ type Configure struct {
 	LogRotate      int         `kv:"log_rotate"`
 	ConnectLimit   int         `kv:"connect_limit"`
 	Metrics        struct {
-		Kafka string `kv:"kafka_addr"`
-		Topic string `kv:"kafka_topic"`
+		Kafka struct {
+			Addr   string `kv:"addr"`
+			Topic  string `kv:"topic"`
+			Format string `kv:"format"`
+		} `kv:"kafka"`
 	} `kv:"metrics"`
 	// runtime
 	WorkDir    string
 	MetricsCli sarama.AsyncProducer
 }
 
+// Load load configure file
 func Load(dir, abs string) *Configure {
 	f, err := os.Open(dir)
 	runtime.Assert(err)
@@ -51,12 +57,12 @@ func Load(dir, abs string) *Configure {
 
 	ret.WorkDir, _ = os.Getwd()
 
-	if len(ret.Metrics.Kafka) > 0 {
+	if len(ret.Metrics.Kafka.Addr) > 0 {
 		cfg := sarama.NewConfig()
 		cfg.Producer.Flush.Bytes = 1024 * 1024 // 1MB
 		cfg.Producer.Flush.Messages = 100
 		cfg.Producer.Flush.Frequency = time.Second
-		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka}, cfg)
+		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka.Topic}, cfg)
 		runtime.Assert(err)
 	}
 
@@ -64,6 +70,9 @@ func Load(dir, abs string) *Configure {
 }
 
 func (cfg *Configure) check(abs string) {
+	if len(cfg.ID) == 0 {
+		panic("missing id config")
+	}
 	if cfg.Listen == 0 {
 		panic("invalid listen config")
 	}
@@ -94,5 +103,12 @@ func (cfg *Configure) check(abs string) {
 	if cfg.ConnectLimit == 0 {
 		logging.Info("reset conf.connect_limit to default limit: %d", defaultConnectLimit)
 		cfg.ConnectLimit = defaultConnectLimit
+	}
+	if len(cfg.Metrics.Kafka.Format) > 0 {
+		switch cfg.Metrics.Kafka.Format {
+		case "json", "proto":
+		default:
+			panic("invalid format in configure file of metrics.kafka.format")
+		}
 	}
 }

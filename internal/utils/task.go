@@ -12,6 +12,7 @@ var taskDate string
 var taskCnt uint32
 var taskLock sync.Mutex
 
+// TaskID generate task id
 func TaskID() (string, error) {
 	now := time.Now()
 	taskLock.Lock()

@@ -17,6 +17,11 @@ import (
 
 var allJobs = []string{"static", "usage", "process", "conns", "temps"}
 
+const (
+	formatJSON = iota
+	formatProtobuf
+)
+
 type jobStatus struct {
 	running   bool
 	interval  uint64
@@ -26,37 +31,51 @@ type jobStatus struct {
 
 type jobs [5]jobStatus
 
+// Handler api handler
 type Handler struct {
 	sync.RWMutex
 	stJobs    *prometheus.GaugeVec
 	stWarning *prometheus.GaugeVec
 	cli       sarama.AsyncProducer
+	clusterID string
 	topic     string
+	format    int
 	jobs      map[string]jobs
 }
 
+// New create api handler
 func New() *Handler {
 	return &Handler{
 		jobs: make(map[string]jobs),
 	}
 }
 
+// Module get module name
 func (h *Handler) Module() string {
 	return "metrics"
 }
 
+// Init initialize module
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
+	h.clusterID = cfg.ID
 	h.stJobs = mgr.RawVec("metrics_jobs", []string{"id", "name",
 		"interval", "bytes_sent", "report_count"})
 	h.stWarning = mgr.RawVec("metrics_warning", []string{"id"})
 	go h.updateJobs()
 	h.cli = cfg.MetricsCli
-	h.topic = cfg.Metrics.Topic
+	h.topic = cfg.Metrics.Kafka.Topic
+	switch cfg.Metrics.Kafka.Format {
+	case "json":
+		h.format = formatJSON
+	case "proto":
+		h.format = formatProtobuf
+	}
 	if h.cli != nil {
 		go HandleReportError(h.cli)
 	}
 }
 
+// HandleFuncs get funcs
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
 		api.MakeRoute(http.MethodGet, "/:id/static"):              h.static,
@@ -71,12 +90,15 @@ func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	}
 }
 
+// OnConnect agent connect callback
 func (h *Handler) OnConnect(*agent.Agent) {
 }
 
+// OnClose agent connection closed callback
 func (h *Handler) OnClose(string) {
 }
 
+// OnMessage received agent message callback
 func (h *Handler) OnMessage(agent *agent.Agent, msg *anet.Msg) {
 	switch msg.Type {
 	case anet.TypeHMStaticRep:

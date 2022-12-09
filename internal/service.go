@@ -13,7 +13,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ConfDir configure file dir
 var ConfDir string
+
+// Version server version
 var Version string
 
 type dummy struct{}
@@ -64,6 +67,7 @@ func newApp() (service.Service, error) {
 	return newService(app.New(cfg, Version))
 }
 
+// Install register system service
 func Install(*cobra.Command, []string) {
 	if len(ConfDir) == 0 {
 		fmt.Println("missing --conf argument")
@@ -73,82 +77,87 @@ func Install(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
 		fmt.Printf("can not create service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	err = svc.Install()
 	if err != nil {
 		fmt.Printf("can not register service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	fmt.Println("register service success")
 }
 
+// Uninstall unregister system service
 func Uninstall(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
 		fmt.Printf("can not create service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	err = svc.Uninstall()
 	if err != nil {
 		fmt.Printf("can not unregister service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	fmt.Println("unregister service success")
 }
 
+// Start start system service
 func Start(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
 		fmt.Printf("can not create service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	err = svc.Start()
 	if err != nil {
 		fmt.Printf("can not start service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	fmt.Println("start service success")
 }
 
+// Stop stop system service
 func Stop(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
 		fmt.Printf("can not create service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	err = svc.Stop()
 	if err != nil {
 		fmt.Printf("can not stop service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	fmt.Println("stop service success")
 }
 
+// Restart restart system service
 func Restart(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
 		fmt.Printf("can not create service: %v\n", err)
-		return
+		os.Exit(1)
 	}
-	err = svc.Stop()
+	err = svc.Restart()
 	if err != nil {
 		fmt.Printf("can not restart service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	fmt.Println("restart service success")
 }
 
+// Status get system service status
 func Status(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
 		fmt.Printf("can not create service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	status, err := svc.Status()
 	if err != nil {
 		fmt.Printf("can not get service status: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	switch status {
 	case service.StatusRunning:
@@ -160,11 +169,12 @@ func Status(*cobra.Command, []string) {
 	}
 }
 
+// Run run server
 func Run(*cobra.Command, []string) {
 	svc, err := newApp()
 	if err != nil {
 		fmt.Printf("can not create service: %v\n", err)
-		return
+		os.Exit(1)
 	}
 	utils.Assert(svc.Run())
 }

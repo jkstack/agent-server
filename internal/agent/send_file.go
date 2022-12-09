@@ -9,6 +9,7 @@ import (
 	"github.com/jkstack/jkframe/compress"
 )
 
+// SendFileLs send ls command
 func (agent *Agent) SendFileLs(dir string) (string, error) {
 	id, err := utils.TaskID()
 	if err != nil {
@@ -25,6 +26,7 @@ func (agent *Agent) SendFileLs(dir string) (string, error) {
 	return id, nil
 }
 
+// SendFileDownload send download file command
 func (agent *Agent) SendFileDownload(dir string) (string, error) {
 	id, err := utils.TaskID()
 	if err != nil {
@@ -41,6 +43,7 @@ func (agent *Agent) SendFileDownload(dir string) (string, error) {
 	return id, nil
 }
 
+// UploadContext upload file arguments
 type UploadContext struct {
 	Dir      string
 	Name     string
@@ -53,10 +56,11 @@ type UploadContext struct {
 	// send data
 	Data []byte
 	// send file
-	Uri   string
+	URI   string
 	Token string
 }
 
+// SendUpload send upload command
 func (agent *Agent) SendUpload(ctx UploadContext, id string) (string, error) {
 	if len(id) == 0 {
 		var err error
@@ -79,8 +83,8 @@ func (agent *Agent) SendUpload(ctx UploadContext, id string) (string, error) {
 	}
 	if len(ctx.Data) > 0 {
 		msg.Upload.Data = compress.Compress(ctx.Data)
-	} else if len(ctx.Uri) > 0 {
-		msg.Upload.URI = ctx.Uri
+	} else if len(ctx.URI) > 0 {
+		msg.Upload.URI = ctx.URI
 		msg.Upload.Token = ctx.Token
 	}
 	agent.Lock()

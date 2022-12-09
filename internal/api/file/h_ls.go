@@ -53,7 +53,7 @@ func (h *Handler) ls(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.HttpError(http.StatusNotFound, "agent not found")
+		g.HTTPError(http.StatusNotFound, "agent not found")
 		return
 	}
 	if cli.Type() != agent.TypeExec {

@@ -8,8 +8,11 @@ import (
 type statusCode int
 
 const (
+	// StatusWaiting waiting status
 	StatusWaiting statusCode = iota
+	// StatusRunning running status
 	StatusRunning
+	// StatusDone done status
 	StatusDone
 )
 

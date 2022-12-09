@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// RequestTimeout request timeout
 const RequestTimeout = 10 * time.Second
 
 // @title       agent-server
@@ -29,14 +30,16 @@ type Failure struct {
 	ExecutionTime int64  `json:"extime" example:"70" validate:"required"`                      // 耗时(毫秒)
 }
 
+// Route route object
 type Route struct {
 	Method string
-	Uri    string
+	URI    string
 }
 
+// MakeRoute create route object
 func MakeRoute(method, uri string) Route {
 	return Route{
 		Method: method,
-		Uri:    uri,
+		URI:    uri,
 	}
 }

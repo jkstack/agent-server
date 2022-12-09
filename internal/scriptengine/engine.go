@@ -7,27 +7,43 @@ import (
 	"time"
 )
 
+// Type script type
 type Type int
+
+// Status task status
 type Status int
 
 const (
+	// TypeSh sh script
 	TypeSh Type = iota
+	// TypeBash bash script
 	TypeBash
+	// TypePython python script
 	TypePython
+	// TypePython3 python3 script
 	TypePython3
+	// TypeBat bat script
 	TypeBat
+	// TypePowerShell powershell script
 	TypePowerShell
+	// TypePhp php script
 	TypePhp
+	// TypeLua lua script
 	TypeLua
 )
 
 const (
+	// StatusStopWaiting waiting status
 	StatusStopWaiting Status = iota
+	// StatusUploading upload status
 	StatusUploading
+	// StatusRunning running status
 	StatusRunning
+	// StatusDone done status
 	StatusDone
 )
 
+// Args run arguments
 type Args struct {
 	Data    string   // 脚本内容
 	Type    Type     // 类型
@@ -39,6 +55,7 @@ type Args struct {
 	Timeout int      // 超时时间
 }
 
+// Engine script engine
 type Engine struct {
 	cli      *agent.Agent
 	args     Args
@@ -53,6 +70,7 @@ type Engine struct {
 	OnData   func([]byte) error
 }
 
+// New create script engine
 func New(cli *agent.Agent, args Args) *Engine {
 	return &Engine{
 		cli:      cli,
@@ -63,10 +81,12 @@ func New(cli *agent.Agent, args Args) *Engine {
 	}
 }
 
+// SetDataHandleFunc set on data callback func
 func (e *Engine) SetDataHandleFunc(fn func([]byte) error) {
 	e.OnData = fn
 }
 
+// Run run script
 func (e *Engine) Run() {
 	e.Begin = time.Now()
 	defer func() {

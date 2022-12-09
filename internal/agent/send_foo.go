@@ -6,6 +6,7 @@ import (
 	"github.com/jkstack/anet"
 )
 
+// SendFoo send foo command
 func (agent *Agent) SendFoo() (string, error) {
 	id, err := utils.TaskID()
 	if err != nil {

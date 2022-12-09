@@ -1,3 +1,11 @@
+- key: id
+  type: string
+  name:
+    zh: 集群ID
+  desc:
+    zh: 集群ID
+  required: true
+
 - key: listen
   type: uint
   name:
@@ -5,6 +13,7 @@
   desc:
     zh: 监听端口号
   default: 13081
+  required: true
 
 - key: cache_dir
   type: path
@@ -12,6 +21,7 @@
     zh: 缓存文件路径
   desc:
     zh: 缓存文件路径
+  required: true
   default: /opt/agent-server/cache
   allow_relative: false
 
@@ -21,6 +31,7 @@
     zh: 缓存阈值
   desc:
     zh: 缓存阈值，超过该值时将开始限流
+  required: true
   default: 80
   min: 0
   max: 100
@@ -31,6 +42,7 @@
     zh: 日志保存路径
   desc:
     zh: 日志保存路径
+  required: true
   default: /opt/agent-server/logs
   allow_relative: false
 
@@ -40,6 +52,9 @@
     zh: 日志文件大小
   desc:
     zh: 日志文件滚动分割时的文件大小
+  required: true
+  default: 10M
+  min: 1K
 
 - key: log_rotate
   type: uint
@@ -47,7 +62,9 @@
     zh: 日志文件份数
   desc:
     zh: 日志文件滚动分割时保留的份数
+  required: true
   default: 7
+  min: 1
 
 - key: connect_limit
   type: uint
@@ -55,20 +72,34 @@
     zh: Agent连接限制
   desc:
     zh: 每秒允许连接的Agent数量
+  required: true
   default: 100
 
-- key: metrics.kafka_addr
+- key: metrics.kafka.addr
   type: naddr
   name:
     zh: kafka地址
   desc:
     zh: MetricsAgent采集数据上报kafka地址
+  required: false
   category: metrics
 
-- key: metrics.kafka_topic
+- key: metrics.kafka.topic
   type: string
   name:
     zh: kafka的topic名称
   desc:
     zh: MetricsAgent采集数据上报topic名称
+  required: false
   category: metrics
+
+- key: metrics.kafka.format
+  type: csv
+  name:
+    zh: kafka数据格式
+  desc:
+    zh: MetricsAgent采集数据上报kafka时的数据格式，目前仅支持json和protobuf
+  required: false
+  category: metrics
+  csv_valid: [json, proto]
+  default: [json]
