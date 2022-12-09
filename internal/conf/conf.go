@@ -32,8 +32,11 @@ type Configure struct {
 	LogRotate      int         `kv:"log_rotate"`
 	ConnectLimit   int         `kv:"connect_limit"`
 	Metrics        struct {
-		Kafka string `kv:"kafka_addr"`
-		Topic string `kv:"kafka_topic"`
+		Kafka struct {
+			Addr   string `kv:"addr"`
+			Topic  string `kv:"topic"`
+			Format string `kv:"format"`
+		} `kv:"kafka"`
 	} `kv:"metrics"`
 	// runtime
 	WorkDir    string
@@ -51,13 +54,18 @@ func Load(dir, abs string) *Configure {
 
 	ret.WorkDir, _ = os.Getwd()
 
-	if len(ret.Metrics.Kafka) > 0 {
+	if len(ret.Metrics.Kafka.Addr) > 0 {
 		cfg := sarama.NewConfig()
 		cfg.Producer.Flush.Bytes = 1024 * 1024 // 1MB
 		cfg.Producer.Flush.Messages = 100
 		cfg.Producer.Flush.Frequency = time.Second
-		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka}, cfg)
+		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka.Topic}, cfg)
 		runtime.Assert(err)
+	}
+	switch ret.Metrics.Kafka.Format {
+	case "json", "proto":
+	default:
+		panic("invalid format in configure file of metrics.kafka.format")
 	}
 
 	return &ret

@@ -51,7 +51,7 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	h.stWarning = mgr.RawVec("metrics_warning", []string{"id"})
 	go h.updateJobs()
 	h.cli = cfg.MetricsCli
-	h.topic = cfg.Metrics.Topic
+	h.topic = cfg.Metrics.Kafka.Topic
 	if h.cli != nil {
 		go HandleReportError(h.cli)
 	}

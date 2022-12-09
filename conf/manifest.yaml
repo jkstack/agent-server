@@ -57,7 +57,7 @@
     zh: 每秒允许连接的Agent数量
   default: 100
 
-- key: metrics.kafka_addr
+- key: metrics.kafka.addr
   type: naddr
   name:
     zh: kafka地址
@@ -65,10 +65,20 @@
     zh: MetricsAgent采集数据上报kafka地址
   category: metrics
 
-- key: metrics.kafka_topic
+- key: metrics.kafka.topic
   type: string
   name:
     zh: kafka的topic名称
   desc:
     zh: MetricsAgent采集数据上报topic名称
   category: metrics
+
+- key: metrics.kafka.format
+  type: csv
+  name:
+    zh: kafka数据格式
+  desc:
+    zh: MetricsAgent采集数据上报kafka时的数据格式，目前仅支持json和protobuf
+  category: metrics
+  csv_valid: [json, proto]
+  default: [json]
