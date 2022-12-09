@@ -3,6 +3,7 @@ package metrics
 import (
 	"encoding/json"
 	"strings"
+	"time"
 
 	"github.com/Shopify/sarama"
 	"github.com/jkstack/anet"
@@ -80,8 +81,7 @@ func (h *Handler) saveStaticData(agentID string, data *anet.HMStaticPayload) {
 			Gid:  user.GID,
 		})
 	}
-	h.sendKafka(h.cli, h.topic, &Data{
-		AgentId:    agentID,
+	h.sendKafka(h.cli, h.topic, agentID, &Data{
 		Type:       Data_static,
 		StaticData: &static,
 	})
@@ -121,8 +121,7 @@ func (h *Handler) saveUsage(agentID string, data *anet.HMDynamicRep) {
 	}
 	dynamic.Type = DynamicData_usage
 	dynamic.UsageData = &usage
-	h.sendKafka(h.cli, h.topic, &Data{
-		AgentId:     agentID,
+	h.sendKafka(h.cli, h.topic, agentID, &Data{
 		Type:        Data_dynamic,
 		DynamicData: &dynamic,
 	})
@@ -132,9 +131,8 @@ func (h *Handler) saveProcess(agentID string, data *anet.HMDynamicRep) {
 	var dynamic DynamicData
 	dynamic.Begin = data.Begin.Unix()
 	dynamic.End = data.End.Unix()
-	var processes DynamicProcesses
 	for _, process := range data.Process {
-		processes.Data = append(processes.Data, &DynamicProcess{
+		dynamic.ProcessesData = append(dynamic.ProcessesData, &DynamicProcess{
 			Id:          uint32(process.ID),
 			ParentId:    uint32(process.ParentID),
 			User:        process.User,
@@ -149,9 +147,7 @@ func (h *Handler) saveProcess(agentID string, data *anet.HMDynamicRep) {
 		})
 	}
 	dynamic.Type = DynamicData_process
-	dynamic.ProcessesData = &processes
-	h.sendKafka(h.cli, h.topic, &Data{
-		AgentId:     agentID,
+	h.sendKafka(h.cli, h.topic, agentID, &Data{
 		Type:        Data_dynamic,
 		DynamicData: &dynamic,
 	})
@@ -161,7 +157,6 @@ func (h *Handler) saveConnections(agentID string, data *anet.HMDynamicRep) {
 	var dynamic DynamicData
 	dynamic.Begin = data.Begin.Unix()
 	dynamic.End = data.End.Unix()
-	var connections DynamicConnections
 	for _, conn := range data.Connections {
 		var t DynamicConnectionConnectionType
 		switch strings.ToLower(conn.Type) {
@@ -180,7 +175,7 @@ func (h *Handler) saveConnections(agentID string, data *anet.HMDynamicRep) {
 		default:
 			t = DynamicConnection_unknown
 		}
-		connections.Data = append(connections.Data, &DynamicConnection{
+		dynamic.ConnectionsData = append(dynamic.ConnectionsData, &DynamicConnection{
 			Fd:     conn.Fd,
 			Pid:    uint32(conn.Pid),
 			Type:   t,
@@ -190,9 +185,7 @@ func (h *Handler) saveConnections(agentID string, data *anet.HMDynamicRep) {
 		})
 	}
 	dynamic.Type = DynamicData_connections
-	dynamic.ConnectionsData = &connections
-	h.sendKafka(h.cli, h.topic, &Data{
-		AgentId:     agentID,
+	h.sendKafka(h.cli, h.topic, agentID, &Data{
 		Type:        Data_dynamic,
 		DynamicData: &dynamic,
 	})
@@ -202,17 +195,14 @@ func (h *Handler) saveSensorsTemperatures(agentID string, data *anet.HMDynamicRe
 	var dynamic DynamicData
 	dynamic.Begin = data.Begin.Unix()
 	dynamic.End = data.End.Unix()
-	var temps DynamicSensorsTemperatures
 	for _, temp := range data.SensorsTemperatures {
-		temps.Data = append(temps.Data, &DynamicSensorTemperature{
+		dynamic.TempsData = append(dynamic.TempsData, &DynamicSensorTemperature{
 			Name: temp.Name,
 			Temp: float32(temp.Temperature),
 		})
 	}
 	dynamic.Type = DynamicData_temps
-	dynamic.TempsData = &temps
-	h.sendKafka(h.cli, h.topic, &Data{
-		AgentId:     agentID,
+	h.sendKafka(h.cli, h.topic, agentID, &Data{
 		Type:        Data_dynamic,
 		DynamicData: &dynamic,
 	})
@@ -230,7 +220,10 @@ func (h *Handler) saveDynamicData(agentID string, data *anet.HMDynamicRep) {
 	}
 }
 
-func (h *Handler) sendKafka(cli sarama.AsyncProducer, topic string, data *Data) {
+func (h *Handler) sendKafka(cli sarama.AsyncProducer, topic, agentID string, data *Data) {
+	data.AgentId = agentID
+	data.ClusterId = h.clusterID
+	data.Time = time.Now().Unix()
 	var bytes []byte
 	var err error
 	switch h.format {

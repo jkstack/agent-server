@@ -24,6 +24,7 @@ const (
 )
 
 type Configure struct {
+	ID             string      `kv:"id"`
 	Listen         uint16      `kv:"listen"`
 	CacheDir       string      `kv:"cache_dir"`
 	CacheThreshold uint        `kv:"cache_threshold"`
@@ -62,16 +63,14 @@ func Load(dir, abs string) *Configure {
 		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka.Topic}, cfg)
 		runtime.Assert(err)
 	}
-	switch ret.Metrics.Kafka.Format {
-	case "json", "proto":
-	default:
-		panic("invalid format in configure file of metrics.kafka.format")
-	}
 
 	return &ret
 }
 
 func (cfg *Configure) check(abs string) {
+	if len(cfg.ID) == 0 {
+		panic("missing id config")
+	}
 	if cfg.Listen == 0 {
 		panic("invalid listen config")
 	}
@@ -102,5 +101,12 @@ func (cfg *Configure) check(abs string) {
 	if cfg.ConnectLimit == 0 {
 		logging.Info("reset conf.connect_limit to default limit: %d", defaultConnectLimit)
 		cfg.ConnectLimit = defaultConnectLimit
+	}
+	if len(cfg.Metrics.Kafka.Format) > 0 {
+		switch cfg.Metrics.Kafka.Format {
+		case "json", "proto":
+		default:
+			panic("invalid format in configure file of metrics.kafka.format")
+		}
 	}
 }

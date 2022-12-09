@@ -36,6 +36,7 @@ type Handler struct {
 	stJobs    *prometheus.GaugeVec
 	stWarning *prometheus.GaugeVec
 	cli       sarama.AsyncProducer
+	clusterID string
 	topic     string
 	format    int
 	jobs      map[string]jobs
@@ -52,6 +53,7 @@ func (h *Handler) Module() string {
 }
 
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
+	h.clusterID = cfg.ID
 	h.stJobs = mgr.RawVec("metrics_jobs", []string{"id", "name",
 		"interval", "bytes_sent", "report_count"})
 	h.stWarning = mgr.RawVec("metrics_warning", []string{"id"})

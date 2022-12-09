@@ -137,18 +137,6 @@ message dynamic_sensor_temperature {
     float  temp = 2; // 温度
 }
 
-message dynamic_processes {
-    repeated dynamic_process data = 1;
-}
-
-message dynamic_connections {
-    repeated dynamic_connection data = 1;
-}
-
-message dynamic_sensors_temperatures {
-    repeated dynamic_sensor_temperature data = 1;
-}
-
 message dynamic_data {
     enum dynamic_data_type {
         usage       = 0;
@@ -160,10 +148,10 @@ message dynamic_data {
     int64              end = 2; // 采集结束时间
     dynamic_data_type type = 3; // 数据类型
     // 内容
-    dynamic_usage                usage_data = 10; // usage数据
-    dynamic_processes        processes_data = 11; // 进程列表
-    dynamic_connections    connections_data = 12; // 连接列表
-    dynamic_sensors_temperatures temps_data = 13; // 传感器温度
+    dynamic_usage                       usage_data = 10; // usage数据
+    repeated dynamic_process        processes_data = 11; // 进程列表
+    repeated dynamic_connection   connections_data = 12; // 连接列表
+    repeated dynamic_sensor_temperature temps_data = 13; // 传感器温度
 }
 
 message data {
@@ -173,6 +161,8 @@ message data {
     }
     string           agent_id = 1; // agent id
     data_type            type = 2; // 数据类型
+    string         cluster_id = 3; // 集群ID
+    int64                time = 4; // 上报时间
     // 内容
     static_data   static_data = 10; // 静态数据
     dynamic_data dynamic_data = 11; // 动态数据
