@@ -17,6 +17,11 @@ import (
 
 var allJobs = []string{"static", "usage", "process", "conns", "temps"}
 
+const (
+	formatJson = iota
+	formatProtobuf
+)
+
 type jobStatus struct {
 	running   bool
 	interval  uint64
@@ -32,6 +37,7 @@ type Handler struct {
 	stWarning *prometheus.GaugeVec
 	cli       sarama.AsyncProducer
 	topic     string
+	format    int
 	jobs      map[string]jobs
 }
 
@@ -52,6 +58,12 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	go h.updateJobs()
 	h.cli = cfg.MetricsCli
 	h.topic = cfg.Metrics.Kafka.Topic
+	switch cfg.Metrics.Kafka.Format {
+	case "json":
+		h.format = formatJson
+	case "proto":
+		h.format = formatProtobuf
+	}
 	if h.cli != nil {
 		go HandleReportError(h.cli)
 	}
