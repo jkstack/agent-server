@@ -13,7 +13,7 @@ import (
 )
 
 type usage struct {
-	Cpu struct {
+	CPU struct {
 		Usage float64 `json:"usage" example:"2.3" validate:"required"` // CPU使用率(百分比)
 	} `json:"cpu"`
 	Memory struct {
@@ -98,7 +98,7 @@ func (h *Handler) dynamicUsage(gin *gin.Context) {
 
 func transDynamicUsage(input *anet.HMDynamicUsage) *usage {
 	var ret usage
-	ret.Cpu.Usage = input.Cpu.Usage.Float()
+	ret.CPU.Usage = input.Cpu.Usage.Float()
 	ret.Memory.Used = input.Memory.Used
 	ret.Memory.Free = input.Memory.Free
 	ret.Memory.Available = input.Memory.Available

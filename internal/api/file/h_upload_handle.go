@@ -16,11 +16,11 @@ func (h *Handler) uploadHandle(gin *gin.Context) {
 	cache := h.uploadCache[id]
 	h.RUnlock()
 	if cache == nil {
-		g.HttpError(http.StatusNotFound, "not found")
+		g.HTTPError(http.StatusNotFound, "not found")
 		return
 	}
 	if g.GetHeader("X-Token") != cache.token {
-		g.HttpError(http.StatusForbidden, "access denied")
+		g.HTTPError(http.StatusForbidden, "access denied")
 		return
 	}
 	g.File(cache.dir)

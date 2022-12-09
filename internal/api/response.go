@@ -75,12 +75,13 @@ func (ctx *GContext) MissingParam(what string) {
 	panic(MissingParam(what))
 }
 
-// HttpError response http error
-func (ctx *GContext) HttpError(code int, msg string) {
+// HTTPError response http error
+func (ctx *GContext) HTTPError(code int, msg string) {
 	ctx.String(code, msg)
 }
 
-func (ctx *GContext) HttpData(data []byte) {
+// HTTPData response http data
+func (ctx *GContext) HTTPData(data []byte) {
 	ct := http.DetectContentType(data)
 	ctx.Data(http.StatusOK, ct, data)
 }

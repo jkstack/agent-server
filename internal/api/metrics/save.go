@@ -227,7 +227,7 @@ func (h *Handler) sendKafka(cli sarama.AsyncProducer, topic, agentID string, dat
 	var bytes []byte
 	var err error
 	switch h.format {
-	case formatJson:
+	case formatJSON:
 		bytes, err = json.Marshal(data)
 		if err != nil {
 			logging.Error("json marshal for [%s]: %v", data.AgentId, err)

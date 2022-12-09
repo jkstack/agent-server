@@ -1,6 +1,8 @@
 package api
 
 const (
+	// KeyPerformance performance key in gin context
 	KeyPerformance = "X-PERFORMANCE" // performance, stat.Tick
-	KeyGContext    = "X-GCONTEXT"    // gcontext, GContext
+	// KeyGContext GContext key in gin context
+	KeyGContext = "X-GCONTEXT" // gcontext, GContext
 )

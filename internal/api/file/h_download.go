@@ -52,7 +52,7 @@ func (h *Handler) download(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.HttpError(http.StatusNotFound, "agent not found")
+		g.HTTPError(http.StatusNotFound, "agent not found")
 		return
 	}
 	if cli.Type() != agent.TypeExec {
@@ -81,7 +81,7 @@ func (h *Handler) download(gin *gin.Context) {
 
 	if !rep.DownloadRep.OK {
 		logging.Error("download [%s] on %s failed, task_id=%s, msg=%s", args.Dir, id, taskID, rep.DownloadRep.ErrMsg)
-		g.HttpError(http.StatusServiceUnavailable, rep.DownloadRep.ErrMsg)
+		g.HTTPError(http.StatusServiceUnavailable, rep.DownloadRep.ErrMsg)
 		return
 	}
 	logging.Info("download [%s] on %s success, task_id=%s, size=%d, md5=%x", args.Dir, id, taskID,
@@ -90,7 +90,7 @@ func (h *Handler) download(gin *gin.Context) {
 	f, err := tmpFile(h.cfg.CacheDir, rep.DownloadRep.Size)
 	if err != nil {
 		logging.Error("download [%s] on %s failed, task_id=%s, err=%v", args.Dir, id, taskID, err)
-		g.HttpError(http.StatusInternalServerError, err.Error())
+		g.HTTPError(http.StatusInternalServerError, err.Error())
 		return
 	}
 	defer func() {
@@ -112,7 +112,7 @@ func (h *Handler) download(gin *gin.Context) {
 			n, err := writeFile(f, msg.DownloadData)
 			if err != nil {
 				logging.Error("download [%s] on %s, task_id=%s, err=%v", args.Dir, id, taskID, err)
-				g.HttpError(http.StatusInternalServerError, err.Error())
+				g.HTTPError(http.StatusInternalServerError, err.Error())
 				return
 			}
 			left -= uint64(n)
@@ -121,7 +121,7 @@ func (h *Handler) download(gin *gin.Context) {
 				return
 			}
 		case anet.TypeDownloadError:
-			g.HttpError(http.StatusServiceUnavailable, msg.DownloadError.Msg)
+			g.HTTPError(http.StatusServiceUnavailable, msg.DownloadError.Msg)
 			return
 		}
 	}
@@ -155,19 +155,19 @@ func serveFile(g *api.GContext, f *os.File, id, dir, taskID string, src [md5.Siz
 	_, err := f.Seek(0, io.SeekStart)
 	if err != nil {
 		logging.Error("download [%s] on %s, task_id=%s, err=%v", dir, id, taskID, err)
-		g.HttpError(http.StatusInternalServerError, err.Error())
+		g.HTTPError(http.StatusInternalServerError, err.Error())
 		return
 	}
 	dst, err := md5From(f)
 	if err != nil {
 		logging.Error("download [%s] on %s, task_id=%s, err=%v", dir, id, taskID, err)
-		g.HttpError(http.StatusInternalServerError, err.Error())
+		g.HTTPError(http.StatusInternalServerError, err.Error())
 		return
 	}
 	if !bytes.Equal(dst[:], src[:]) {
 		logging.Error("download [%s] on %s, task_id=%s, invalid md5checksum, src=%x, dst=%x",
 			dir, id, taskID, src, dst)
-		g.HttpError(http.StatusInternalServerError, "invalid checksum")
+		g.HTTPError(http.StatusInternalServerError, "invalid checksum")
 		return
 	}
 	f.Close()

@@ -83,7 +83,7 @@ func (h *Handler) upload(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.HttpError(http.StatusNotFound, "agent not found")
+		g.HTTPError(http.StatusNotFound, "agent not found")
 		return
 	}
 	if cli.Type() != agent.TypeExec {
@@ -151,7 +151,7 @@ func (h *Handler) upload(gin *gin.Context) {
 			OwnGroup: ownGroup,
 			Size:     uint64(hdr.Size),
 			Md5:      dstMD5,
-			Uri:      uri,
+			URI:      uri,
 			Token:    token,
 		}, taskID)
 	}

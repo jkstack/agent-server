@@ -17,7 +17,7 @@ type process struct {
 	ID            int32    `json:"id" example:"5167" validate:"required"`   // 进程ID
 	ParentID      int32    `json:"pid" example:"1" validate:"required"`     // 父进程ID
 	User          string   `json:"user" example:"root" validate:"required"` // 用户
-	CpuUsage      float64  `json:"cpu_usage,omitempty" example:"3.2"`       // CPU使用率
+	CPUUsage      float64  `json:"cpu_usage,omitempty" example:"3.2"`       // CPU使用率
 	RssMemory     uint64   `json:"rss,omitempty" example:"37654"`           // 物理内存数
 	VirtualMemory uint64   `json:"vms,omitempty" example:"26754"`           // 虚拟内存数
 	SwapMemory    uint64   `json:"swap,omitempty" example:"0"`              // swap内存数
@@ -87,7 +87,7 @@ func transDynamicProcess(input []anet.HMDynamicProcess) []process {
 			ID:            p.ID,
 			ParentID:      p.ParentID,
 			User:          p.User,
-			CpuUsage:      p.CpuUsage.Float(),
+			CPUUsage:      p.CpuUsage.Float(),
 			RssMemory:     p.RssMemory,
 			VirtualMemory: p.VirtualMemory,
 			SwapMemory:    p.SwapMemory,

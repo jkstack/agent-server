@@ -35,21 +35,21 @@ func (h *Handler) pty(gin *gin.Context) {
 
 	cli := agents.Get(id)
 	if cli == nil {
-		g.HttpError(http.StatusNotFound, "agent not found")
+		g.HTTPError(http.StatusNotFound, "agent not found")
 		return
 	}
 
 	task := h.getTasksOrCreate(id).get(int(pid))
 	if task == nil {
-		g.HttpError(http.StatusNotFound, "task not found")
+		g.HTTPError(http.StatusNotFound, "task not found")
 		return
 	}
 
 	data, err := io.ReadAll(task.cache)
 	if err != nil {
-		g.HttpError(http.StatusInternalServerError, err.Error())
+		g.HTTPError(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	g.HttpData(data)
+	g.HTTPData(data)
 }

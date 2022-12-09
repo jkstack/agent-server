@@ -98,7 +98,7 @@ func (h *Handler) setStatus(gin *gin.Context) {
 
 	id := g.Param("id")
 	var args setArgs
-	if err := g.ShouldBindJson(&args); err != nil {
+	if err := g.ShouldBindJSON(&args); err != nil {
 		g.BadParam(err.Error())
 		return
 	}
@@ -143,7 +143,7 @@ func (h *Handler) batchSetStatus(gin *gin.Context) {
 	g := api.GetG(gin)
 
 	var args batchSetArgs
-	if err := g.ShouldBindJson(&args); err != nil {
+	if err := g.ShouldBindJSON(&args); err != nil {
 		g.BadParam(err.Error())
 		return
 	}
@@ -165,9 +165,8 @@ func (h *Handler) batchSetStatus(gin *gin.Context) {
 				targets = append(targets, a)
 			}
 			return true
-		} else {
-			targets = append(targets, a)
 		}
+		targets = append(targets, a)
 		return true
 	})
 

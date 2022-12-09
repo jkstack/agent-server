@@ -23,6 +23,7 @@ const (
 	defaultConnectLimit   = 100
 )
 
+// Configure configure object
 type Configure struct {
 	ID             string      `kv:"id"`
 	Listen         uint16      `kv:"listen"`
@@ -44,6 +45,7 @@ type Configure struct {
 	MetricsCli sarama.AsyncProducer
 }
 
+// Load load configure file
 func Load(dir, abs string) *Configure {
 	f, err := os.Open(dir)
 	runtime.Assert(err)

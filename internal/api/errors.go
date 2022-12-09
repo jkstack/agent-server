@@ -2,6 +2,7 @@ package api
 
 import "fmt"
 
+// BadParam bad param error
 type BadParam string
 
 func (e BadParam) Error() string {
@@ -11,6 +12,7 @@ func (e BadParam) Error() string {
 	return "bad param"
 }
 
+// Notfound not found error
 type Notfound string
 
 func (e Notfound) Error() string {

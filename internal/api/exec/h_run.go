@@ -58,7 +58,7 @@ func (h *Handler) run(gin *gin.Context) {
 		Result:  true,
 		Timeout: 60,
 	}
-	if err := g.ShouldBindJson(&args); err != nil {
+	if err := g.ShouldBindJSON(&args); err != nil {
 		g.BadParam(err.Error())
 		return
 	}

@@ -12,6 +12,7 @@ import (
 	"github.com/jkstack/jkframe/stat"
 )
 
+// Agents agent list object
 type Agents struct {
 	sync.RWMutex
 	data         map[string]*Agent
@@ -21,6 +22,7 @@ type Agents struct {
 	stOutBytes   *stat.Counter
 }
 
+// NewAgents create agent list object
 func NewAgents(stats *stat.Mgr) *Agents {
 	agents := &Agents{
 		data:         make(map[string]*Agent),
@@ -110,6 +112,7 @@ func (agents *Agents) print() {
 	}
 }
 
+// Prefix search agent by prefix
 func (agents *Agents) Prefix(str string) []*Agent {
 	var ret []*Agent
 	agents.RLock()
@@ -122,6 +125,7 @@ func (agents *Agents) Prefix(str string) []*Agent {
 	return ret
 }
 
+// Contains search agent by str
 func (agents *Agents) Contains(str string) []*Agent {
 	var ret []*Agent
 	agents.RLock()
@@ -134,6 +138,7 @@ func (agents *Agents) Contains(str string) []*Agent {
 	return ret
 }
 
+// All get all agent list
 func (agents *Agents) All() []*Agent {
 	var ret []*Agent
 	agents.RLock()

@@ -15,6 +15,7 @@ import (
 
 const channelBuffer = 10000
 
+// Agent agent object
 type Agent struct {
 	sync.RWMutex
 	t      string
@@ -27,6 +28,7 @@ type Agent struct {
 	taskRead map[string]chan *anet.Msg
 }
 
+// Close close agent connection
 func (agent *Agent) Close() {
 	logging.Info("agent [%s] connection closed", agent.info.ID)
 	if agent.remote != nil {
@@ -139,24 +141,29 @@ func (agent *Agent) write(ctx context.Context, cancel context.CancelFunc, remote
 	}
 }
 
+// ID get agent id
 func (agent *Agent) ID() string {
 	return agent.info.ID
 }
 
+// Type get agent type
 func (agent *Agent) Type() string {
 	return agent.info.Name
 }
 
+// Info get agent information
 func (agent *Agent) Info() anet.ComePayload {
 	return agent.info
 }
 
+// ChanRead get read channel by taskID
 func (agent *Agent) ChanRead(id string) <-chan *anet.Msg {
 	agent.RLock()
 	defer agent.RUnlock()
 	return agent.taskRead[id]
 }
 
+// ChanClose close read channel by taskID
 func (agent *Agent) ChanClose(id string) {
 	agent.Lock()
 	defer agent.Unlock()
@@ -166,6 +173,7 @@ func (agent *Agent) ChanClose(id string) {
 	}
 }
 
+// Unknown get no taskID channel
 func (agent *Agent) Unknown() <-chan *anet.Msg {
 	return agent.chRead
 }

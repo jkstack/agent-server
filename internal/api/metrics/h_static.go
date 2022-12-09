@@ -136,7 +136,7 @@ func transStatic(payload *anet.HMStaticPayload) staticInfo {
 	var ret staticInfo
 	ret.Time = payload.Time.Unix()
 	fillStaticHost(&ret, payload)
-	fillStaticCpu(&ret, payload)
+	fillStaticCPU(&ret, payload)
 	fillStaticMemory(&ret, payload)
 	fillStaticDisk(&ret, payload)
 	fillStaticNetwork(&ret, payload)
@@ -156,7 +156,7 @@ func fillStaticHost(ret *staticInfo, payload *anet.HMStaticPayload) {
 	ret.Kernel.Arch = payload.Kernel.Arch
 }
 
-func fillStaticCpu(ret *staticInfo, payload *anet.HMStaticPayload) {
+func fillStaticCPU(ret *staticInfo, payload *anet.HMStaticPayload) {
 	ret.CPU.Physical = payload.CPU.Physical
 	ret.CPU.Logical = payload.CPU.Logical
 	for _, c := range payload.CPU.Cores {

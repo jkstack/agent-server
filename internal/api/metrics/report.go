@@ -61,6 +61,7 @@ func (h *Handler) updateJobs() {
 	}
 }
 
+// HandleReportError kafka send error callback
 func HandleReportError(cli sarama.AsyncProducer) {
 	for err := range cli.Errors() {
 		key, err := err.Msg.Key.Encode()

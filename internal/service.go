@@ -13,7 +13,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ConfDir configure file dir
 var ConfDir string
+
+// Version server version
 var Version string
 
 type dummy struct{}
@@ -64,6 +67,7 @@ func newApp() (service.Service, error) {
 	return newService(app.New(cfg, Version))
 }
 
+// Install register system service
 func Install(*cobra.Command, []string) {
 	if len(ConfDir) == 0 {
 		fmt.Println("missing --conf argument")
@@ -83,6 +87,7 @@ func Install(*cobra.Command, []string) {
 	fmt.Println("register service success")
 }
 
+// Uninstall unregister system service
 func Uninstall(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
@@ -97,6 +102,7 @@ func Uninstall(*cobra.Command, []string) {
 	fmt.Println("unregister service success")
 }
 
+// Start start system service
 func Start(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
@@ -111,6 +117,7 @@ func Start(*cobra.Command, []string) {
 	fmt.Println("start service success")
 }
 
+// Stop stop system service
 func Stop(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
@@ -125,6 +132,7 @@ func Stop(*cobra.Command, []string) {
 	fmt.Println("stop service success")
 }
 
+// Restart restart system service
 func Restart(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
@@ -139,6 +147,7 @@ func Restart(*cobra.Command, []string) {
 	fmt.Println("restart service success")
 }
 
+// Status get system service status
 func Status(*cobra.Command, []string) {
 	svc, err := dummyService()
 	if err != nil {
@@ -160,6 +169,7 @@ func Status(*cobra.Command, []string) {
 	}
 }
 
+// Run run server
 func Run(*cobra.Command, []string) {
 	svc, err := newApp()
 	if err != nil {

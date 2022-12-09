@@ -6,8 +6,8 @@ import "github.com/dustin/go-humanize"
 type Bytes uint64
 
 // MarshalKV marshal bytes
-func (b Bytes) MarshalKV() (string, error) {
-	return humanize.Bytes(uint64(b)), nil
+func (data Bytes) MarshalKV() (string, error) {
+	return humanize.Bytes(uint64(data)), nil
 }
 
 // UnmarshalKV unmarshal bytes

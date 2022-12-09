@@ -6,6 +6,7 @@ import (
 	"github.com/jkstack/anet"
 )
 
+// SendExecRun send exec task
 func (agent *Agent) SendExecRun(
 	cmd string, args []string,
 	auth, user string,
@@ -37,6 +38,7 @@ func (agent *Agent) SendExecRun(
 	return id, nil
 }
 
+// SendExecKill send kill command
 func (agent *Agent) SendExecKill(pid int) error {
 	id, err := utils.TaskID()
 	if err != nil {

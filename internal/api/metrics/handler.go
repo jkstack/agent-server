@@ -18,7 +18,7 @@ import (
 var allJobs = []string{"static", "usage", "process", "conns", "temps"}
 
 const (
-	formatJson = iota
+	formatJSON = iota
 	formatProtobuf
 )
 
@@ -31,6 +31,7 @@ type jobStatus struct {
 
 type jobs [5]jobStatus
 
+// Handler api handler
 type Handler struct {
 	sync.RWMutex
 	stJobs    *prometheus.GaugeVec
@@ -42,16 +43,19 @@ type Handler struct {
 	jobs      map[string]jobs
 }
 
+// New create api handler
 func New() *Handler {
 	return &Handler{
 		jobs: make(map[string]jobs),
 	}
 }
 
+// Module get module name
 func (h *Handler) Module() string {
 	return "metrics"
 }
 
+// Init initialize module
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	h.clusterID = cfg.ID
 	h.stJobs = mgr.RawVec("metrics_jobs", []string{"id", "name",
@@ -62,7 +66,7 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	h.topic = cfg.Metrics.Kafka.Topic
 	switch cfg.Metrics.Kafka.Format {
 	case "json":
-		h.format = formatJson
+		h.format = formatJSON
 	case "proto":
 		h.format = formatProtobuf
 	}
@@ -71,6 +75,7 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	}
 }
 
+// HandleFuncs get funcs
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
 		api.MakeRoute(http.MethodGet, "/:id/static"):              h.static,
@@ -85,12 +90,15 @@ func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	}
 }
 
+// OnConnect agent connect callback
 func (h *Handler) OnConnect(*agent.Agent) {
 }
 
+// OnClose agent connection closed callback
 func (h *Handler) OnClose(string) {
 }
 
+// OnMessage received agent message callback
 func (h *Handler) OnMessage(agent *agent.Agent, msg *anet.Msg) {
 	switch msg.Type {
 	case anet.TypeHMStaticRep:
