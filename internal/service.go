@@ -131,7 +131,7 @@ func Restart(*cobra.Command, []string) {
 		fmt.Printf("can not create service: %v\n", err)
 		os.Exit(1)
 	}
-	err = svc.Stop()
+	err = svc.Restart()
 	if err != nil {
 		fmt.Printf("can not restart service: %v\n", err)
 		os.Exit(1)
