@@ -55,3 +55,9 @@
 2. 修正服务无法重启的问题
 3. metrics数据上报支持json格式，修改上报数据格式定义
 4. 修正代码中的golint问题
+
+## 1.1.4
+
+1. 修改manifest.yaml文件中id字段类型
+2. /agents和/agents/info接口增加is_busy返回值
+3. /info/server接口中增加id返回值

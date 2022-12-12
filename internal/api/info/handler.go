@@ -13,6 +13,7 @@ import (
 
 // Handler api handler
 type Handler struct {
+	id         string
 	version    string
 	isBlocking *bool
 }
@@ -32,6 +33,7 @@ func (h *Handler) Module() string {
 
 // Init initialize module
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
+	h.id = cfg.ID
 }
 
 // HandleFuncs get funcs
