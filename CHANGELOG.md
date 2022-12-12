@@ -60,3 +60,4 @@
 
 1. 修改manifest.yaml文件中id字段类型
 2. /agents和/agents/info接口增加is_busy返回值
+3. /info/server接口中增加id返回值
