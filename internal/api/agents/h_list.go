@@ -64,6 +64,7 @@ func (h *Handler) list(gin *gin.Context) {
 				OS:       a.OS,
 				Platform: a.Platform,
 				Arch:     a.Arch,
+				IsBusy:   true, // TODO
 			})
 		}
 		return true

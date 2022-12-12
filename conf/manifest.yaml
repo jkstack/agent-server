@@ -1,5 +1,5 @@
 - key: id
-  type: string
+  type: uuid
   name:
     zh: 集群ID
   desc:

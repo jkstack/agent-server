@@ -15,6 +15,7 @@ type info struct {
 	OS       string `json:"os" example:"linux" enums:"windows,linux" validate:"required"`            // 操作系统类型
 	Platform string `json:"platform" example:"debian" enums:"debian,centos,..." validate:"required"` // 操作系统名称
 	Arch     string `json:"arch" example:"x86_64" enums:"i386,x86_64,..." validate:"required"`       // 操作系统位数
+	IsBusy   bool   `json:"is_busy" example:"false" validate:"required"`                             // 是否处于忙碌状态
 }
 
 // info 获取某个节点信息
@@ -48,5 +49,6 @@ func (h *Handler) info(gin *gin.Context) {
 		OS:       a.OS,
 		Platform: a.Platform,
 		Arch:     a.Arch,
+		IsBusy:   false, // TODO
 	})
 }
