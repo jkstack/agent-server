@@ -61,3 +61,8 @@
 1. 修改manifest.yaml文件中id字段类型
 2. /agents和/agents/info接口增加is_busy返回值
 3. /info/server接口中增加id返回值
+
+## TODO
+
+1. 修正打包脚本中没有正确更新文档的问题
+2. go版本升级到1.19.4
