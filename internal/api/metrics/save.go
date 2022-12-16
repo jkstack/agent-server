@@ -240,6 +240,7 @@ func (h *Handler) sendKafka(cli sarama.AsyncProducer, topic, agentID string, dat
 			return
 		}
 	}
+	logging.Info("report data: %s", string(bytes))
 	if cli == nil {
 		return
 	}
