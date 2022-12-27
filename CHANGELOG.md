@@ -62,7 +62,7 @@
 2. /agents和/agents/info接口增加is_busy返回值
 3. /info/server接口中增加id返回值
 
-## TODO
+## 1.1.5
 
 1. 修正metrics-agent上报kafka连接问题
 2. 修正打包脚本中没有正确更新文档的问题
