@@ -62,7 +62,7 @@ func Load(dir, abs string) *Configure {
 		cfg.Producer.Flush.Bytes = 1024 * 1024 // 1MB
 		cfg.Producer.Flush.Messages = 100
 		cfg.Producer.Flush.Frequency = time.Second
-		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka.Topic}, cfg)
+		ret.MetricsCli, err = sarama.NewAsyncProducer([]string{ret.Metrics.Kafka.Addr}, cfg)
 		runtime.Assert(err)
 	}
 

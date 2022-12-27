@@ -2,7 +2,7 @@
 
 OUTDIR=release
 
-VERSION=1.1.4
+VERSION=1.1.5
 TIMESTAMP=`date +%s`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
@@ -19,6 +19,7 @@ all:
 	rm -fr $(OUTDIR)/$(VERSION)
 	mkdir -p $(OUTDIR)/$(VERSION)/opt/agent-server/bin \
 		$(OUTDIR)/$(VERSION)/opt/agent-server/conf
+	swag init -g internal/api/api.go
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \
 		-o $(OUTDIR)/$(VERSION)/opt/agent-server/bin/agent-server main.go
 	cp conf/server.conf $(OUTDIR)/$(VERSION)/opt/agent-server/conf/server.conf
