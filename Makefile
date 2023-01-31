@@ -2,7 +2,7 @@
 
 OUTDIR=release
 
-VERSION=1.1.5
+VERSION=1.2.0
 TIMESTAMP=`date +%s`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
