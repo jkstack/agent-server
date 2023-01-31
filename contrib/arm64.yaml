@@ -1,0 +1,17 @@
+name: agent-server
+arch: arm64
+platform: linux
+#version: 1.0.0
+maintainer: liwenchao <liwenchao@jkstack.com>
+description: jkstack agent server
+contents:
+  - src: $WORKDIR/opt/agent-server/bin/agent-server
+    dst: /opt/agent-server/bin/agent-server
+  - src: $WORKDIR/opt/agent-server/conf/server.conf
+    dst: /opt/agent-server/conf/server.conf
+    type: config|noreplace
+  - src: $WORKDIR/opt/agent-server/.version
+    dst: /opt/agent-server/.version
+scripts:
+  postinstall: contrib/postinstall
+  preremove: contrib/preremove

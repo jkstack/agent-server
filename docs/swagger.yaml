@@ -18,6 +18,10 @@ definitions:
         description: ip地址
         example: 127.0.0.1
         type: string
+      is_busy:
+        description: 是否处于忙碌状态
+        example: false
+        type: boolean
       mac:
         description: mac地址
         example: 00:15:5d:c9:e0:17
@@ -49,6 +53,7 @@ definitions:
     - arch
     - id
     - ip
+    - is_busy
     - mac
     - os
     - platform
@@ -176,7 +181,8 @@ definitions:
         example: 9655
         type: integer
       result:
-        $ref: '#/definitions/exec.result'
+        allOf:
+        - $ref: '#/definitions/exec.result'
         description: 任务状态，仅当result参数为true时返回
     required:
     - begin
@@ -257,6 +263,10 @@ definitions:
         description: 当前连接的agent数量
         example: 10
         type: integer
+      id:
+        description: 集群ID
+        example: cluster-01
+        type: string
       is_blocking:
         description: 是否处于限流状态
         example: false
@@ -267,6 +277,7 @@ definitions:
         type: string
     required:
     - agents
+    - id
     - is_blocking
     - version
     type: object
@@ -503,7 +514,8 @@ definitions:
           $ref: '#/definitions/metrics.temp'
         type: array
       usage:
-        $ref: '#/definitions/metrics.usage'
+        allOf:
+        - $ref: '#/definitions/metrics.usage'
         description: usage数据
     type: object
   metrics.interfaceUsage:

@@ -1415,6 +1415,7 @@ const docTemplate = `{
                 "arch",
                 "id",
                 "ip",
+                "is_busy",
                 "mac",
                 "os",
                 "platform",
@@ -1441,6 +1442,11 @@ const docTemplate = `{
                     "description": "ip地址",
                     "type": "string",
                     "example": "127.0.0.1"
+                },
+                "is_busy": {
+                    "description": "是否处于忙碌状态",
+                    "type": "boolean",
+                    "example": false
                 },
                 "mac": {
                     "description": "mac地址",
@@ -1644,7 +1650,11 @@ const docTemplate = `{
                 },
                 "result": {
                     "description": "任务状态，仅当result参数为true时返回",
-                    "$ref": "#/definitions/exec.result"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/exec.result"
+                        }
+                    ]
                 }
             }
         },
@@ -1739,6 +1749,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "agents",
+                "id",
                 "is_blocking",
                 "version"
             ],
@@ -1747,6 +1758,11 @@ const docTemplate = `{
                     "description": "当前连接的agent数量",
                     "type": "integer",
                     "example": 10
+                },
+                "id": {
+                    "description": "集群ID",
+                    "type": "string",
+                    "example": "cluster-01"
                 },
                 "is_blocking": {
                     "description": "是否处于限流状态",
@@ -2061,7 +2077,11 @@ const docTemplate = `{
                 },
                 "usage": {
                     "description": "usage数据",
-                    "$ref": "#/definitions/metrics.usage"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/metrics.usage"
+                        }
+                    ]
                 }
             }
         },
