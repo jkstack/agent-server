@@ -1,6 +1,6 @@
 # agent-server
 
-[![agent](https://github.com/jkstack/agent-server/actions/workflows/build.yml/badge.svg)](https://github.com/jkstack/agent-server/actions/workflows/build.yml)
+[![version](https://img.shields.io/github/v/release/jkstack/agent-server)](https://github.com/jkstack/agent-server/releases/latest)
 [![go-mod](https://img.shields.io/github/go-mod/go-version/jkstack/agent-server)](https://github.com/jkstack/agent-server)
 [![license](https://img.shields.io/github/license/jkstack/agent-server)](https://www.gnu.org/licenses/agpl-3.0.txt)
 ![downloads](https://img.shields.io/github/downloads/jkstack/agent-server/total)
