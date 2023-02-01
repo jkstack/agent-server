@@ -40,8 +40,6 @@ linux.arm64: prepare
 		-workdir $(OUTDIR)/$(VERSION) \
 		-epoch $(REVERSION)
 prepare:
-	swag init -g internal/api/api.go
-	protoc --go_out=internal/api/metrics internal/api/metrics/*.proto
 	rm -fr $(OUTDIR)/$(VERSION)
 	mkdir -p $(OUTDIR)/$(VERSION)/opt/agent-server/bin \
 		$(OUTDIR)/$(VERSION)/opt/agent-server/conf
