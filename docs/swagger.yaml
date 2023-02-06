@@ -1059,32 +1059,6 @@ info:
   title: agent-server
   version: TODO
 paths:
-  /agent/{id}/logs:
-    get:
-      consumes:
-      - application/json
-      operationId: /api/agent/logs
-      parameters:
-      - description: 节点ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/api.Success'
-            - properties:
-                payload:
-                  $ref: '#/definitions/agents.fileInfo'
-              type: object
-      summary: 获取某个节点信息
-      tags:
-      - agents
   /agents:
     get:
       consumes:
@@ -1160,6 +1134,68 @@ paths:
                   $ref: '#/definitions/agents.info'
               type: object
       summary: 获取某个节点信息
+      tags:
+      - agents
+  /agents/{id}/log/download:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/agents/log
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 文件列表
+        in: query
+        items:
+          type: string
+        name: files
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 文件内容
+          schema:
+            type: string
+        "500":
+          description: 出错原因
+          schema:
+            type: string
+        "503":
+          description: 出错原因
+          schema:
+            type: string
+      summary: 下载某个agent下的日志文件
+      tags:
+      - agents
+  /agents/{id}/logs:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/agents/logs
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/agents.fileInfo'
+              type: object
+      summary: 获取某个节点下的日志文件列表
       tags:
       - agents
   /exec/{id}/kill/{pid}:

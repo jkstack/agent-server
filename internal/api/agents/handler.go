@@ -44,9 +44,10 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 // HandleFuncs get funcs
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
-		api.MakeRoute(http.MethodGet, ""):          h.list,
-		api.MakeRoute(http.MethodGet, "/:id"):      h.info,
-		api.MakeRoute(http.MethodGet, "/:id/logs"): h.logs,
+		api.MakeRoute(http.MethodGet, ""):                  h.list,
+		api.MakeRoute(http.MethodGet, "/:id"):              h.info,
+		api.MakeRoute(http.MethodGet, "/:id/logs"):         h.logs,
+		api.MakeRoute(http.MethodGet, "/:id/log/download"): h.logDownload,
 	}
 }
 

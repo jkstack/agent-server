@@ -10,13 +10,13 @@ type fileInfo struct {
 
 // info 获取某个节点下的日志文件列表
 //
-//	@ID			/api/agent/logs
-//	@Summary	获取某个节点信息
+//	@ID			/api/agents/logs
+//	@Summary	获取某个节点下的日志文件列表
 //	@Tags		agents
 //	@Accept		json
 //	@Produce	json
 //	@Param		id	path		string	true	"节点ID"
 //	@Success	200	{object}	api.Success{payload=fileInfo}
-//	@Router		/agent/{id}/logs [get]
+//	@Router		/agents/{id}/logs [get]
 func (h *Handler) logs(gin *gin.Context) {
 }
