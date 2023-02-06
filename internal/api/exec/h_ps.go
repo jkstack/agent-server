@@ -14,14 +14,14 @@ type info struct {
 }
 
 // ps 列出正在运行中的任务
-// @ID /api/exec/ps
-// @Summary 列出正在运行中的任务
-// @Tags exec
-// @Accept  json
-// @Produce json
-// @Param   id   path string  true  "节点ID"
-// @Success 200  {object}     api.Success{payload=[]info}
-// @Router /exec/{id}/ps [get]
+//	@ID			/api/exec/ps
+//	@Summary	列出正在运行中的任务
+//	@Tags		exec
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Success	200	{object}	api.Success{payload=[]info}
+//	@Router		/exec/{id}/ps [get]
 func (h *Handler) ps(gin *gin.Context) {
 	g := api.GetG(gin)
 

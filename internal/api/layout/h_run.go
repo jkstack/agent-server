@@ -36,27 +36,27 @@ type context struct {
 }
 
 // run 批量执行脚本
-// @ID /api/layout/run
-// @description 分组示例:
-// @description 当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务
-// @Summary 批量执行脚本
-// @Tags layout
-// @Accept  mpfd
-// @Produce json
-// @Param  ids     formData []string true  "节点ID列表"
-// @Param  group   formData []int    true  "分组列表"
-// @Param  file    formData file     true  "文件"
-// @Param  type    formData string   true  "脚本类型" enums(sh,bash,python,python3,bat,powershell,php,lua)
-// @Param  args    formData []string false "参数"
-// @Param  md5     formData string   false "md5校验码"
-// @Param  auth    formData string   false "提权方式，仅linux有效" enums(,sudo,su)
-// @Param  user    formData string   false "运行身份，仅linux有效"
-// @Param  workdir formData string   false "工作目录"
-// @Param  env     formData []string false "环境变量"
-// @Param  timeout formData int      false "单个节点的超时时间" default(60)
-// @Param  onerror formData string   false "执行失败时的后续操作" enums(exit,continue) default(exit)
-// @Success 200  {object}   api.Success{payload=string} "payload为任务ID"
-// @Router /layout/run [post]
+//	@ID				/api/layout/run
+//	@description	分组示例:
+//	@description	当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务
+//	@Summary		批量执行脚本
+//	@Tags			layout
+//	@Accept			mpfd
+//	@Produce		json
+//	@Param			ids		formData	[]string					true	"节点ID列表"
+//	@Param			group	formData	[]int						true	"分组列表"
+//	@Param			file	formData	file						true	"文件"
+//	@Param			type	formData	string						true	"脚本类型"	enums(sh,bash,python,python3,bat,powershell,php,lua)
+//	@Param			args	formData	[]string					false	"参数"
+//	@Param			md5		formData	string						false	"md5校验码"
+//	@Param			auth	formData	string						false	"提权方式，仅linux有效"	enums(,sudo,su)
+//	@Param			user	formData	string						false	"运行身份，仅linux有效"
+//	@Param			workdir	formData	string						false	"工作目录"
+//	@Param			env		formData	[]string					false	"环境变量"
+//	@Param			timeout	formData	int							false	"单个节点的超时时间"		default(60)
+//	@Param			onerror	formData	string						false	"执行失败时的后续操作"	enums(exit,continue)	default(exit)
+//	@Success		200		{object}	api.Success{payload=string}	"payload为任务ID"
+//	@Router			/layout/run [post]
 func (h *Handler) run(gin *gin.Context) {
 	g := api.GetG(gin)
 

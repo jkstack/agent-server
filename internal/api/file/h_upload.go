@@ -25,21 +25,21 @@ import (
 const uploadLimit = 1024 * 1024
 
 // upload 上传文件
-// @ID /api/file/upload
-// @Summary 上传文件
-// @Tags file
-// @Accept mpfd
-// @Produce json
-// @Param   id        path     string true  "节点ID"
-// @Param   dir       formData string true  "保存路径"
-// @Param   file      formData file   true  "文件"
-// @Param   md5       formData string false "md5校验码"
-// @Param   mod       formData int    false "文件权限（8进制）" default(0644)
-// @Param   own_user  formData string false "文件所属用户"
-// @Param   own_group formData string false "文件所属分组"
-// @Param   timeout   formData int    false "超时时间" default(60)
-// @Success 200  {object}      api.Success{payload}
-// @Router /file/{id}/upload [post]
+//	@ID			/api/file/upload
+//	@Summary	上传文件
+//	@Tags		file
+//	@Accept		mpfd
+//	@Produce	json
+//	@Param		id			path		string	true	"节点ID"
+//	@Param		dir			formData	string	true	"保存路径"
+//	@Param		file		formData	file	true	"文件"
+//	@Param		md5			formData	string	false	"md5校验码"
+//	@Param		mod			formData	int		false	"文件权限（8进制）"	default(0644)
+//	@Param		own_user	formData	string	false	"文件所属用户"
+//	@Param		own_group	formData	string	false	"文件所属分组"
+//	@Param		timeout		formData	int		false	"超时时间"	default(60)
+//	@Success	200			{object}	api.Success{payload}
+//	@Router		/file/{id}/upload [post]
 func (h *Handler) upload(gin *gin.Context) {
 	g := api.GetG(gin)
 

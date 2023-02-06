@@ -7,13 +7,30 @@ import (
 // RequestTimeout request timeout
 const RequestTimeout = 10 * time.Second
 
-// @title       agent-server
-// @version     TODO
-// @description jkagent management server.
+//	@title			agent-server
+//	@version		TODO
+//	@description	jkagent management server.
 
-// @contact.url  https://www.jkstack.com
+//	@contact.url	https://www.jkstack.com
 
-// @BasePath /api
+//	@BasePath	/api
+
+//	@tag.name			agents
+//	@tag.description	agent相关操作接口
+//	@tag.name			exec
+//	@tag.description	exec-agent执行命令相关操作接口
+//	@tag.name			file
+//	@tag.description	exec-agent文件处理相关操作接口
+//	@tag.name			foo
+//	@tag.description	example-agent相关接口
+//	@tag.name			info
+//	@tag.description	服务器端信息相关接口
+//	@tag.name			layout
+//	@tag.description	编排运行相关接口
+//	@tag.name			metrics
+//	@tag.description	metrics-agent处理相关接口
+//	@tag.name			script
+//	@tag.description	脚本运行相关接口
 
 // Success response success
 type Success struct {

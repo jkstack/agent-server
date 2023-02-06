@@ -18,6 +18,50 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/agent/{id}/logs": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "agents"
+                ],
+                "summary": "获取某个节点信息",
+                "operationId": "/api/agent/logs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/agents.fileInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/agents": {
             "get": {
                 "consumes": [
@@ -1409,6 +1453,31 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "agents.fileInfo": {
+            "type": "object",
+            "required": [
+                "mod_time",
+                "name",
+                "size"
+            ],
+            "properties": {
+                "mod_time": {
+                    "description": "修改时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "name": {
+                    "description": "文件名",
+                    "type": "string",
+                    "example": "metrics-agent.log"
+                },
+                "size": {
+                    "description": "文件大小",
+                    "type": "integer",
+                    "example": 155
+                }
+            }
+        },
         "agents.info": {
             "type": "object",
             "required": [
@@ -2764,7 +2833,41 @@ const docTemplate = `{
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "description": "agent相关操作接口",
+            "name": "agents"
+        },
+        {
+            "description": "exec-agent执行命令相关操作接口",
+            "name": "exec"
+        },
+        {
+            "description": "exec-agent文件处理相关操作接口",
+            "name": "file"
+        },
+        {
+            "description": "example-agent相关接口",
+            "name": "foo"
+        },
+        {
+            "description": "服务器端信息相关接口",
+            "name": "info"
+        },
+        {
+            "description": "编排运行相关接口",
+            "name": "layout"
+        },
+        {
+            "description": "metrics-agent处理相关接口",
+            "name": "metrics"
+        },
+        {
+            "description": "脚本运行相关接口",
+            "name": "script"
+        }
+    ]
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

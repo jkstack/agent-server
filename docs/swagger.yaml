@@ -1,5 +1,24 @@
 basePath: /api
 definitions:
+  agents.fileInfo:
+    properties:
+      mod_time:
+        description: 修改时间
+        example: 1663816771
+        type: integer
+      name:
+        description: 文件名
+        example: metrics-agent.log
+        type: string
+      size:
+        description: 文件大小
+        example: 155
+        type: integer
+    required:
+    - mod_time
+    - name
+    - size
+    type: object
   agents.info:
     properties:
       arch:
@@ -1040,6 +1059,32 @@ info:
   title: agent-server
   version: TODO
 paths:
+  /agent/{id}/logs:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/agent/logs
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/agents.fileInfo'
+              type: object
+      summary: 获取某个节点信息
+      tags:
+      - agents
   /agents:
     get:
       consumes:
@@ -1932,3 +1977,20 @@ paths:
       tags:
       - script
 swagger: "2.0"
+tags:
+- description: agent相关操作接口
+  name: agents
+- description: exec-agent执行命令相关操作接口
+  name: exec
+- description: exec-agent文件处理相关操作接口
+  name: file
+- description: example-agent相关接口
+  name: foo
+- description: 服务器端信息相关接口
+  name: info
+- description: 编排运行相关接口
+  name: layout
+- description: metrics-agent处理相关接口
+  name: metrics
+- description: 脚本运行相关接口
+  name: script

@@ -18,14 +18,14 @@ type temp struct {
 }
 
 // static 获取节点的传感器温度数据
-// @ID /api/metrics/dynamic/temps
-// @Summary 获取节点的传感器温度数据
-// @Tags metrics
-// @Accept  json
-// @Produce json
-// @Param   id   path  string  true  "节点ID"
-// @Success 200  {object}     api.Success{payload=[]temp}
-// @Router /metrics/{id}/dynamic/temps [get]
+//	@ID			/api/metrics/dynamic/temps
+//	@Summary	获取节点的传感器温度数据
+//	@Tags		metrics
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Success	200	{object}	api.Success{payload=[]temp}
+//	@Router		/metrics/{id}/dynamic/temps [get]
 func (h *Handler) dynamicTemps(gin *gin.Context) {
 	g := api.GetG(gin)
 

@@ -14,13 +14,13 @@ type serverInfo struct {
 }
 
 // server 获取当前服务器状态
-// @ID /api/info/server
-// @Summary 获取当前服务器状态
-// @Tags info
-// @Accept  json
-// @Produce json
-// @Success 200  {object}  api.Success{payload=serverInfo}
-// @Router /info/server [get]
+//	@ID			/api/info/server
+//	@Summary	获取当前服务器状态
+//	@Tags		info
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	{object}	api.Success{payload=serverInfo}
+//	@Router		/info/server [get]
 func (h *Handler) server(gin *gin.Context) {
 	g := api.GetG(gin)
 

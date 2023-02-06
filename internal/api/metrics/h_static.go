@@ -85,14 +85,14 @@ type staticInfo struct {
 }
 
 // static 获取节点的静态数据
-// @ID /api/metrics/static
-// @Summary 获取节点的静态数据
-// @Tags metrics
-// @Accept  json
-// @Produce json
-// @Param   id   path string  true "节点ID"
-// @Success 200  {object}     api.Success{payload=staticInfo}
-// @Router /metrics/{id}/static [get]
+//	@ID			/api/metrics/static
+//	@Summary	获取节点的静态数据
+//	@Tags		metrics
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Success	200	{object}	api.Success{payload=staticInfo}
+//	@Router		/metrics/{id}/static [get]
 func (h *Handler) static(gin *gin.Context) {
 	g := api.GetG(gin)
 

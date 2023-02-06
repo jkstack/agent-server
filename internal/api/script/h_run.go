@@ -27,23 +27,23 @@ type runPayload struct {
 }
 
 // run 执行脚本
-// @ID /api/script/run
-// @Summary 执行脚本
-// @Tags script
-// @Accept  mpfd
-// @Produce json
-// @Param  id      path     string   true  "节点ID"
-// @Param  file    formData file     true  "文件"
-// @Param  type    formData string   true  "脚本类型" enums(sh,bash,python,python3,bat,powershell,php,lua)
-// @Param  args    formData []string false "参数"
-// @Param  md5     formData string   false "md5校验码"
-// @Param  auth    formData string   false "提权方式，仅linux有效" enums(,sudo,su)
-// @Param  user    formData string   false "运行身份，仅linux有效"
-// @Param  workdir formData string   false "工作目录"
-// @Param  env     formData []string false "环境变量"
-// @Param  timeout formData int      false "超时时间" default(60)
-// @Success 200  {object}  api.Success{payload=runPayload}
-// @Router /script/{id}/run [post]
+//	@ID			/api/script/run
+//	@Summary	执行脚本
+//	@Tags		script
+//	@Accept		mpfd
+//	@Produce	json
+//	@Param		id		path		string		true	"节点ID"
+//	@Param		file	formData	file		true	"文件"
+//	@Param		type	formData	string		true	"脚本类型"	enums(sh,bash,python,python3,bat,powershell,php,lua)
+//	@Param		args	formData	[]string	false	"参数"
+//	@Param		md5		formData	string		false	"md5校验码"
+//	@Param		auth	formData	string		false	"提权方式，仅linux有效"	enums(,sudo,su)
+//	@Param		user	formData	string		false	"运行身份，仅linux有效"
+//	@Param		workdir	formData	string		false	"工作目录"
+//	@Param		env		formData	[]string	false	"环境变量"
+//	@Param		timeout	formData	int			false	"超时时间"	default(60)
+//	@Success	200		{object}	api.Success{payload=runPayload}
+//	@Router		/script/{id}/run [post]
 func (h *Handler) run(gin *gin.Context) {
 	g := api.GetG(gin)
 

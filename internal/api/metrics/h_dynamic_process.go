@@ -28,15 +28,15 @@ type process struct {
 }
 
 // static 获取节点的进程列表数据
-// @ID /api/metrics/dynamic/process
-// @Summary 获取节点的所有进程列表数据
-// @Tags metrics
-// @Accept  json
-// @Produce json
-// @Param   id   path  string  true  "节点ID"
-// @Param   top  query integer false "数量限制"
-// @Success 200  {object}     api.Success{payload=[]process}
-// @Router /metrics/{id}/dynamic/process [get]
+//	@ID			/api/metrics/dynamic/process
+//	@Summary	获取节点的所有进程列表数据
+//	@Tags		metrics
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Param		top	query		integer	false	"数量限制"
+//	@Success	200	{object}	api.Success{payload=[]process}
+//	@Router		/metrics/{id}/dynamic/process [get]
 func (h *Handler) dynamicProcess(gin *gin.Context) {
 	g := api.GetG(gin)
 

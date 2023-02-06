@@ -10,15 +10,15 @@ import (
 )
 
 // kill 结束进程
-// @ID /api/exec/kill
-// @Summary 结束进程
-// @Tags exec
-// @Accept  json
-// @Produce json
-// @Param   id   path string  true  "节点ID"
-// @Param   pid  path int     true  "进程号"
-// @Success 200  {object}     api.Success
-// @Router /exec/{id}/kill/{pid} [delete]
+//	@ID			/api/exec/kill
+//	@Summary	结束进程
+//	@Tags		exec
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Param		pid	path		int		true	"进程号"
+//	@Success	200	{object}	api.Success
+//	@Router		/exec/{id}/kill/{pid} [delete]
 func (h *Handler) kill(gin *gin.Context) {
 	g := api.GetG(gin)
 

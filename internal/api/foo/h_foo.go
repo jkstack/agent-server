@@ -13,14 +13,14 @@ import (
 )
 
 // info 调用example类型的agent
-// @ID /api/foo
-// @Summary 调用example类型的agent
-// @Tags foo
-// @Accept  json
-// @Produce json
-// @Param   id    path string  true "节点ID"
-// @Success 200   {object}     api.Success
-// @Router /foo/{id} [get]
+//	@ID			/api/foo
+//	@Summary	调用example类型的agent
+//	@Tags		foo
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Success	200	{object}	api.Success
+//	@Router		/foo/{id} [get]
 func (h *Handler) foo(gin *gin.Context) {
 	g := api.GetG(gin)
 

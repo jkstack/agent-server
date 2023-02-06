@@ -21,19 +21,19 @@ type dynamicInfo struct {
 }
 
 // static 获取节点的所有动态数据
-// @ID /api/metrics/dynamic
-// @description 1. 当指定top参数时将会获取CPU占用率最高的n个进程数据
-// @description 2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置
-// @description 3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接
-// @Summary 获取节点的所有动态数据
-// @Tags metrics
-// @Accept  json
-// @Produce json
-// @Param   id    path  string   true  "节点ID"
-// @Param   top   query integer  false "获取进程列表时的数量限制"
-// @Param   kinds query []string false "获取连接类型" Enums(tcp,tcp4,tcp6,udp,udp4,udp6,unix)
-// @Success 200   {object}       api.Success{payload=dynamicInfo}
-// @Router /metrics/{id}/dynamic [get]
+//	@ID				/api/metrics/dynamic
+//	@description	1. 当指定top参数时将会获取CPU占用率最高的n个进程数据
+//	@description	2. 当指定kinds参数时获取的连接类型将会覆盖该agent节点配置文件中的类型设置
+//	@description	3. 当未指定kinds参数且该agent未配置task.conns.allow类型时默认返回所有类型的连接
+//	@Summary		获取节点的所有动态数据
+//	@Tags			metrics
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		string		true	"节点ID"
+//	@Param			top		query		integer		false	"获取进程列表时的数量限制"
+//	@Param			kinds	query		[]string	false	"获取连接类型"	Enums(tcp,tcp4,tcp6,udp,udp4,udp6,unix)
+//	@Success		200		{object}	api.Success{payload=dynamicInfo}
+//	@Router			/metrics/{id}/dynamic [get]
 func (h *Handler) dynamic(gin *gin.Context) {
 	g := api.GetG(gin)
 
