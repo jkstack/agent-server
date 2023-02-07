@@ -228,7 +228,10 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "payload": {
-                                            "$ref": "#/definitions/agents.fileInfo"
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/agents.fileInfo"
+                                            }
                                         }
                                     }
                                 }

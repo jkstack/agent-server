@@ -1,6 +1,15 @@
 package agents
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"net/http"
+	"server/internal/api"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/jkstack/anet"
+	"github.com/jkstack/jkframe/utils"
+)
 
 type fileInfo struct {
 	Name    string `json:"name" example:"metrics-agent.log" validate:"required"` // 文件名
@@ -16,7 +25,48 @@ type fileInfo struct {
 //	@Accept		json
 //	@Produce	json
 //	@Param		id	path		string	true	"节点ID"
-//	@Success	200	{object}	api.Success{payload=fileInfo}
+//	@Success	200	{object}	api.Success{payload=[]fileInfo}
 //	@Router		/agents/{id}/logs [get]
 func (h *Handler) logs(gin *gin.Context) {
+	g := api.GetG(gin)
+
+	id := g.Param("id")
+
+	agents := g.GetAgents()
+
+	agent := agents.Get(id)
+	if agent == nil {
+		g.Notfound("agent")
+		return
+	}
+
+	taskID, err := agent.SendLogLs()
+	utils.Assert(err)
+
+	var msg *anet.Msg
+	select {
+	case msg = <-agent.ChanRead(taskID):
+	case <-time.After(api.RequestTimeout):
+		g.Timeout()
+	}
+
+	switch {
+	case msg.Type == anet.TypeError:
+		g.ERR(http.StatusServiceUnavailable, msg.ErrorMsg)
+		return
+	case msg.Type != anet.TypeLogLsRep:
+		g.ERR(http.StatusInternalServerError, fmt.Sprintf("invalid message type: %d", msg.Type))
+		return
+	}
+
+	var files []fileInfo
+	for _, file := range msg.LsLog.Files {
+		files = append(files, fileInfo{
+			Name:    file.Name,
+			Size:    file.Size,
+			ModTime: file.ModTime.Unix(),
+		})
+	}
+
+	g.OK(files)
 }

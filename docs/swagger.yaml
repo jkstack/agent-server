@@ -1193,7 +1193,9 @@ paths:
             - $ref: '#/definitions/api.Success'
             - properties:
                 payload:
-                  $ref: '#/definitions/agents.fileInfo'
+                  items:
+                    $ref: '#/definitions/agents.fileInfo'
+                  type: array
               type: object
       summary: 获取某个节点下的日志文件列表
       tags:
