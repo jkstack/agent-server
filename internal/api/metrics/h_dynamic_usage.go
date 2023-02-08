@@ -47,14 +47,14 @@ type interfaceUsage struct {
 }
 
 // static 获取节点的usage动态数据
-// @ID /api/metrics/dynamic/usage
-// @Summary 获取节点的usage动态数据
-// @Tags metrics
-// @Accept  json
-// @Produce json
-// @Param   id   path string  true "节点ID"
-// @Success 200  {object}     api.Success{payload=usage}
-// @Router /metrics/{id}/dynamic/usage [get]
+//	@ID			/api/metrics/dynamic/usage
+//	@Summary	获取节点的usage动态数据
+//	@Tags		metrics
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Success	200	{object}	api.Success{payload=usage}
+//	@Router		/metrics/{id}/dynamic/usage [get]
 func (h *Handler) dynamicUsage(gin *gin.Context) {
 	g := api.GetG(gin)
 

@@ -132,6 +132,115 @@
                 }
             }
         },
+        "/agents/{id}/log/download": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "agents"
+                ],
+                "summary": "下载某个agent下的日志文件",
+                "operationId": "/api/agents/log/download",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "文件列表",
+                        "name": "files",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 600,
+                        "description": "超时时间",
+                        "name": "timeout",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "文件内容",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "出错原因",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "503": {
+                        "description": "出错原因",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/agents/{id}/logs": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "agents"
+                ],
+                "summary": "获取某个节点下的日志文件列表",
+                "operationId": "/api/agents/logs",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/agents.fileInfo"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/exec/{id}/kill/{pid}": {
             "delete": {
                 "consumes": [
@@ -1401,6 +1510,31 @@
         }
     },
     "definitions": {
+        "agents.fileInfo": {
+            "type": "object",
+            "required": [
+                "mod_time",
+                "name",
+                "size"
+            ],
+            "properties": {
+                "mod_time": {
+                    "description": "修改时间",
+                    "type": "integer",
+                    "example": 1663816771
+                },
+                "name": {
+                    "description": "文件名",
+                    "type": "string",
+                    "example": "metrics-agent.log"
+                },
+                "size": {
+                    "description": "文件大小",
+                    "type": "integer",
+                    "example": 155
+                }
+            }
+        },
         "agents.info": {
             "type": "object",
             "required": [
@@ -2756,5 +2890,39 @@
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "description": "agent相关操作接口",
+            "name": "agents"
+        },
+        {
+            "description": "exec-agent执行命令相关操作接口",
+            "name": "exec"
+        },
+        {
+            "description": "exec-agent文件处理相关操作接口",
+            "name": "file"
+        },
+        {
+            "description": "example-agent相关接口",
+            "name": "foo"
+        },
+        {
+            "description": "服务器端信息相关接口",
+            "name": "info"
+        },
+        {
+            "description": "编排运行相关接口",
+            "name": "layout"
+        },
+        {
+            "description": "metrics-agent处理相关接口",
+            "name": "metrics"
+        },
+        {
+            "description": "脚本运行相关接口",
+            "name": "script"
+        }
+    ]
 }

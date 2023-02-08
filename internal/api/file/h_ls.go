@@ -29,15 +29,15 @@ type info struct {
 }
 
 // ls 查询文件列表
-// @ID /api/file/ls
-// @Summary 查询文件列表
-// @Tags file
-// @Accept  json
-// @Produce json
-// @Param   id   path  string true "节点ID"
-// @Param   dir  query string true "查询路径"
-// @Success 200  {object}     api.Success{payload=[]info}
-// @Router /file/{id}/ls [get]
+//	@ID			/api/file/ls
+//	@Summary	查询文件列表
+//	@Tags		file
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Param		dir	query		string	true	"查询路径"
+//	@Success	200	{object}	api.Success{payload=[]info}
+//	@Router		/file/{id}/ls [get]
 func (h *Handler) ls(gin *gin.Context) {
 	g := api.GetG(gin)
 

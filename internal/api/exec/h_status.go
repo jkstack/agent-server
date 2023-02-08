@@ -15,15 +15,15 @@ type status struct {
 }
 
 // status 获取运行状态
-// @ID /api/exec/status
-// @Summary 获取运行状态
-// @Tags exec
-// @Accept  json
-// @Produce json
-// @Param   id  path string true "节点ID"
-// @Param   pid path int    true "进程号"
-// @Success 200 {object}    api.Success{payload=status}
-// @Router /exec/{id}/status/{pid} [get]
+//	@ID			/api/exec/status
+//	@Summary	获取运行状态
+//	@Tags		exec
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Param		pid	path		int		true	"进程号"
+//	@Success	200	{object}	api.Success{payload=status}
+//	@Router		/exec/{id}/status/{pid} [get]
 func (h *Handler) status(gin *gin.Context) {
 	g := api.GetG(gin)
 

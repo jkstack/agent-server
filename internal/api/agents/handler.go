@@ -20,6 +20,7 @@ type Handler struct {
 	mVersion       sync.RWMutex
 	oldVersion     map[string]string
 	oldGoVersion   map[string]string
+	cacheDir       string
 }
 
 // New create api handler
@@ -39,13 +40,16 @@ func (h *Handler) Module() string {
 func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 	h.stAgentVersion = mgr.RawVec("agent_version", []string{"id", "version", "go_version"})
 	h.stAgentInfo = mgr.RawVec("agent_info", []string{"id", "agent_type", "tag"})
+	h.cacheDir = cfg.CacheDir
 }
 
 // HandleFuncs get funcs
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
-		api.MakeRoute(http.MethodGet, ""):     h.list,
-		api.MakeRoute(http.MethodGet, "/:id"): h.info,
+		api.MakeRoute(http.MethodGet, ""):                  h.list,
+		api.MakeRoute(http.MethodGet, "/:id"):              h.info,
+		api.MakeRoute(http.MethodGet, "/:id/logs"):         h.logs,
+		api.MakeRoute(http.MethodGet, "/:id/log/download"): h.logDownload,
 	}
 }
 

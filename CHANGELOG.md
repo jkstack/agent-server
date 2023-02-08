@@ -73,3 +73,10 @@
 1. 支持arm架构
 2. 修正文档中的描述问题
 3. go版本升级到1.19.5
+
+## 1.3.0
+
+1. 新增/agents/{id}/logs和/agents/{id}/log/download接口用于下载Agent执行日志
+2. 优化swagger文档内容
+3. 升级第三方库版本
+4. go版本升级到1.20

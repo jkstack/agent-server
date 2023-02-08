@@ -41,15 +41,15 @@ type runPayload struct {
 }
 
 // run 执行命令或脚本
-// @ID /api/exec/run
-// @Summary 执行命令或脚本
-// @Tags exec
-// @Accept  json
-// @Produce json
-// @Param   id   path string  true  "节点ID"
-// @Param   args body runArgs true "需启动的任务列表"
-// @Success 200  {object}     api.Success{payload=runPayload}
-// @Router /exec/{id}/run [post]
+//	@ID			/api/exec/run
+//	@Summary	执行命令或脚本
+//	@Tags		exec
+//	@Accept		json
+//	@Produce	json
+//	@Param		id		path		string	true	"节点ID"
+//	@Param		args	body		runArgs	true	"需启动的任务列表"
+//	@Success	200		{object}	api.Success{payload=runPayload}
+//	@Router		/exec/{id}/run [post]
 func (h *Handler) run(gin *gin.Context) {
 	g := api.GetG(gin)
 

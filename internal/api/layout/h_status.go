@@ -23,14 +23,14 @@ type status struct {
 }
 
 // run 获取批量任务状态
-// @ID /api/layout/status
-// @Summary 获取批量任务状态
-// @Tags layout
-// @Accept  json
-// @Produce json
-// @Param   id   query string  true  "任务ID"
-// @Success 200  {object}      api.Success{payload=status}
-// @Router /layout/{id} [get]
+//	@ID			/api/layout/status
+//	@Summary	获取批量任务状态
+//	@Tags		layout
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	query		string	true	"任务ID"
+//	@Success	200	{object}	api.Success{payload=status}
+//	@Router		/layout/{id} [get]
 func (h *Handler) status(gin *gin.Context) {
 	g := api.GetG(gin)
 

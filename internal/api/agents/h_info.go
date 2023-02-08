@@ -19,14 +19,14 @@ type info struct {
 }
 
 // info 获取某个节点信息
-// @ID /api/agents/info
-// @Summary 获取某个节点信息
-// @Tags agents
-// @Accept  json
-// @Produce json
-// @Param   id    path string  true "节点ID"
-// @Success 200   {object}     api.Success{payload=info}
-// @Router /agents/{id} [get]
+//	@ID			/api/agents/info
+//	@Summary	获取某个节点信息
+//	@Tags		agents
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Success	200	{object}	api.Success{payload=info}
+//	@Router		/agents/{id} [get]
 func (h *Handler) info(gin *gin.Context) {
 	g := api.GetG(gin)
 

@@ -24,14 +24,14 @@ type status struct {
 }
 
 // getStatus 获取节点自动采集状态
-// @ID /api/metrics/status_get
-// @Summary 获取节点自动采集状态
-// @Tags metrics
-// @Accept  json
-// @Produce json
-// @Param   id   path string  true "节点ID"
-// @Success 200  {object}     api.Success{payload=status}
-// @Router /metrics/{id}/status [get]
+//	@ID			/api/metrics/status_get
+//	@Summary	获取节点自动采集状态
+//	@Tags		metrics
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"节点ID"
+//	@Success	200	{object}	api.Success{payload=status}
+//	@Router		/metrics/{id}/status [get]
 func (h *Handler) getStatus(gin *gin.Context) {
 	g := api.GetG(gin)
 
@@ -84,15 +84,15 @@ type setArgs struct {
 }
 
 // setStatus 设置节点自动采集状态
-// @ID /api/metrics/status_set
-// @Summary 设置节点自动采集状态
-// @Tags metrics
-// @Accept  json
-// @Produce json
-// @Param   id   path string  true "节点ID"
-// @Param   jobs body setArgs true "需启动的任务列表"
-// @Success 200  {object}     api.Success
-// @Router /metrics/{id}/status [put]
+//	@ID			/api/metrics/status_set
+//	@Summary	设置节点自动采集状态
+//	@Tags		metrics
+//	@Accept		json
+//	@Produce	json
+//	@Param		id		path		string	true	"节点ID"
+//	@Param		jobs	body		setArgs	true	"需启动的任务列表"
+//	@Success	200		{object}	api.Success
+//	@Router		/metrics/{id}/status [put]
 func (h *Handler) setStatus(gin *gin.Context) {
 	g := api.GetG(gin)
 
@@ -132,13 +132,13 @@ type counts struct {
 }
 
 // batchSetStatus 批量启动或停止采集
-// @ID /api/metrics/batch_status_set
-// @Summary 批量启动或停止采集
-// @Tags metrics
-// @Produce json
-// @Param   jobs body batchSetArgs true "需启动的任务列表"
-// @Success 200  {object}     api.Success{payload=counts}
-// @Router /metrics/status [put]
+//	@ID			/api/metrics/batch_status_set
+//	@Summary	批量启动或停止采集
+//	@Tags		metrics
+//	@Produce	json
+//	@Param		jobs	body		batchSetArgs	true	"需启动的任务列表"
+//	@Success	200		{object}	api.Success{payload=counts}
+//	@Router		/metrics/status [put]
 func (h *Handler) batchSetStatus(gin *gin.Context) {
 	g := api.GetG(gin)
 
