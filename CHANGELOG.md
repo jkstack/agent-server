@@ -76,6 +76,7 @@
 
 ## 1.3.0
 
-1. 优化swagger文档内容
-2. 升级第三方库版本
-3. go版本升级到1.20
+1. 新增/agents/{id}/logs和/agents/{id}/log/download接口用于下载Agent执行日志
+2. 优化swagger文档内容
+3. 升级第三方库版本
+4. go版本升级到1.20
