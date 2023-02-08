@@ -45,6 +45,7 @@ prepare:
 		$(OUTDIR)/$(VERSION)/opt/agent-server/conf
 	cp conf/server.conf $(OUTDIR)/$(VERSION)/opt/agent-server/conf/server.conf
 	echo $(VERSION) > $(OUTDIR)/$(VERSION)/opt/agent-server/.version
+	git config --global --add safe.directory `pwd`
 clean:
 	rm -fr $(OUTDIR)
 version:
