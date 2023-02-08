@@ -152,7 +152,7 @@ const docTemplate = `{
                     "agents"
                 ],
                 "summary": "下载某个agent下的日志文件",
-                "operationId": "/api/agents/log",
+                "operationId": "/api/agents/log/download",
                 "parameters": [
                     {
                         "type": "string",
@@ -170,6 +170,14 @@ const docTemplate = `{
                         "name": "files",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 600,
+                        "description": "超时时间",
+                        "name": "timeout",
+                        "in": "query"
                     }
                 ],
                 "responses": {

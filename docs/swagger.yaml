@@ -1140,7 +1140,7 @@ paths:
     get:
       consumes:
       - application/json
-      operationId: /api/agents/log
+      operationId: /api/agents/log/download
       parameters:
       - description: 节点ID
         in: path
@@ -1154,6 +1154,12 @@ paths:
         name: files
         required: true
         type: array
+      - default: 600
+        description: 超时时间
+        in: query
+        minimum: 1
+        name: timeout
+        type: integer
       produces:
       - application/json
       responses:
