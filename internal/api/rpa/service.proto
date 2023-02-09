@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package rpa;
+option go_package = ".;network";
+
+message run_args {
+    string     id = 1; // agent-id
+    string    url = 2; // zip包下载地址
+    bool is_debug = 3; // 是否调试运行
+}
+
+message log {
+    string data = 1; // 日志内容
+}
+
+message control_args {
+    enum status {
+        pause    = 0; // 暂停
+        stop     = 1; // 停止
+        continue = 2; // 继续运行
+    }
+    string id = 1; // agent-id
+    status st = 2; // 操作状态
+}
+
+message control_response {
+    bool    ok = 1; // 操作是否成功
+    string msg = 2; // 失败原因
+}
+
+service rpa {
+    rpc run(run_args) returns(stream log);
+    rpc control(control_args) returns(control_response);
+}

@@ -80,3 +80,8 @@
 2. 优化swagger文档内容
 3. 升级第三方库版本
 4. go版本升级到1.20
+
+## 1.3.1
+
+1. 增加rpa模块的gPRC接口定义
+2. 修改manifest.yaml中metrics.kafka.format字段类型
