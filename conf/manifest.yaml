@@ -94,12 +94,12 @@
   category: metrics
 
 - key: metrics.kafka.format
-  type: csv
+  type: enum
   name:
     zh: kafka数据格式
   desc:
     zh: MetricsAgent采集数据上报kafka时的数据格式，目前仅支持json和protobuf
   required: false
   category: metrics
-  csv_valid: [json, proto]
-  default: [json]
+  enum_valid: [json, proto]
+  default: json
