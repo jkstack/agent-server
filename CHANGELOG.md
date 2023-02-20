@@ -85,3 +85,8 @@
 
 1. 增加rpa模块的gPRC接口定义
 2. 修改manifest.yaml中metrics.kafka.format字段类型
+
+## 1.3.2
+
+1. metrics: 新增nameserver相关字段，用于获取主机上的dns配置
+2. go版本升级到1.20.1
