@@ -63,6 +63,7 @@ func (h *Handler) saveStaticData(agentID string, data *anet.HMStaticPayload) {
 			Inodes:  part.INodes,
 		})
 	}
+	static.Nameservers = data.NameServers
 	static.Gateway = data.GateWay
 	for _, intf := range data.Interface {
 		static.Interfaces = append(static.Interfaces, &StaticInterface{

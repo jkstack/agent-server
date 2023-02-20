@@ -68,6 +68,7 @@ message static_data {
     string                       gateway = 16; // 网关地址
     repeated static_interface interfaces = 17; // 网卡列表
     repeated static_user           users = 18; // 用户列表
+    repeated string          nameservers = 19; // DNS服务器列表
 }
 
 message dynamic_partition {
