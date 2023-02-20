@@ -2533,6 +2533,7 @@ const docTemplate = `{
                 "host",
                 "kernel",
                 "memory",
+                "nameservers",
                 "os",
                 "time"
             ],
@@ -2643,6 +2644,16 @@ const docTemplate = `{
                             "example": 8589930496
                         }
                     }
+                },
+                "nameservers": {
+                    "description": "DNS服务器地址列表",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "192.168.1.1"
+                    ]
                 },
                 "os": {
                     "type": "object",

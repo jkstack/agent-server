@@ -852,6 +852,13 @@ definitions:
         - physical
         - swap
         type: object
+      nameservers:
+        description: DNS服务器地址列表
+        example:
+        - 192.168.1.1
+        items:
+          type: string
+        type: array
       os:
         properties:
           install:
@@ -910,6 +917,7 @@ definitions:
     - host
     - kernel
     - memory
+    - nameservers
     - os
     - time
     type: object

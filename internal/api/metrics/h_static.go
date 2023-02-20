@@ -77,14 +77,16 @@ type staticInfo struct {
 		Physical uint64 `json:"physical" example:"33363566592" validate:"required"` // 物理内存大小
 		Swap     uint64 `json:"swap" example:"8589930496" validate:"required"`      // swap内存大小
 	} `json:"memory" validate:"required"`
-	Disks      []disk      `json:"disks,omitempty"`                                   // 物理磁盘列表
-	Partitions []partition `json:"partitions,omitempty"`                              // 逻辑分区列表
-	GateWay    string      `json:"gateway" example:"192.168.1.1" validate:"required"` // 网关地址
-	Interface  []intf      `json:"interface,omitempty"`                               // 网卡列表
-	User       []user      `json:"user,omitempty"`                                    // 用户列表
+	Disks       []disk      `json:"disks,omitempty"`                                       // 物理磁盘列表
+	Partitions  []partition `json:"partitions,omitempty"`                                  // 逻辑分区列表
+	NameServers []string    `json:"nameservers" example:"192.168.1.1" validate:"required"` // DNS服务器地址列表
+	GateWay     string      `json:"gateway" example:"192.168.1.1" validate:"required"`     // 网关地址
+	Interface   []intf      `json:"interface,omitempty"`                                   // 网卡列表
+	User        []user      `json:"user,omitempty"`                                        // 用户列表
 }
 
 // static 获取节点的静态数据
+//
 //	@ID			/api/metrics/static
 //	@Summary	获取节点的静态数据
 //	@Tags		metrics
@@ -197,6 +199,7 @@ func fillStaticDisk(ret *staticInfo, payload *anet.HMStaticPayload) {
 }
 
 func fillStaticNetwork(ret *staticInfo, payload *anet.HMStaticPayload) {
+	ret.NameServers = payload.NameServers
 	ret.GateWay = payload.GateWay
 	for _, i := range payload.Interface {
 		ret.Interface = append(ret.Interface, intf{
