@@ -20,3 +20,7 @@ jobs:
         uses: jkstack/smartagent-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OSS_ENDPOINT: http://oss-cn-shanghai.aliyuncs.com
+          OSS_KEY: ${{ secrets.OSS_KEY }}
+          OSS_SECRET: ${{ secrets.OSS_SECRET }}
+          OSS_BUCKET: smartagent
