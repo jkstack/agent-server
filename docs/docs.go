@@ -2781,9 +2781,27 @@ const docTemplate = `{
                 "cpu": {
                     "type": "object",
                     "required": [
+                        "load1",
+                        "load15",
+                        "load5",
                         "usage"
                     ],
                     "properties": {
+                        "load1": {
+                            "description": "1分钟负载",
+                            "type": "number",
+                            "example": 1.1
+                        },
+                        "load15": {
+                            "description": "15分钟负载",
+                            "type": "number",
+                            "example": 1
+                        },
+                        "load5": {
+                            "description": "5分钟负载",
+                            "type": "number",
+                            "example": 1.3
+                        },
                         "usage": {
                             "description": "CPU使用率(百分比)",
                             "type": "number",

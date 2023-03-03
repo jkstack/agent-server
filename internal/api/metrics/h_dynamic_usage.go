@@ -14,7 +14,10 @@ import (
 
 type usage struct {
 	CPU struct {
-		Usage float64 `json:"usage" example:"2.3" validate:"required"` // CPU使用率(百分比)
+		Usage  float64 `json:"usage" example:"2.3" validate:"required"` // CPU使用率(百分比)
+		Load1  float64 `json:"load1" example:"1.1" validate:"required"` // 1分钟负载
+		Load5  float64 `json:"load5" example:"1.3" validate:"required"` // 5分钟负载
+		Load15 float64 `json:"load15" example:"1" validate:"required"`  // 15分钟负载
 	} `json:"cpu"`
 	Memory struct {
 		Used      uint64  `json:"used" example:"1595712" validate:"required"`      // 已使用字节数
@@ -47,6 +50,7 @@ type interfaceUsage struct {
 }
 
 // static 获取节点的usage动态数据
+//
 //	@ID			/api/metrics/dynamic/usage
 //	@Summary	获取节点的usage动态数据
 //	@Tags		metrics
@@ -99,6 +103,9 @@ func (h *Handler) dynamicUsage(gin *gin.Context) {
 func transDynamicUsage(input *anet.HMDynamicUsage) *usage {
 	var ret usage
 	ret.CPU.Usage = input.Cpu.Usage.Float()
+	ret.CPU.Load1 = input.Cpu.Load1.Float()
+	ret.CPU.Load5 = input.Cpu.Load5.Float()
+	ret.CPU.Load15 = input.Cpu.Load15.Float()
 	ret.Memory.Used = input.Memory.Used
 	ret.Memory.Free = input.Memory.Free
 	ret.Memory.Available = input.Memory.Available

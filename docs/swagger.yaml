@@ -963,11 +963,26 @@ definitions:
     properties:
       cpu:
         properties:
+          load1:
+            description: 1分钟负载
+            example: 1.1
+            type: number
+          load5:
+            description: 5分钟负载
+            example: 1.3
+            type: number
+          load15:
+            description: 15分钟负载
+            example: 1
+            type: number
           usage:
             description: CPU使用率(百分比)
             example: 2.3
             type: number
         required:
+        - load1
+        - load15
+        - load5
         - usage
         type: object
       interface:
