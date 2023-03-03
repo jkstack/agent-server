@@ -14,7 +14,10 @@ import (
 
 type usage struct {
 	CPU struct {
-		Usage float64 `json:"usage" example:"2.3" validate:"required"` // CPU使用率(百分比)
+		Usage  float64 `json:"usage" example:"2.3" validate:"required"`  // CPU使用率(百分比)
+		Load1  float64 `json:"load1" example:"0.3" validate:"required"`  // 1分钟负载
+		Load5  float64 `json:"load5" example:"0.4" validate:"required"`  // 5分钟负载
+		Load15 float64 `json:"load15" example:"0.5" validate:"required"` // 15分钟负载
 	} `json:"cpu"`
 	Memory struct {
 		Used      uint64  `json:"used" example:"1595712" validate:"required"`      // 已使用字节数
@@ -29,13 +32,16 @@ type usage struct {
 }
 
 type partitionUsage struct {
-	Mount      string  `json:"name" example:"/" validate:"required"`         // linux为挂载路径如/run，windows为盘符如C:
-	Used       uint64  `json:"used" example:"16920992" validate:"required"`  // 已使用字节数
-	Free       uint64  `json:"free" example:"232815064" validate:"required"` // 剩余字节数
-	Usage      float64 `json:"usage" example:"6.27" validate:"required"`     // 磁盘使用率
-	InodeUsed  uint64  `json:"inode_used,omitempty" example:"778282"`        // inode已使用数量
-	InodeFree  uint64  `json:"inode_free,omitempty" example:"15998934"`      // inode剩余数量
-	InodeUsage float64 `json:"inode_usage,omitempty" example:"5.64"`         // inode使用率
+	Mount          string  `json:"name" example:"/" validate:"required"`               // linux为挂载路径如/run，windows为盘符如C:
+	Used           uint64  `json:"used" example:"16920992" validate:"required"`        // 已使用字节数
+	Free           uint64  `json:"free" example:"232815064" validate:"required"`       // 剩余字节数
+	Usage          float64 `json:"usage" example:"6.27" validate:"required"`           // 磁盘使用率
+	InodeUsed      uint64  `json:"inode_used,omitempty" example:"778282"`              // inode已使用数量
+	InodeFree      uint64  `json:"inode_free,omitempty" example:"15998934"`            // inode剩余数量
+	InodeUsage     float64 `json:"inode_usage,omitempty" example:"5.64"`               // inode使用率
+	ReadPerSecond  float64 `json:"read_per_second" example:"100" validate:"required"`  // 每秒读取字节数
+	WritePerSecond float64 `json:"write_per_second" example:"200" validate:"required"` // 每秒写入字节数
+	IopsInProgress uint64  `json:"iops_in_progress" example:"0"`                       // 正在等待的IO操作数量
 }
 
 type interfaceUsage struct {
@@ -47,6 +53,7 @@ type interfaceUsage struct {
 }
 
 // static 获取节点的usage动态数据
+//
 //	@ID			/api/metrics/dynamic/usage
 //	@Summary	获取节点的usage动态数据
 //	@Tags		metrics
@@ -99,6 +106,9 @@ func (h *Handler) dynamicUsage(gin *gin.Context) {
 func transDynamicUsage(input *anet.HMDynamicUsage) *usage {
 	var ret usage
 	ret.CPU.Usage = input.Cpu.Usage.Float()
+	ret.CPU.Load1 = input.Cpu.Load1.Float()
+	ret.CPU.Load5 = input.Cpu.Load5.Float()
+	ret.CPU.Load15 = input.Cpu.Load15.Float()
 	ret.Memory.Used = input.Memory.Used
 	ret.Memory.Free = input.Memory.Free
 	ret.Memory.Available = input.Memory.Available
@@ -107,13 +117,16 @@ func transDynamicUsage(input *anet.HMDynamicUsage) *usage {
 	ret.Memory.SwapFree = input.Memory.SwapFree
 	for _, part := range input.Partitions {
 		ret.Partitions = append(ret.Partitions, partitionUsage{
-			Mount:      part.Name,
-			Used:       part.Used,
-			Free:       part.Free,
-			Usage:      part.Usage.Float(),
-			InodeUsed:  part.InodeUsed,
-			InodeFree:  part.InodeFree,
-			InodeUsage: part.InodeUsage.Float(),
+			Mount:          part.Name,
+			Used:           part.Used,
+			Free:           part.Free,
+			Usage:          part.Usage.Float(),
+			InodeUsed:      part.InodeUsed,
+			InodeFree:      part.InodeFree,
+			InodeUsage:     part.InodeUsage.Float(),
+			ReadPerSecond:  part.ReadPreSecond.Float(),
+			WritePerSecond: part.WritePreSecond.Float(),
+			IopsInProgress: part.IopsInProgress,
 		})
 	}
 	for _, intf := range input.Interface {

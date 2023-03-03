@@ -2381,8 +2381,10 @@ const docTemplate = `{
             "required": [
                 "free",
                 "name",
+                "read_per_second",
                 "usage",
-                "used"
+                "used",
+                "write_per_second"
             ],
             "properties": {
                 "free": {
@@ -2405,10 +2407,20 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 778282
                 },
+                "iops_in_progress": {
+                    "description": "正在等待的IO操作数量",
+                    "type": "integer",
+                    "example": 0
+                },
                 "name": {
                     "description": "linux为挂载路径如/run，windows为盘符如C:",
                     "type": "string",
                     "example": "/"
+                },
+                "read_per_second": {
+                    "description": "每秒读取字节数",
+                    "type": "number",
+                    "example": 100
                 },
                 "usage": {
                     "description": "磁盘使用率",
@@ -2419,6 +2431,11 @@ const docTemplate = `{
                     "description": "已使用字节数",
                     "type": "integer",
                     "example": 16920992
+                },
+                "write_per_second": {
+                    "description": "每秒写入字节数",
+                    "type": "number",
+                    "example": 200
                 }
             }
         },
@@ -2781,9 +2798,27 @@ const docTemplate = `{
                 "cpu": {
                     "type": "object",
                     "required": [
+                        "load1",
+                        "load15",
+                        "load5",
                         "usage"
                     ],
                     "properties": {
+                        "load1": {
+                            "description": "1分钟负载",
+                            "type": "number",
+                            "example": 0.3
+                        },
+                        "load15": {
+                            "description": "15分钟负载",
+                            "type": "number",
+                            "example": 0.5
+                        },
+                        "load5": {
+                            "description": "5分钟负载",
+                            "type": "number",
+                            "example": 0.4
+                        },
                         "usage": {
                             "description": "CPU使用率(百分比)",
                             "type": "number",

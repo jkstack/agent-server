@@ -675,10 +675,18 @@ definitions:
         description: inode已使用数量
         example: 778282
         type: integer
+      iops_in_progress:
+        description: 正在等待的IO操作数量
+        example: 0
+        type: integer
       name:
         description: 'linux为挂载路径如/run，windows为盘符如C:'
         example: /
         type: string
+      read_per_second:
+        description: 每秒读取字节数
+        example: 100
+        type: number
       usage:
         description: 磁盘使用率
         example: 6.27
@@ -687,11 +695,17 @@ definitions:
         description: 已使用字节数
         example: 16920992
         type: integer
+      write_per_second:
+        description: 每秒写入字节数
+        example: 200
+        type: number
     required:
     - free
     - name
+    - read_per_second
     - usage
     - used
+    - write_per_second
     type: object
   metrics.process:
     properties:
@@ -963,11 +977,26 @@ definitions:
     properties:
       cpu:
         properties:
+          load1:
+            description: 1分钟负载
+            example: 0.3
+            type: number
+          load5:
+            description: 5分钟负载
+            example: 0.4
+            type: number
+          load15:
+            description: 15分钟负载
+            example: 0.5
+            type: number
           usage:
             description: CPU使用率(百分比)
             example: 2.3
             type: number
         required:
+        - load1
+        - load15
+        - load5
         - usage
         type: object
       interface:
