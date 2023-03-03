@@ -94,6 +94,9 @@ func (h *Handler) saveUsage(agentID string, data *anet.HMDynamicRep) {
 	dynamic.End = data.End.Unix()
 	var usage DynamicUsage
 	usage.CpuUsage = float32(data.Usage.Cpu.Usage)
+	usage.CpuLoad_1 = float32(data.Usage.Cpu.Load1)
+	usage.CpuLoad_5 = float32(data.Usage.Cpu.Load5)
+	usage.CpuLoad_15 = float32(data.Usage.Cpu.Load15)
 	usage.MemoryUsed = data.Usage.Memory.Used
 	usage.MemoryFree = data.Usage.Memory.Free
 	usage.MemoryAvailable = data.Usage.Memory.Available
@@ -102,13 +105,16 @@ func (h *Handler) saveUsage(agentID string, data *anet.HMDynamicRep) {
 	usage.SwapFree = data.Usage.Memory.SwapFree
 	for _, parts := range data.Usage.Partitions {
 		usage.Partitions = append(usage.Partitions, &DynamicPartition{
-			Mount:      parts.Name,
-			Used:       parts.Used,
-			Free:       parts.Free,
-			Usage:      float32(parts.Usage),
-			InodeUsed:  parts.InodeUsed,
-			InodeFree:  parts.InodeFree,
-			InodeUsage: float32(parts.InodeUsage),
+			Mount:          parts.Name,
+			Used:           parts.Used,
+			Free:           parts.Free,
+			Usage:          float32(parts.Usage),
+			InodeUsed:      parts.InodeUsed,
+			InodeFree:      parts.InodeFree,
+			InodeUsage:     float32(parts.InodeUsage),
+			ReadPerSecond:  float32(parts.ReadPreSecond),
+			WritePerSecond: float32(parts.WritePreSecond),
+			IopsInProgress: parts.IopsInProgress,
 		})
 	}
 	for _, intf := range data.Usage.Interface {

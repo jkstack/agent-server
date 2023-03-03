@@ -94,3 +94,8 @@
 ## 1.3.3
 
 调整打包脚本，新增oss上传逻辑
+
+## 1.3.4
+
+1. metrics: `/metrics/{id}/dynamic/usage`接口新增CPU的load1、load5、load15数据
+2. metrics: `/metrics/{id}/dynamic/usage`接口新增磁盘的read_per_second、write_per_second、iops_in_progress数据

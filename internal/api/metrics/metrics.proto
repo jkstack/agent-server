@@ -72,13 +72,16 @@ message static_data {
 }
 
 message dynamic_partition {
-    string      mount = 1; // linux为挂载路径如/run，windows为盘符如C:
-    uint64       used = 2; // 已使用字节数
-    uint64       free = 3; // 剩余字节数
-    float       usage = 4; // 分区使用率
-    uint64 inode_used = 5; // inode使用数量
-    uint64 inode_free = 6; // inode剩余数量
-    float inode_usage = 7; // inode使用率
+    string            mount = 1; // linux为挂载路径如/run，windows为盘符如C:
+    uint64             used = 2; // 已使用字节数
+    uint64             free = 3; // 剩余字节数
+    float             usage = 4; // 分区使用率
+    uint64       inode_used = 5; // inode使用数量
+    uint64       inode_free = 6; // inode剩余数量
+    float       inode_usage = 7; // inode使用率
+    float   read_per_second = 8; // 每秒读取字节数
+    float  write_per_second = 9; // 每秒写入字节数
+    uint64 iops_in_progress = 10; // 正在等待的IO操作数量
 }
 
 message dynamic_interface {
@@ -99,6 +102,9 @@ message dynamic_usage {
     uint64 swap_free                      = 7; // 剩余swap内存字节数
     repeated dynamic_partition partitions = 8; // 分区列表
     repeated dynamic_interface interfaces = 9; // 网卡列表
+    float cpu_load_1                      = 10; // 1分钟负载
+    float cpu_load_5                      = 11; // 5分钟负载
+    float cpu_load_15                     = 12; // 15分钟负载
 }
 
 message dynamic_process {
