@@ -173,12 +173,6 @@ github.com/jcmturner/gokrb5/v8 v8.4.3/go.mod h1:dqRwJGXznQrzw6cWmyo6kH+E7jksEQG/
 github.com/jcmturner/rpc/v2 v2.0.3 h1:7FXXj8Ti1IaVFpSAziCZWNzbNuZmnvw/i6CqLNdWfZY=
 github.com/jcmturner/rpc/v2 v2.0.3/go.mod h1:VUJYCIDm3PVOEHw8sgt091/20OJjskO/YJki3ELg/Hc=
 github.com/jessevdk/go-flags v1.5.0/go.mod h1:Fw0T6WPc1dYxT4mKEZRfG5kJhaTDP9pj1c2EWnYs/m4=
-github.com/jkstack/anet v0.0.0-20230220030505-4da4a8898921 h1:Zqx10D13SqD1We44UAT675ohP5qQXKkWpMeYkMZLLSA=
-github.com/jkstack/anet v0.0.0-20230220030505-4da4a8898921/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
-github.com/jkstack/anet v0.0.0-20230303055416-4e4a52c766db h1:ViH1AagRcxtPE2uglNoL9aaCf+vkE+SCY1MXkHXPKGk=
-github.com/jkstack/anet v0.0.0-20230303055416-4e4a52c766db/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
-github.com/jkstack/anet v0.0.0-20230303073300-eb30482abcba h1:tD+u1j1ZbAb3EDzupf5mI0XPK4oBYvDw9O3NQ4e4Gjs=
-github.com/jkstack/anet v0.0.0-20230303073300-eb30482abcba/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
 github.com/jkstack/anet v0.0.0-20230307100942-eed3faa49175 h1:xdxw22GU9q7FWuLI7uGCwRafuWNcFTVlI5jNdqXiY2Y=
 github.com/jkstack/anet v0.0.0-20230307100942-eed3faa49175/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
 github.com/jkstack/jkframe v1.2.2 h1:JKeb7Dg0HpyBIap4ZZ88nloojR+WvPFYy1V1jh67p10=
