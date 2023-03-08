@@ -102,5 +102,6 @@
 
 ## TODO
 
-1. 去除manifest.yaml描述文件
-2. 实现rpa相关功能
+1. rpa: 实现rpa相关功能
+2. 去除manifest.yaml描述文件
+3. go版本升级到1.20.2
