@@ -14,6 +14,7 @@ import (
 	"server/internal/api/info"
 	"server/internal/api/layout"
 	"server/internal/api/metrics"
+	"server/internal/api/rpa"
 	"server/internal/api/script"
 	"server/internal/conf"
 	"server/internal/utils"
@@ -30,6 +31,8 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"golang.org/x/time/rate"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 )
 
 type apiHandler interface {
@@ -127,6 +130,8 @@ func (app *App) Start(s service.Service) error {
 		logging.Info("route => %6s /docs/*any", http.MethodGet)
 		g.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+		go app.listenGRPC(app.cfg.GrpcListen)
+
 		logging.Info("http listen on %d", app.cfg.Listen)
 		addrs, _ := net.InterfaceAddrs()
 		for _, addr := range addrs {
@@ -163,4 +168,17 @@ func (app *App) limit() {
 		}
 		time.Sleep(time.Second)
 	}
+}
+
+func (app *App) listenGRPC(port uint16) {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	runtime.Assert(err)
+	s := grpc.NewServer(
+		grpc.KeepaliveParams(keepalive.ServerParameters{
+			Time: 30 * time.Second,
+		}),
+	)
+	rpa.RegisterRpaServer(s, rpa.New(app.agents))
+	logging.Info("grpc listen on %d", port)
+	runtime.Assert(s.Serve(lis))
 }

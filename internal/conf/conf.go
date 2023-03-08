@@ -27,6 +27,7 @@ const (
 type Configure struct {
 	ID             string      `kv:"id"`
 	Listen         uint16      `kv:"listen"`
+	GrpcListen     uint16      `kv:"grpc_listen"`
 	CacheDir       string      `kv:"cache_dir"`
 	CacheThreshold uint        `kv:"cache_threshold"`
 	LogDir         string      `kv:"log_dir"`

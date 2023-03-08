@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package rpa;
-option go_package = ".;network";
+option go_package = ".;rpa";
 
 message run_args {
     string     id = 1; // agent-id
