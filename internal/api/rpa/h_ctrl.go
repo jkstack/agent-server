@@ -22,11 +22,11 @@ func (svr *Server) Control(ctx context.Context, args *ControlArgs) (*ControlResp
 	}
 	var status int
 	switch args.GetSt() {
-	case ControlArgs_pause:
+	case ControlArgs_Pause:
 		status = anet.RPAPause
-	case ControlArgs_stop:
+	case ControlArgs_Stop:
 		status = anet.RPAStop
-	case ControlArgs_continue:
+	case ControlArgs_Resume:
 		status = anet.RPAContinue
 	}
 	err := agent.SendRpaCtrl(taskID, status)
