@@ -4,13 +4,11 @@ import (
 	"context"
 
 	"github.com/jkstack/anet"
-	"github.com/jkstack/jkframe/logging"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 )
 
 func (svr *Server) Control(ctx context.Context, args *ControlArgs) (*ControlResponse, error) {
-	logging.Info("rpa control: %v", args)
 	agentID := args.GetId()
 	agent := svr.agents.Get(agentID)
 	if agent == nil {

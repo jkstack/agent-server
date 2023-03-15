@@ -173,8 +173,8 @@ github.com/jcmturner/gokrb5/v8 v8.4.3/go.mod h1:dqRwJGXznQrzw6cWmyo6kH+E7jksEQG/
 github.com/jcmturner/rpc/v2 v2.0.3 h1:7FXXj8Ti1IaVFpSAziCZWNzbNuZmnvw/i6CqLNdWfZY=
 github.com/jcmturner/rpc/v2 v2.0.3/go.mod h1:VUJYCIDm3PVOEHw8sgt091/20OJjskO/YJki3ELg/Hc=
 github.com/jessevdk/go-flags v1.5.0/go.mod h1:Fw0T6WPc1dYxT4mKEZRfG5kJhaTDP9pj1c2EWnYs/m4=
-github.com/jkstack/anet v0.0.0-20230307100942-eed3faa49175 h1:xdxw22GU9q7FWuLI7uGCwRafuWNcFTVlI5jNdqXiY2Y=
-github.com/jkstack/anet v0.0.0-20230307100942-eed3faa49175/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
+github.com/jkstack/anet v0.0.0-20230315062259-1f65db2f2e03 h1:KVxERvSxVUDnVtLnWFMtlHKvxq3jB1nwtJnRM9pgIUM=
+github.com/jkstack/anet v0.0.0-20230315062259-1f65db2f2e03/go.mod h1:L9J4lHwDxTsCPX5MNaVa/0UG36JIiDWIJxlp3jmCQxQ=
 github.com/jkstack/jkframe v1.2.2 h1:JKeb7Dg0HpyBIap4ZZ88nloojR+WvPFYy1V1jh67p10=
 github.com/jkstack/jkframe v1.2.2/go.mod h1:9f/mU26CFA4eBx/Zp8EZtuZxTS+4zokiO7yhuMl2zTA=
 github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=

@@ -8,7 +8,6 @@ import (
 )
 
 func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
-	logging.Info("rpa run: %v", args)
 	agentID := args.GetId()
 	agent := svr.agents.Get(agentID)
 	if agent == nil {
@@ -16,7 +15,7 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 	}
 	taskID, err := agent.SendRpaRun(args.GetUrl(), args.GetIsDebug())
 	if err != nil {
-		return err
+		return grpc.Errorf(codes.Unavailable, "send message: %v", err)
 	}
 	defer agent.ChanClose(taskID)
 	chRep := make(chan *anet.RPACtrlRep, 1)
@@ -44,8 +43,11 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 			err := stream.Send(&Log{Data: string(*msg.RPALog)})
 			if err != nil {
 				logging.Error("send log error: %v", err)
-				return nil
+				return grpc.Errorf(codes.Internal, "send log error: %v", err)
 			}
+		case anet.TypeRPAFinish:
+			payload := msg.RPAFinish
+			return grpc.Errorf(codes.Code(payload.Code), payload.Msg)
 		}
 	}
 }
