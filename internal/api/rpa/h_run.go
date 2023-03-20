@@ -47,7 +47,13 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 			}
 		case anet.TypeRPAFinish:
 			payload := msg.RPAFinish
-			return grpc.Errorf(codes.Code(payload.Code), payload.Msg)
+			var code int
+			if payload.Code == 1 {
+				code = 0
+			} else {
+				code = 1
+			}
+			return grpc.Errorf(codes.Code(code), payload.Msg)
 		}
 	}
 }
