@@ -22,6 +22,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/logging"
 	"github.com/jkstack/jkframe/stat"
@@ -177,6 +179,12 @@ func (app *App) listenGRPC(port uint16) {
 		grpc.KeepaliveParams(keepalive.ServerParameters{
 			Time: 30 * time.Second,
 		}),
+		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+			grpc_recovery.StreamServerInterceptor(),
+		)),
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			grpc_recovery.UnaryServerInterceptor(),
+		)),
 	)
 	rpa.RegisterRpaServer(s, rpa.New(app.agents))
 	logging.Info("grpc listen on %d", port)
