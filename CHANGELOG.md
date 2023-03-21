@@ -103,5 +103,6 @@
 ## TODO
 
 1. rpa: 实现rpa相关功能
-2. 去除manifest.yaml描述文件
-3. go版本升级到1.20.2
+2. 新增agent断开连接时的处理逻辑
+3. 去除manifest.yaml描述文件
+4. go版本升级到1.20.2

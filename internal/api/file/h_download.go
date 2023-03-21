@@ -24,6 +24,7 @@ type downloadArgs struct {
 }
 
 // download 下载文件
+//
 //	@ID			/api/file/download
 //	@Summary	下载文件
 //	@Tags		file
@@ -105,6 +106,10 @@ func (h *Handler) download(gin *gin.Context) {
 		case msg = <-cli.ChanRead(taskID):
 		case <-after:
 			g.Timeout()
+			return
+		}
+		if msg == nil {
+			g.HTTPError(http.StatusGone, "agent is gone")
 			return
 		}
 		switch msg.Type {
