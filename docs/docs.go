@@ -37,6 +37,7 @@ const docTemplate = `{
                             "example-agent",
                             "container-agent",
                             "metrics-agent",
+                            "rpa-agent",
                             "..."
                         ],
                         "type": "string",
