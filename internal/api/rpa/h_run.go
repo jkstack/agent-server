@@ -36,6 +36,9 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 			return grpc.ErrClientConnClosing
 		}
 		msg := <-ch
+		if msg == nil {
+			return grpc.ErrClientConnClosing
+		}
 		switch msg.Type {
 		case anet.TypeRPAControlRep:
 			chRep <- msg.RPACtrlRep
