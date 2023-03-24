@@ -13,6 +13,12 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 	if agent == nil {
 		return grpc.Errorf(codes.NotFound, "agent not found")
 	}
+	svr.RLock()
+	_, ok := svr.jobs[agentID]
+	svr.RUnlock()
+	if ok {
+		return grpc.Errorf(codes.Unavailable, "agent is busy")
+	}
 	taskID, err := agent.SendRpaRun(args.GetUrl(), args.GetIsDebug())
 	if err != nil {
 		return grpc.Errorf(codes.Unavailable, "send message: %v", err)
