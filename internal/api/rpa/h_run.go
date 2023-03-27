@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
+// Run run rpa workflow
 func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 	agentID := args.GetId()
 	agent := svr.agents.Get(agentID)

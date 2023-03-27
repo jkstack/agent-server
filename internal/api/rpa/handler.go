@@ -7,6 +7,7 @@ import (
 	"github.com/jkstack/anet"
 )
 
+// Server rpa server
 type Server struct {
 	sync.RWMutex
 	UnimplementedRpaServer
@@ -15,6 +16,7 @@ type Server struct {
 	ctrlRep map[string]chan *anet.RPACtrlRep // task id => response
 }
 
+// New create rpa server
 func New(agents *agent.Agents) *Server {
 	return &Server{
 		agents:  agents,

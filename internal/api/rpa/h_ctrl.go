@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
+// Control send control packet to rpa agent
 func (svr *Server) Control(ctx context.Context, args *ControlArgs) (*ControlResponse, error) {
 	agentID := args.GetId()
 	agent := svr.agents.Get(agentID)
