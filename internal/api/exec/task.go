@@ -69,6 +69,9 @@ func (t *task) recv(ch <-chan *anet.Msg, done <-chan time.Time) {
 	for {
 		select {
 		case msg := <-ch:
+			if msg == nil {
+				return
+			}
 			switch msg.Type {
 			case anet.TypeExecData:
 				data, err := base64.StdEncoding.DecodeString(msg.ExecData.Data)

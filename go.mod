@@ -10,7 +10,8 @@ require (
 	github.com/gin-gonic/gin v1.8.2
 	github.com/goreleaser/nfpm/v2 v2.25.1
 	github.com/gorilla/websocket v1.5.0
-	github.com/jkstack/anet v0.0.0-20230303073300-eb30482abcba
+	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
+	github.com/jkstack/anet v0.0.0-20230315062259-1f65db2f2e03
 	github.com/jkstack/jkframe v1.2.2
 	github.com/kardianos/service v1.2.1
 	github.com/prometheus/client_golang v1.14.0

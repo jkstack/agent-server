@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package rpa;
-option go_package = ".;network";
+option go_package = ".;rpa";
 
 message run_args {
     string     id = 1; // agent-id
@@ -15,9 +15,9 @@ message log {
 
 message control_args {
     enum status {
-        pause    = 0; // 暂停
-        stop     = 1; // 停止
-        continue = 2; // 继续运行
+        Pause  = 0; // 暂停
+        Stop   = 1; // 停止
+        Resume = 2; // 继续运行
     }
     string id = 1; // agent-id
     status st = 2; // 操作状态

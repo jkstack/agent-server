@@ -43,6 +43,12 @@ func (agent *Agent) Close() {
 		close(agent.chWrite)
 		agent.chWrite = nil
 	}
+	agent.Lock()
+	for _, task := range agent.taskRead {
+		close(task)
+	}
+	agent.taskRead = nil
+	agent.Unlock()
 }
 
 func (agent *Agent) remoteAddr() string {

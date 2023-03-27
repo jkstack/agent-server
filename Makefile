@@ -2,7 +2,7 @@
 
 OUTDIR=release
 
-VERSION=1.3.4
+VERSION=1.4.0
 TIMESTAMP=`date +%s`
 
 BRANCH=`git rev-parse --abbrev-ref HEAD`
@@ -17,7 +17,6 @@ LDFLAGS="-X 'main.gitBranch=$(BRANCH)' \
 
 all: distclean linux.amd64 linux.arm64
 	rm -fr $(OUTDIR)/$(VERSION)/opt
-	cp conf/manifest.yaml $(OUTDIR)/$(VERSION)/manifest.yaml
 	cp CHANGELOG.md $(OUTDIR)/CHANGELOG.md
 linux.amd64: prepare
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags $(LDFLAGS) \

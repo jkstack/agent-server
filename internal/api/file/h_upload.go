@@ -25,6 +25,7 @@ import (
 const uploadLimit = 1024 * 1024
 
 // upload 上传文件
+//
 //	@ID			/api/file/upload
 //	@Summary	上传文件
 //	@Tags		file
@@ -167,6 +168,11 @@ func (h *Handler) upload(gin *gin.Context) {
 	case rep = <-cli.ChanRead(taskID):
 	case <-time.After(time.Duration(timeout) * time.Second):
 		g.Timeout()
+	}
+
+	if rep == nil {
+		g.HTTPError(http.StatusGone, "agent is gone")
+		return
 	}
 
 	switch {

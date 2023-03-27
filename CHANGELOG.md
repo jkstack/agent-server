@@ -99,3 +99,10 @@
 
 1. metrics: `/metrics/{id}/dynamic/usage`接口新增CPU的load1、load5、load15数据
 2. metrics: `/metrics/{id}/dynamic/usage`接口新增磁盘的read_per_second、write_per_second、iops_in_progress数据
+
+## 1.4.0
+
+1. rpa:适配精鲲自研RPA-Agent
+2. 新增:agent断开连接时的处理逻辑
+3. 去除:manifest.yaml描述文件
+4. 其他:go版本升级到1.20.2

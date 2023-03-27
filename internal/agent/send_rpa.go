@@ -1,0 +1,39 @@
+package agent
+
+import (
+	"server/internal/utils"
+
+	"github.com/jkstack/anet"
+)
+
+// SendRpaRun send rpa run command
+func (agent *Agent) SendRpaRun(url string, isDebug bool) (string, error) {
+	id, err := utils.TaskID()
+	if err != nil {
+		return "", err
+	}
+	var msg anet.Msg
+	msg.Type = anet.TypeRPARun
+	msg.RPARun = &anet.RPARunArgs{
+		URL:     url,
+		IsDebug: isDebug,
+	}
+	msg.TaskID = id
+	agent.Lock()
+	agent.taskRead[id] = make(chan *anet.Msg)
+	agent.Unlock()
+	agent.chWrite <- &msg
+	return id, nil
+}
+
+// SendRpaCtrl send rpa control command
+func (agent *Agent) SendRpaCtrl(taskID string, status int) error {
+	var msg anet.Msg
+	msg.Type = anet.TypeRPAControlReq
+	msg.RPACtrlReq = &anet.RPACtrlReq{
+		Status: status,
+	}
+	msg.TaskID = taskID
+	agent.chWrite <- &msg
+	return nil
+}

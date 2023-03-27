@@ -4,7 +4,7 @@
 // - protoc             v3.21.2
 // source: service.proto
 
-package network
+package rpa
 
 import (
 	context "context"
