@@ -77,6 +77,9 @@ func (cfg *Configure) check(abs string) {
 	if cfg.Listen == 0 {
 		panic("invalid listen config")
 	}
+	if cfg.GrpcListen == 0 {
+		panic("invalid grpc_listen config")
+	}
 	if len(cfg.CacheDir) == 0 {
 		logging.Info("reset conf.cache_dir to default path: %s", defaultCacheDir)
 		cfg.CacheDir = defaultCacheDir
