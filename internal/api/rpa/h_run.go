@@ -9,6 +9,7 @@ import (
 
 // Run run rpa workflow
 func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
+	logging.Info("rpa run: %s", args.String())
 	agentID := args.GetId()
 	agent := svr.agents.Get(agentID)
 	if agent == nil {
