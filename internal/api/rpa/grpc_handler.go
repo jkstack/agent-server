@@ -17,7 +17,7 @@ type Server struct {
 }
 
 // New create rpa server
-func New(agents *agent.Agents) *Server {
+func NewGRPC(agents *agent.Agents) *Server {
 	return &Server{
 		agents:  agents,
 		jobs:    make(map[string]string),

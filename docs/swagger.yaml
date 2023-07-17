@@ -1063,6 +1063,13 @@ definitions:
     - id
     - name
     type: object
+  rpa.inSelectorArgs:
+    properties:
+      callback:
+        description: 回调地址
+        example: https://www.baidu.com
+        type: string
+    type: object
   script.runPayload:
     properties:
       begin:
@@ -1976,6 +1983,49 @@ paths:
       summary: 批量启动或停止采集
       tags:
       - metrics
+  /rpa/{id}/in_selector:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        1. 当RPAAgent返回元素拾取结果时进行回调，即用户选择了某一个界面元素
+        2. 使用`POST`方法进行回调
+        3. 回调过程中将在请求体中包含以下内容
+
+        ```json
+        {
+            "id": "rpa-01",               // agent id
+            "ts": 1689576608,             // 时间戳
+            "cost": 10,                   // 耗时（秒）
+            "code": 0,                    // 状态码
+            "msg": "abc",                 // 错误信息
+            "content": "<abc />",         // 元素拾取内容
+            "image_uri": "/rpa/files/..." // 拾取元素图像获取uri
+        }
+        ```
+      operationId: /api/rpa/in_selector
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 需启动的任务列表
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/rpa.inSelectorArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Success'
+      summary: 进入元素选择器状态
+      tags:
+      - rpa
   /script/{id}/run:
     post:
       consumes:

@@ -186,7 +186,7 @@ func (app *App) listenGRPC(port uint16) {
 			grpc_recovery.UnaryServerInterceptor(),
 		)),
 	)
-	rpa.RegisterRpaServer(s, rpa.New(app.agents))
+	rpa.RegisterRpaServer(s, rpa.NewGRPC(app.agents))
 	logging.Info("grpc listen on %d", port)
 	runtime.Assert(s.Serve(lis))
 }
