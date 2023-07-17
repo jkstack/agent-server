@@ -1992,17 +1992,17 @@ paths:
         2. 使用`POST`方法进行回调
         3. 回调过程中将在请求体中包含以下内容
 
-        ```json
-        {
-            "id": "rpa-01",               // agent id
-            "ts": 1689576608,             // 时间戳
-            "cost": 10,                   // 耗时（秒）
-            "code": 0,                    // 状态码
-            "msg": "abc",                 // 错误信息
-            "content": "<abc />",         // 元素拾取内容
-            "image_uri": "/rpa/files/..." // 拾取元素图像获取uri
-        }
-        ```
+            ```json
+            {
+                "id": "rpa-01",               // agent id
+                "ts": 1689576608,             // 时间戳
+                "cost": 10,                   // 耗时（秒）
+                "code": 1,                    // 状态码，1为成功，非1为失败
+                "msg": "abc",                 // 错误信息
+                "content": "<abc />",         // 元素拾取内容
+                "image_uri": "/rpa/files/..." // 拾取元素图像获取uri
+            }
+            ```
       operationId: /api/rpa/in_selector
       parameters:
       - description: 节点ID
