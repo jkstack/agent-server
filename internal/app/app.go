@@ -111,6 +111,7 @@ func (app *App) Start(s service.Service) error {
 		apis = append(apis, file.New())
 		apis = append(apis, script.New())
 		apis = append(apis, layout.New())
+		apis = append(apis, rpa.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)
