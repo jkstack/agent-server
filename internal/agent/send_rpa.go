@@ -45,7 +45,7 @@ func (agent *Agent) SendRpaInSelector() (string, error) {
 		return "", err
 	}
 	var msg anet.Msg
-	msg.Type = anet.TypeRPAControlReq
+	msg.Type = anet.TypeRPASelectorReq
 	msg.TaskID = id
 	agent.Lock()
 	agent.taskRead[id] = make(chan *anet.Msg)
