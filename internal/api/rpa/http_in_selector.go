@@ -102,6 +102,7 @@ func (h *Handler) waitSelectorResult(cli *agent.Agent, taskID, callback string) 
 			},
 		})
 	case msg := <-cli.ChanRead(taskID):
+		logging.Info("rpa selector result: %d %s", msg.RPASelectorResult.Code, msg.RPASelectorResult.Msg)
 		if msg.RPASelectorResult.Code == 1 {
 			h.logImage(taskID, msg.RPASelectorResult.Image)
 		}

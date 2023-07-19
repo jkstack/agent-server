@@ -2,6 +2,7 @@ package rpa
 
 import (
 	"net/http"
+	"os"
 	"path/filepath"
 	"server/internal/agent"
 	"server/internal/api"
@@ -68,6 +69,7 @@ func (h *Handler) OnMessage(agent *agent.Agent, msg *anet.Msg) {
 }
 
 func (h *Handler) newCache(taskID string, data []byte) {
+	os.MkdirAll(filepath.Join(h.cacheDir, "rpa"), 0755)
 	c, err := l2cache.New(102400, filepath.Join(h.cacheDir, "rpa"))
 	utils.Assert(err)
 	_, err = c.Write(data)
