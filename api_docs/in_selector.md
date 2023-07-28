@@ -11,6 +11,6 @@
         "msg": "abc",                 // 错误信息
         "content": "<abc />",         // 元素拾取内容
         "imageUri": "/rpa/files/...", // 拾取元素图像获取uri
-        "requestID": "20230728..."    // 请求ID
+        "requestId": "20230728..."    // 请求ID
     }
     ```
