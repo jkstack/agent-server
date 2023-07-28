@@ -10,6 +10,7 @@
         "code": 1,                    // 状态码，1为成功，非1为失败
         "msg": "abc",                 // 错误信息
         "content": "<abc />",         // 元素拾取内容
-        "image_uri": "/rpa/files/..." // 拾取元素图像获取uri
+        "imageUri": "/rpa/files/...", // 拾取元素图像获取uri
+        "requestID": "20230728..."    // 请求ID
     }
     ```

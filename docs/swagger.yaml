@@ -1069,6 +1069,10 @@ definitions:
         description: 回调地址
         example: https://www.baidu.com
         type: string
+      requestId:
+        description: 请求ID
+        example: 20230728...
+        type: string
     type: object
   script.runPayload:
     properties:
@@ -2000,7 +2004,8 @@ paths:
                 "code": 1,                    // 状态码，1为成功，非1为失败
                 "msg": "abc",                 // 错误信息
                 "content": "<abc />",         // 元素拾取内容
-                "image_uri": "/rpa/files/..." // 拾取元素图像获取uri
+                "imageUri": "/rpa/files/...", // 拾取元素图像获取uri
+                "requestID": "20230728..."    // 请求ID
             }
             ```
       operationId: /api/rpa/in_selector

@@ -23,7 +23,8 @@ var callbackCli = &http.Client{
 }
 
 type inSelectorArgs struct {
-	CallBack string `json:"callback" example:"https://www.baidu.com"` // 回调地址
+	CallBack  string `json:"callback" example:"https://www.baidu.com"` // 回调地址
+	RequestID string `json:"requestId" example:"20230728..."`          // 请求ID
 }
 
 // inSelector 进入元素选择器状态
@@ -83,12 +84,12 @@ func (h *Handler) inSelector(gin *gin.Context) {
 		return
 	}
 
-	go h.waitSelectorResult(cli, taskID, args.CallBack)
+	go h.waitSelectorResult(cli, taskID, args.CallBack, args.RequestID)
 
 	g.OK(nil)
 }
 
-func (h *Handler) waitSelectorResult(cli *agent.Agent, taskID, callback string) {
+func (h *Handler) waitSelectorResult(cli *agent.Agent, taskID, callback, requestID string) {
 	defer uts.Recover("wait selector result")
 	defer cli.ChanClose(taskID)
 	begin := time.Now()
@@ -100,17 +101,17 @@ func (h *Handler) waitSelectorResult(cli *agent.Agent, taskID, callback string) 
 				Code: 65535,
 				Msg:  "execution timeout",
 			},
-		})
+		}, requestID)
 	case msg := <-cli.ChanRead(taskID):
 		logging.Info("rpa selector result: %d %s", msg.RPASelectorResult.Code, msg.RPASelectorResult.Msg)
 		if msg.RPASelectorResult.Code == 1 {
 			h.logImage(taskID, msg.RPASelectorResult.Image)
 		}
-		h.callback(cli, callback, begin, msg)
+		h.callback(cli, callback, begin, msg, requestID)
 	}
 }
 
-func (h *Handler) callback(cli *agent.Agent, url string, begin time.Time, msg *anet.Msg) {
+func (h *Handler) callback(cli *agent.Agent, url string, begin time.Time, msg *anet.Msg, requestID string) {
 	var buf bytes.Buffer
 	var body struct {
 		ID        string `json:"id"`
@@ -119,7 +120,8 @@ func (h *Handler) callback(cli *agent.Agent, url string, begin time.Time, msg *a
 		Code      int    `json:"code"`
 		Msg       string `json:"msg"`
 		Content   string `json:"content,omitempty"`
-		ImageURI  string `json:"image_uri,omitempty"`
+		ImageURI  string `json:"imageUri,omitempty"`
+		RequestID string `json:"requestId,omitempty"`
 	}
 	body.ID = cli.ID()
 	body.Timestamp = time.Now().Unix()
@@ -130,6 +132,7 @@ func (h *Handler) callback(cli *agent.Agent, url string, begin time.Time, msg *a
 		body.Content = msg.RPASelectorResult.Content
 		body.ImageURI = fmt.Sprintf("/api/rpa/files/%s", msg.TaskID)
 	}
+	body.RequestID = requestID
 	utils.Assert(json.NewEncoder(&buf).Encode(body))
 	req, err := http.NewRequest(http.MethodPost, url, &buf)
 	utils.Assert(err)
