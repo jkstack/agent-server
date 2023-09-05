@@ -51,8 +51,9 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 // HandleFuncs get funcs
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
-		api.MakeRoute(http.MethodPost, "/:id/in_selector"): h.inSelector,
-		api.MakeRoute(http.MethodGet, "/files/:id"):        h.file,
+		api.MakeRoute(http.MethodPost, "/:id/in_selector"):       h.inSelector,
+		api.MakeRoute(http.MethodGet, "/files/:id"):              h.file,
+		api.MakeRoute(http.MethodPost, "/:id/selector_validate"): h.selectorValidate,
 	}
 }
 

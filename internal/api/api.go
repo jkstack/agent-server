@@ -5,7 +5,7 @@ import (
 )
 
 // RequestTimeout request timeout
-const RequestTimeout = 10 * time.Second
+const RequestTimeout = time.Minute
 
 //	@title			agent-server
 //	@version		TODO

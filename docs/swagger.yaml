@@ -1074,6 +1074,12 @@ definitions:
         example: 20230728...
         type: string
     type: object
+  rpa.selectorValidateArgs:
+    properties:
+      content:
+        description: 验证内容
+        type: string
+    type: object
   script.runPayload:
     properties:
       begin:
@@ -2029,6 +2035,33 @@ paths:
           schema:
             $ref: '#/definitions/api.Success'
       summary: 进入元素选择器状态
+      tags:
+      - rpa
+  /rpa/{id}/selector_validate:
+    post:
+      consumes:
+      - application/json
+      operationId: /api/rpa/selector_validate
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 需启动的任务列表
+        in: body
+        name: args
+        required: true
+        schema:
+          $ref: '#/definitions/rpa.selectorValidateArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Success'
+      summary: 元素选择器结果验证
       tags:
       - rpa
   /script/{id}/run:

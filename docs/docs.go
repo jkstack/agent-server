@@ -1437,6 +1437,47 @@ const docTemplate = `{
                 }
             }
         },
+        "/rpa/{id}/selector_validate": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rpa"
+                ],
+                "summary": "元素选择器结果验证",
+                "operationId": "/api/rpa/selector_validate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "需启动的任务列表",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rpa.selectorValidateArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/script/{id}/run": {
             "post": {
                 "consumes": [
@@ -2965,6 +3006,15 @@ const docTemplate = `{
                     "description": "请求ID",
                     "type": "string",
                     "example": "20230728..."
+                }
+            }
+        },
+        "rpa.selectorValidateArgs": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "验证内容",
+                    "type": "string"
                 }
             }
         },
