@@ -50,6 +50,7 @@ func (h *Handler) selectorValidate(gin *gin.Context) {
 
 	taskID, err := cli.SendRpaSelectorValidate(args.Content)
 	utils.Assert(err)
+	defer cli.ChanClose(taskID)
 
 	var msg *anet.Msg
 	select {
