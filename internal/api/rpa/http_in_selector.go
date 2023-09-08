@@ -62,7 +62,6 @@ func (h *Handler) inSelector(gin *gin.Context) {
 
 	taskID, err := cli.SendRpaInSelector()
 	utils.Assert(err)
-	defer cli.ChanClose(taskID)
 
 	var msg *anet.Msg
 	select {
