@@ -16,7 +16,7 @@ type Server struct {
 	ctrlRep map[string]chan *anet.RPACtrlRep // task id => response
 }
 
-// New create rpa server
+// NewGRPC create rpa server
 func NewGRPC(agents *agent.Agents) *Server {
 	return &Server{
 		agents:  agents,
@@ -25,6 +25,7 @@ func NewGRPC(agents *agent.Agents) *Server {
 	}
 }
 
+// OnClose on agent close
 func (svr *Server) OnClose(id string) {
 	svr.Lock()
 	defer svr.Unlock()
