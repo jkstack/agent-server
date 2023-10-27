@@ -41,6 +41,7 @@ func (app *App) onConnect(id string, apis []apiHandler) {
 	for _, api := range apis {
 		api.OnClose(id)
 	}
+	app.rpaSvr.OnClose(id)
 }
 
 // handleWS agent连接处理接口
@@ -84,6 +85,7 @@ func (app *App) handleWS(g *gin.Context, apis []apiHandler) {
 	for _, api := range apis {
 		api.OnClose(cli.ID())
 	}
+	app.rpaSvr.OnClose(cli.ID())
 }
 
 func (app *App) waitCome(conn *websocket.Conn) (*anet.ComePayload, error) {

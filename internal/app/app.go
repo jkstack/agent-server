@@ -58,6 +58,7 @@ type App struct {
 	blocked      bool
 	stAgentCount *stat.Counter
 	connectLimit *rate.Limiter
+	rpaSvr       *rpa.Server
 }
 
 // New new app
@@ -111,6 +112,7 @@ func (app *App) Start(s service.Service) error {
 		apis = append(apis, file.New())
 		apis = append(apis, script.New())
 		apis = append(apis, layout.New())
+		apis = append(apis, rpa.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)
@@ -186,7 +188,8 @@ func (app *App) listenGRPC(port uint16) {
 			grpc_recovery.UnaryServerInterceptor(),
 		)),
 	)
-	rpa.RegisterRpaServer(s, rpa.New(app.agents))
+	app.rpaSvr = rpa.NewGRPC(app.agents)
+	rpa.RegisterRpaServer(s, app.rpaSvr)
 	logging.Info("grpc listen on %d", port)
 	runtime.Assert(s.Serve(lis))
 }

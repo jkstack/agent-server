@@ -1395,6 +1395,89 @@ const docTemplate = `{
                 }
             }
         },
+        "/rpa/{id}/in_selector": {
+            "post": {
+                "description": "1. 当RPAAgent返回元素拾取结果时进行回调，即用户选择了某一个界面元素\n2. 使用` + "`" + `POST` + "`" + `方法进行回调\n3. 回调过程中将在请求体中包含以下内容\n\n    ` + "`" + `` + "`" + `` + "`" + `json\n    {\n        \"id\": \"rpa-01\",               // agent id\n        \"ts\": 1689576608,             // 时间戳\n        \"cost\": 10,                   // 耗时（秒）\n        \"code\": 1,                    // 状态码，1为成功，非1为失败\n        \"msg\": \"abc\",                 // 错误信息\n        \"content\": \"\u003cabc /\u003e\",         // 元素拾取内容\n        \"imageUri\": \"/rpa/files/...\", // 拾取元素图像获取uri\n        \"requestId\": \"20230728...\"    // 请求ID\n    }\n    ` + "`" + `` + "`" + `` + "`" + `",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rpa"
+                ],
+                "summary": "进入元素选择器状态",
+                "operationId": "/api/rpa/in_selector",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "需启动的任务列表",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rpa.inSelectorArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/rpa/{id}/selector_validate": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rpa"
+                ],
+                "summary": "元素选择器结果验证",
+                "operationId": "/api/rpa/selector_validate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "需启动的任务列表",
+                        "name": "args",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rpa.selectorValidateArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/script/{id}/run": {
             "post": {
                 "consumes": [
@@ -2908,6 +2991,30 @@ const docTemplate = `{
                     "description": "用户名",
                     "type": "string",
                     "example": "root"
+                }
+            }
+        },
+        "rpa.inSelectorArgs": {
+            "type": "object",
+            "properties": {
+                "callback": {
+                    "description": "回调地址",
+                    "type": "string",
+                    "example": "https://www.baidu.com"
+                },
+                "requestId": {
+                    "description": "请求ID",
+                    "type": "string",
+                    "example": "20230728..."
+                }
+            }
+        },
+        "rpa.selectorValidateArgs": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "验证内容",
+                    "type": "string"
                 }
             }
         },

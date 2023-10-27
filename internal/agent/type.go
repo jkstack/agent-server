@@ -7,4 +7,6 @@ const (
 	TypeMetrics = "metrics-agent"
 	// TypeExec exec agent type
 	TypeExec = "exec-agent"
+	// TypeRPA rpa agent type
+	TypeRPA = "rpa-agent"
 )

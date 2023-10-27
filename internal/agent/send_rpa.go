@@ -37,3 +37,38 @@ func (agent *Agent) SendRpaCtrl(taskID string, status int) error {
 	agent.chWrite <- &msg
 	return nil
 }
+
+// SendRpaInSelector send rpa in selector command
+func (agent *Agent) SendRpaInSelector() (string, error) {
+	id, err := utils.TaskID()
+	if err != nil {
+		return "", err
+	}
+	var msg anet.Msg
+	msg.Type = anet.TypeRPASelectorReq
+	msg.TaskID = id
+	agent.Lock()
+	agent.taskRead[id] = make(chan *anet.Msg)
+	agent.Unlock()
+	agent.chWrite <- &msg
+	return id, nil
+}
+
+// SendRpaSelectorValidate send rpa in selector validate request
+func (agent *Agent) SendRpaSelectorValidate(content string) (string, error) {
+	id, err := utils.TaskID()
+	if err != nil {
+		return "", err
+	}
+	var msg anet.Msg
+	msg.Type = anet.TypeRPASelectorValidateReq
+	msg.TaskID = id
+	msg.RPASelectorValidateReq = &anet.RPASelectorValidateReq{
+		Content: content,
+	}
+	agent.Lock()
+	agent.taskRead[id] = make(chan *anet.Msg)
+	agent.Unlock()
+	agent.chWrite <- &msg
+	return id, nil
+}
