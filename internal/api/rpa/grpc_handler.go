@@ -24,3 +24,12 @@ func NewGRPC(agents *agent.Agents) *Server {
 		ctrlRep: make(map[string]chan *anet.RPACtrlRep),
 	}
 }
+
+func (svr *Server) OnClose(id string) {
+	svr.Lock()
+	defer svr.Unlock()
+	if tid, ok := svr.jobs[id]; ok {
+		delete(svr.jobs, id)
+		delete(svr.ctrlRep, tid)
+	}
+}
