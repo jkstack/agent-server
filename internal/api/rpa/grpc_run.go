@@ -3,7 +3,6 @@ package rpa
 import (
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/logging"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 )
@@ -46,7 +45,7 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 		}
 		msg := <-ch
 		if msg == nil {
-			return grpc.ErrClientConnClosing
+			return status.Error(codes.Unavailable, "agent is closed")
 		}
 		switch msg.Type {
 		case anet.TypeRPAControlRep:
