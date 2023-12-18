@@ -159,6 +159,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "文件列表",
                         "name": "files",
                         "in": "query",
@@ -747,6 +748,83 @@
                 }
             }
         },
+        "/ipmi/{id}/device_info": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ipmi"
+                ],
+                "summary": "获取服务器的IPMI信息",
+                "operationId": "/api/ipmi/device_info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI地址",
+                        "name": "addr",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI用户名",
+                        "name": "user",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI密码",
+                        "name": "pass",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "lan",
+                            "lanplus",
+                            "auto"
+                        ],
+                        "type": "string",
+                        "default": "auto",
+                        "description": "IPMI连接模式",
+                        "name": "mode",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "服务器IPMI信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/ipmi.deviceInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/layout/run": {
             "post": {
                 "description": "分组示例:\n当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务",
@@ -767,6 +845,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "节点ID列表",
                         "name": "ids",
                         "in": "formData",
@@ -777,6 +856,7 @@
                         "items": {
                             "type": "integer"
                         },
+                        "collectionFormat": "csv",
                         "description": "分组列表",
                         "name": "group",
                         "in": "formData",
@@ -811,6 +891,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "参数",
                         "name": "args",
                         "in": "formData"
@@ -849,6 +930,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "环境变量",
                         "name": "env",
                         "in": "formData"
@@ -1023,6 +1105,7 @@
                             ],
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "获取连接类型",
                         "name": "kinds",
                         "in": "query"
@@ -1086,6 +1169,7 @@
                             ],
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "获取连接类型",
                         "name": "kinds",
                         "in": "query"
@@ -1520,6 +1604,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "参数",
                         "name": "args",
                         "in": "formData"
@@ -1558,6 +1643,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "环境变量",
                         "name": "env",
                         "in": "formData"
@@ -1983,6 +2069,23 @@
                     "description": "服务端版本号",
                     "type": "string",
                     "example": "1.0.0"
+                }
+            }
+        },
+        "ipmi.deviceInfo": {
+            "type": "object",
+            "properties": {
+                "firmware_version": {
+                    "description": "固件版本",
+                    "type": "string"
+                },
+                "ipmi_version": {
+                    "description": "IPMI版本",
+                    "type": "string"
+                },
+                "oem": {
+                    "description": "生产厂商",
+                    "type": "string"
                 }
             }
         },
@@ -3077,6 +3180,10 @@
         {
             "description": "脚本运行相关接口",
             "name": "script"
+        },
+        {
+            "description": "ipmi相关接口",
+            "name": "ipmi"
         }
     ]
 }

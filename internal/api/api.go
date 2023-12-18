@@ -31,6 +31,8 @@ const RequestTimeout = time.Minute
 //	@tag.description	metrics-agent处理相关接口
 //	@tag.name			script
 //	@tag.description	脚本运行相关接口
+//	@tag.name			ipmi
+//	@tag.description	ipmi相关接口
 
 // Success response success
 type Success struct {

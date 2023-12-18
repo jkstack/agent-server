@@ -300,6 +300,18 @@ definitions:
     - is_blocking
     - version
     type: object
+  ipmi.deviceInfo:
+    properties:
+      firmware_version:
+        description: 固件版本
+        type: string
+      ipmi_version:
+        description: IPMI版本
+        type: string
+      oem:
+        description: 生产厂商
+        type: string
+    type: object
   layout.nodeStatus:
     properties:
       begin:
@@ -1202,7 +1214,8 @@ paths:
         name: id
         required: true
         type: string
-      - description: 文件列表
+      - collectionFormat: csv
+        description: 文件列表
         in: query
         items:
           type: string
@@ -1583,6 +1596,56 @@ paths:
       summary: 获取当前服务器状态
       tags:
       - info
+  /ipmi/{id}/device_info:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/ipmi/device_info
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: IPMI地址
+        in: query
+        name: addr
+        required: true
+        type: string
+      - description: IPMI用户名
+        in: query
+        name: user
+        required: true
+        type: string
+      - description: IPMI密码
+        in: query
+        name: pass
+        required: true
+        type: string
+      - default: auto
+        description: IPMI连接模式
+        enum:
+        - lan
+        - lanplus
+        - auto
+        in: query
+        name: mode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 服务器IPMI信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/ipmi.deviceInfo'
+              type: object
+      summary: 获取服务器的IPMI信息
+      tags:
+      - ipmi
   /layout/{id}:
     get:
       consumes:
@@ -1618,14 +1681,16 @@ paths:
         当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务
       operationId: /api/layout/run
       parameters:
-      - description: 节点ID列表
+      - collectionFormat: csv
+        description: 节点ID列表
         in: formData
         items:
           type: string
         name: ids
         required: true
         type: array
-      - description: 分组列表
+      - collectionFormat: csv
+        description: 分组列表
         in: formData
         items:
           type: integer
@@ -1651,7 +1716,8 @@ paths:
         name: type
         required: true
         type: string
-      - description: 参数
+      - collectionFormat: csv
+        description: 参数
         in: formData
         items:
           type: string
@@ -1677,7 +1743,8 @@ paths:
         in: formData
         name: workdir
         type: string
-      - description: 环境变量
+      - collectionFormat: csv
+        description: 环境变量
         in: formData
         items:
           type: string
@@ -1730,7 +1797,8 @@ paths:
         in: query
         name: top
         type: integer
-      - description: 获取连接类型
+      - collectionFormat: csv
+        description: 获取连接类型
         in: query
         items:
           enum:
@@ -1773,7 +1841,8 @@ paths:
         name: id
         required: true
         type: string
-      - description: 获取连接类型
+      - collectionFormat: csv
+        description: 获取连接类型
         in: query
         items:
           enum:
@@ -2094,7 +2163,8 @@ paths:
         name: type
         required: true
         type: string
-      - description: 参数
+      - collectionFormat: csv
+        description: 参数
         in: formData
         items:
           type: string
@@ -2120,7 +2190,8 @@ paths:
         in: formData
         name: workdir
         type: string
-      - description: 环境变量
+      - collectionFormat: csv
+        description: 环境变量
         in: formData
         items:
           type: string
@@ -2164,3 +2235,5 @@ tags:
   name: metrics
 - description: 脚本运行相关接口
   name: script
+- description: ipmi相关接口
+  name: ipmi
