@@ -311,6 +311,93 @@ definitions:
       oem:
         description: 生产厂商
         type: string
+    required:
+    - firmware_version
+    - ipmi_version
+    - oem
+    type: object
+  ipmi.sensorCritical:
+    properties:
+      critical:
+        description: 告警数值
+        type: number
+      non_critical:
+        description: 恢复数值
+        type: number
+      non_recoverable:
+        description: 严重告警数值
+        type: number
+    type: object
+  ipmi.sensorInfo:
+    properties:
+      discrete:
+        description: 是否是离散传感器
+        type: boolean
+      entity_id:
+        description: 实体ID
+        type: string
+      id:
+        description: 传感器序号
+        type: integer
+      name:
+        description: 传感器名称
+        type: string
+      sensor_id:
+        description: 传感器ID
+        type: integer
+      type:
+        description: 传感器类型
+        type: string
+      values:
+        allOf:
+        - $ref: '#/definitions/ipmi.sensorValue'
+        description: 传感器数值
+    required:
+    - discrete
+    - entity_id
+    - id
+    - name
+    - sensor_id
+    - type
+    type: object
+  ipmi.sensorUnitValue:
+    properties:
+      base:
+        description: 基本单位
+        type: string
+      mod:
+        description: 第二项单位
+        type: string
+      op:
+        description: 乘或除
+        type: string
+      percent:
+        description: 是否是百分比
+        type: boolean
+    required:
+    - base
+    - percent
+    type: object
+  ipmi.sensorValue:
+    properties:
+      current:
+        description: 当前数值
+        type: number
+      lower:
+        allOf:
+        - $ref: '#/definitions/ipmi.sensorCritical'
+        description: 最低告警数值
+      unit:
+        allOf:
+        - $ref: '#/definitions/ipmi.sensorUnitValue'
+        description: 当前传感器的单位信息
+      upper:
+        allOf:
+        - $ref: '#/definitions/ipmi.sensorCritical'
+        description: 最高告警数值
+    required:
+    - current
+    - unit
     type: object
   layout.nodeStatus:
     properties:
@@ -1596,11 +1683,11 @@ paths:
       summary: 获取当前服务器状态
       tags:
       - info
-  /ipmi/{id}/device_info:
+  /ipmi/{id}/device:
     get:
       consumes:
       - application/json
-      operationId: /api/ipmi/device_info
+      operationId: /api/ipmi/device
       parameters:
       - description: 节点ID
         in: path
@@ -1644,6 +1731,58 @@ paths:
                   $ref: '#/definitions/ipmi.deviceInfo'
               type: object
       summary: 获取服务器的IPMI信息
+      tags:
+      - ipmi
+  /ipmi/{id}/sensors:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/ipmi/sensors
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: IPMI地址
+        in: query
+        name: addr
+        required: true
+        type: string
+      - description: IPMI用户名
+        in: query
+        name: user
+        required: true
+        type: string
+      - description: IPMI密码
+        in: query
+        name: pass
+        required: true
+        type: string
+      - default: auto
+        description: IPMI连接模式
+        enum:
+        - lan
+        - lanplus
+        - auto
+        in: query
+        name: mode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 传感器列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/ipmi.sensorInfo'
+                  type: array
+              type: object
+      summary: 获取服务器的传感器列表
       tags:
       - ipmi
   /layout/{id}:

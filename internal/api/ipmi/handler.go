@@ -37,7 +37,8 @@ func (h *Handler) Init(cfg *conf.Configure, mgr *stat.Mgr) {
 // HandleFuncs get funcs
 func (h *Handler) HandleFuncs() map[api.Route]func(*gin.Context) {
 	return map[api.Route]func(*gin.Context){
-		api.MakeRoute(http.MethodGet, "/:id/device_info"): h.deviceInfo,
+		api.MakeRoute(http.MethodGet, "/:id/device"):  h.deviceInfo,
+		api.MakeRoute(http.MethodGet, "/:id/sensors"): h.sensorList,
 	}
 }
 

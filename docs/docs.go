@@ -755,7 +755,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ipmi/{id}/device_info": {
+        "/ipmi/{id}/device": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -767,7 +767,7 @@ const docTemplate = `{
                     "ipmi"
                 ],
                 "summary": "获取服务器的IPMI信息",
-                "operationId": "/api/ipmi/device_info",
+                "operationId": "/api/ipmi/device",
                 "parameters": [
                     {
                         "type": "string",
@@ -823,6 +823,86 @@ const docTemplate = `{
                                     "properties": {
                                         "payload": {
                                             "$ref": "#/definitions/ipmi.deviceInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/ipmi/{id}/sensors": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ipmi"
+                ],
+                "summary": "获取服务器的传感器列表",
+                "operationId": "/api/ipmi/sensors",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI地址",
+                        "name": "addr",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI用户名",
+                        "name": "user",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI密码",
+                        "name": "pass",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "lan",
+                            "lanplus",
+                            "auto"
+                        ],
+                        "type": "string",
+                        "default": "auto",
+                        "description": "IPMI连接模式",
+                        "name": "mode",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "传感器列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/ipmi.sensorInfo"
+                                            }
                                         }
                                     }
                                 }
@@ -2081,6 +2161,11 @@ const docTemplate = `{
         },
         "ipmi.deviceInfo": {
             "type": "object",
+            "required": [
+                "firmware_version",
+                "ipmi_version",
+                "oem"
+            ],
             "properties": {
                 "firmware_version": {
                     "description": "固件版本",
@@ -2093,6 +2178,130 @@ const docTemplate = `{
                 "oem": {
                     "description": "生产厂商",
                     "type": "string"
+                }
+            }
+        },
+        "ipmi.sensorCritical": {
+            "type": "object",
+            "properties": {
+                "critical": {
+                    "description": "告警数值",
+                    "type": "number"
+                },
+                "non_critical": {
+                    "description": "恢复数值",
+                    "type": "number"
+                },
+                "non_recoverable": {
+                    "description": "严重告警数值",
+                    "type": "number"
+                }
+            }
+        },
+        "ipmi.sensorInfo": {
+            "type": "object",
+            "required": [
+                "discrete",
+                "entity_id",
+                "id",
+                "name",
+                "sensor_id",
+                "type"
+            ],
+            "properties": {
+                "discrete": {
+                    "description": "是否是离散传感器",
+                    "type": "boolean"
+                },
+                "entity_id": {
+                    "description": "实体ID",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "传感器序号",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "传感器名称",
+                    "type": "string"
+                },
+                "sensor_id": {
+                    "description": "传感器ID",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "传感器类型",
+                    "type": "string"
+                },
+                "values": {
+                    "description": "传感器数值",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ipmi.sensorValue"
+                        }
+                    ]
+                }
+            }
+        },
+        "ipmi.sensorUnitValue": {
+            "type": "object",
+            "required": [
+                "base",
+                "percent"
+            ],
+            "properties": {
+                "base": {
+                    "description": "基本单位",
+                    "type": "string"
+                },
+                "mod": {
+                    "description": "第二项单位",
+                    "type": "string"
+                },
+                "op": {
+                    "description": "乘或除",
+                    "type": "string"
+                },
+                "percent": {
+                    "description": "是否是百分比",
+                    "type": "boolean"
+                }
+            }
+        },
+        "ipmi.sensorValue": {
+            "type": "object",
+            "required": [
+                "current",
+                "unit"
+            ],
+            "properties": {
+                "current": {
+                    "description": "当前数值",
+                    "type": "number"
+                },
+                "lower": {
+                    "description": "最低告警数值",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ipmi.sensorCritical"
+                        }
+                    ]
+                },
+                "unit": {
+                    "description": "当前传感器的单位信息",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ipmi.sensorUnitValue"
+                        }
+                    ]
+                },
+                "upper": {
+                    "description": "最高告警数值",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ipmi.sensorCritical"
+                        }
+                    ]
                 }
             }
         },
