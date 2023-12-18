@@ -834,6 +834,7 @@ const docTemplate = `{
         },
         "/ipmi/{id}/sensors": {
             "get": {
+                "description": "常量定义：https://docs.jkservice.org/dp/others/ipmi/defs/",
                 "consumes": [
                     "application/json"
                 ],
@@ -2169,15 +2170,18 @@ const docTemplate = `{
             "properties": {
                 "firmware_version": {
                     "description": "固件版本",
-                    "type": "string"
+                    "type": "string",
+                    "default": "0.0"
                 },
                 "ipmi_version": {
                     "description": "IPMI版本",
-                    "type": "string"
+                    "type": "string",
+                    "default": "2.0"
                 },
                 "oem": {
                     "description": "生产厂商",
-                    "type": "string"
+                    "type": "string",
+                    "default": "IBM"
                 }
             }
         },
@@ -2186,15 +2190,18 @@ const docTemplate = `{
             "properties": {
                 "critical": {
                     "description": "告警数值",
-                    "type": "number"
+                    "type": "number",
+                    "default": 70
                 },
                 "non_critical": {
                     "description": "恢复数值",
-                    "type": "number"
+                    "type": "number",
+                    "default": 60
                 },
                 "non_recoverable": {
                     "description": "严重告警数值",
-                    "type": "number"
+                    "type": "number",
+                    "default": 100
                 }
             }
         },
@@ -2211,27 +2218,33 @@ const docTemplate = `{
             "properties": {
                 "discrete": {
                     "description": "是否是离散传感器",
-                    "type": "boolean"
+                    "type": "boolean",
+                    "default": false
                 },
                 "entity_id": {
                     "description": "实体ID",
-                    "type": "string"
+                    "type": "string",
+                    "default": "12.1"
                 },
                 "id": {
                     "description": "传感器序号",
-                    "type": "integer"
+                    "type": "integer",
+                    "default": 0
                 },
                 "name": {
                     "description": "传感器名称",
-                    "type": "string"
+                    "type": "string",
+                    "default": "Ambient Temp"
                 },
                 "sensor_id": {
                     "description": "传感器ID",
-                    "type": "integer"
+                    "type": "integer",
+                    "default": 44
                 },
                 "type": {
                     "description": "传感器类型",
-                    "type": "string"
+                    "type": "string",
+                    "default": "Temperature"
                 },
                 "values": {
                     "description": "传感器数值",
@@ -2252,19 +2265,23 @@ const docTemplate = `{
             "properties": {
                 "base": {
                     "description": "基本单位",
-                    "type": "string"
+                    "type": "string",
+                    "default": "degrees C"
                 },
                 "mod": {
                     "description": "第二项单位",
-                    "type": "string"
+                    "type": "string",
+                    "default": "minute"
                 },
                 "op": {
                     "description": "乘或除",
-                    "type": "string"
+                    "type": "string",
+                    "default": "/"
                 },
                 "percent": {
                     "description": "是否是百分比",
-                    "type": "boolean"
+                    "type": "boolean",
+                    "default": false
                 }
             }
         },
@@ -2277,7 +2294,8 @@ const docTemplate = `{
             "properties": {
                 "current": {
                     "description": "当前数值",
-                    "type": "number"
+                    "type": "number",
+                    "default": 23
                 },
                 "lower": {
                     "description": "最低告警数值",

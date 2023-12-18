@@ -29,9 +29,9 @@ func (args commonArgs) toRequest() *anet.IPMICommonRequest {
 }
 
 type deviceInfo struct {
-	OEM             string `json:"oem" validate:"required"`              // 生产厂商
-	FirmwareVersion string `json:"firmware_version" validate:"required"` // 固件版本
-	IPMIVersion     string `json:"ipmi_version" validate:"required"`     // IPMI版本
+	OEM             string `json:"oem" validate:"required" default:"IBM"`              // 生产厂商
+	FirmwareVersion string `json:"firmware_version" validate:"required" default:"0.0"` // 固件版本
+	IPMIVersion     string `json:"ipmi_version" validate:"required" default:"2.0"`     // IPMI版本
 }
 
 // deviceInfo 获取服务器的IPMI信息
@@ -45,7 +45,7 @@ type deviceInfo struct {
 //	@Param		addr	query		string							true	"IPMI地址"
 //	@Param		user	query		string							true	"IPMI用户名"
 //	@Param		pass	query		string							true	"IPMI密码"
-//	@Param		mode	query		string							false	"IPMI连接模式"	Enums(lan,lanplus,auto) Default(auto)
+//	@Param		mode	query		string							false	"IPMI连接模式"	enums(lan,lanplus,auto) default(auto)
 //	@Success	200		{object}	api.Success{payload=deviceInfo}	"服务器IPMI信息"
 //	@Router		/ipmi/{id}/device [get]
 func (h *Handler) deviceInfo(gin *gin.Context) {

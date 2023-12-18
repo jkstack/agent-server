@@ -13,49 +13,50 @@ import (
 )
 
 type sensorUnitValue struct {
-	Percent bool   `json:"percent" validate:"required"` // 是否是百分比
-	Base    string `json:"base" validate:"required"`    // 基本单位
-	Op      string `json:"op,omitempty"`                // 乘或除
-	Mod     string `json:"mod,omitempty"`               // 第二项单位
+	Percent bool   `json:"percent" validate:"required" default:"false"`  // 是否是百分比
+	Base    string `json:"base" validate:"required" default:"degrees C"` // 基本单位
+	Op      string `json:"op,omitempty" default:"/"`                     // 乘或除
+	Mod     string `json:"mod,omitempty" default:"minute"`               // 第二项单位
 }
 
 type sensorCritical struct {
-	NonCritical    *float64 `json:"non_critical,omitempty"`    // 恢复数值
-	Critical       *float64 `json:"critical,omitempty"`        // 告警数值
-	NonRecoverable *float64 `json:"non_recoverable,omitempty"` // 严重告警数值
+	NonCritical    *float64 `json:"non_critical,omitempty" default:"60"`     // 恢复数值
+	Critical       *float64 `json:"critical,omitempty" default:"70"`         // 告警数值
+	NonRecoverable *float64 `json:"non_recoverable,omitempty" default:"100"` // 严重告警数值
 }
 
 type sensorValue struct {
-	Unit    sensorUnitValue `json:"unit" validate:"required"`    // 当前传感器的单位信息
-	Current float64         `json:"current" validate:"required"` // 当前数值
-	Lower   *sensorCritical `json:"lower,omitempty"`             // 最低告警数值
-	Upper   *sensorCritical `json:"upper,omitempty"`             // 最高告警数值
+	Unit    sensorUnitValue `json:"unit" validate:"required"`                 // 当前传感器的单位信息
+	Current float64         `json:"current" validate:"required" default:"23"` // 当前数值
+	Lower   *sensorCritical `json:"lower,omitempty"`                          // 最低告警数值
+	Upper   *sensorCritical `json:"upper,omitempty"`                          // 最高告警数值
 }
 
 type sensorInfo struct {
-	ID       uint16       `json:"id" validate:"required"`        // 传感器序号
-	SensorID uint8        `json:"sensor_id" validate:"required"` // 传感器ID
-	EntityID string       `json:"entity_id" validate:"required"` // 实体ID
-	Name     string       `json:"name" validate:"required"`      // 传感器名称
-	Type     string       `json:"type" validate:"required"`      // 传感器类型
-	Discrete bool         `json:"discrete" validate:"required"`  // 是否是离散传感器
-	Values   *sensorValue `json:"values,omitempty"`              // 传感器数值
+	ID       uint16       `json:"id" validate:"required" default:"0"`              // 传感器序号
+	SensorID uint8        `json:"sensor_id" validate:"required" default:"44"`      // 传感器ID
+	EntityID string       `json:"entity_id" validate:"required" default:"12.1"`    // 实体ID
+	Name     string       `json:"name" validate:"required" default:"Ambient Temp"` // 传感器名称
+	Type     string       `json:"type" validate:"required" default:"Temperature"`  // 传感器类型
+	Discrete bool         `json:"discrete" validate:"required" default:"false"`    // 是否是离散传感器
+	Values   *sensorValue `json:"values,omitempty"`                                // 传感器数值
 }
 
 // sensorList 获取服务器的传感器列表
 //
-//	@ID			/api/ipmi/sensors
-//	@Summary	获取服务器的传感器列表
-//	@Tags		ipmi
-//	@Accept		json
-//	@Produce	json
-//	@Param		id		path		string								true	"节点ID"
-//	@Param		addr	query		string								true	"IPMI地址"
-//	@Param		user	query		string								true	"IPMI用户名"
-//	@Param		pass	query		string								true	"IPMI密码"
-//	@Param		mode	query		string								false	"IPMI连接模式"	Enums(lan,lanplus,auto)	Default(auto)
-//	@Success	200		{object}	api.Success{payload=[]sensorInfo}	"传感器列表"
-//	@Router		/ipmi/{id}/sensors [get]
+//	@ID				/api/ipmi/sensors
+//	@Description	常量定义：https://docs.jkservice.org/dp/others/ipmi/defs/
+//	@Summary		获取服务器的传感器列表
+//	@Tags			ipmi
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		string								true	"节点ID"
+//	@Param			addr	query		string								true	"IPMI地址"
+//	@Param			user	query		string								true	"IPMI用户名"
+//	@Param			pass	query		string								true	"IPMI密码"
+//	@Param			mode	query		string								false	"IPMI连接模式"	enums(lan,lanplus,auto)	default(auto)
+//	@Success		200		{object}	api.Success{payload=[]sensorInfo}	"传感器列表"
+//	@Router			/ipmi/{id}/sensors [get]
 func (h *Handler) sensorList(gin *gin.Context) {
 	g := api.GetG(gin)
 

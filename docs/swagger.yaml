@@ -303,12 +303,15 @@ definitions:
   ipmi.deviceInfo:
     properties:
       firmware_version:
+        default: "0.0"
         description: 固件版本
         type: string
       ipmi_version:
+        default: "2.0"
         description: IPMI版本
         type: string
       oem:
+        default: IBM
         description: 生产厂商
         type: string
     required:
@@ -319,33 +322,42 @@ definitions:
   ipmi.sensorCritical:
     properties:
       critical:
+        default: 70
         description: 告警数值
         type: number
       non_critical:
+        default: 60
         description: 恢复数值
         type: number
       non_recoverable:
+        default: 100
         description: 严重告警数值
         type: number
     type: object
   ipmi.sensorInfo:
     properties:
       discrete:
+        default: false
         description: 是否是离散传感器
         type: boolean
       entity_id:
+        default: "12.1"
         description: 实体ID
         type: string
       id:
+        default: 0
         description: 传感器序号
         type: integer
       name:
+        default: Ambient Temp
         description: 传感器名称
         type: string
       sensor_id:
+        default: 44
         description: 传感器ID
         type: integer
       type:
+        default: Temperature
         description: 传感器类型
         type: string
       values:
@@ -363,15 +375,19 @@ definitions:
   ipmi.sensorUnitValue:
     properties:
       base:
+        default: degrees C
         description: 基本单位
         type: string
       mod:
+        default: minute
         description: 第二项单位
         type: string
       op:
+        default: /
         description: 乘或除
         type: string
       percent:
+        default: false
         description: 是否是百分比
         type: boolean
     required:
@@ -381,6 +397,7 @@ definitions:
   ipmi.sensorValue:
     properties:
       current:
+        default: 23
         description: 当前数值
         type: number
       lower:
@@ -1737,6 +1754,7 @@ paths:
     get:
       consumes:
       - application/json
+      description: 常量定义：https://docs.jkservice.org/dp/others/ipmi/defs/
       operationId: /api/ipmi/sensors
       parameters:
       - description: 节点ID
