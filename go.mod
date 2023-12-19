@@ -1,6 +1,6 @@
 module server
 
-go 1.18
+go 1.20
 
 replace github.com/kardianos/service => github.com/lwch/service v1.2.1-1
 
