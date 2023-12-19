@@ -1747,7 +1747,7 @@ paths:
                 payload:
                   $ref: '#/definitions/ipmi.deviceInfo'
               type: object
-      summary: 获取服务器的IPMI信息
+      summary: 获取服务器的设备信息
       tags:
       - ipmi
   /ipmi/{id}/sensors:

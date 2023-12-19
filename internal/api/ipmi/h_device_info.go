@@ -34,10 +34,10 @@ type deviceInfo struct {
 	IPMIVersion     string `json:"ipmi_version" validate:"required" default:"2.0"`     // IPMI版本
 }
 
-// deviceInfo 获取服务器的IPMI信息
+// deviceInfo 获取服务器的设备信息
 //
 //	@ID			/api/ipmi/device
-//	@Summary	获取服务器的IPMI信息
+//	@Summary	获取服务器的设备信息
 //	@Tags		ipmi
 //	@Accept		json
 //	@Produce	json

@@ -766,7 +766,7 @@ const docTemplate = `{
                 "tags": [
                     "ipmi"
                 ],
-                "summary": "获取服务器的IPMI信息",
+                "summary": "获取服务器的设备信息",
                 "operationId": "/api/ipmi/device",
                 "parameters": [
                     {
