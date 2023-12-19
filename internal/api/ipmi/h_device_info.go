@@ -98,7 +98,7 @@ func (h *Handler) deviceInfo(gin *gin.Context) {
 	}
 
 	if !msg.IPMIDeviceInfo.OK {
-		g.ERR(http.StatusServiceUnavailable, msg.LSRep.ErrMsg)
+		g.ERR(http.StatusServiceUnavailable, msg.IPMIDeviceInfo.Msg)
 		return
 	}
 

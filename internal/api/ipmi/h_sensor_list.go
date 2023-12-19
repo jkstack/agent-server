@@ -107,7 +107,7 @@ func (h *Handler) sensorList(gin *gin.Context) {
 	}
 
 	if !msg.IPMISensorList.OK {
-		g.ERR(http.StatusServiceUnavailable, msg.LSRep.ErrMsg)
+		g.ERR(http.StatusServiceUnavailable, msg.IPMISensorList.Msg)
 		return
 	}
 
