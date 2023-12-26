@@ -1,10 +1,12 @@
 package rpa
 
 import (
+	"encoding/json"
+
 	"github.com/jkstack/anet"
 	"github.com/jkstack/jkframe/logging"
 	"google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
+	"google.golang.org/grpc/status"
 )
 
 // Run run rpa workflow
@@ -13,17 +15,17 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 	agentID := args.GetId()
 	agent := svr.agents.Get(agentID)
 	if agent == nil {
-		return status.Errorf(codes.NotFound, "agent not found")
+		return svr.runResponse(codes.NotFound, "agent not found", "")
 	}
 	svr.RLock()
 	_, ok := svr.jobs[agentID]
 	svr.RUnlock()
 	if ok {
-		return status.Errorf(codes.Unavailable, "agent is busy")
+		return svr.runResponse(codes.Unavailable, "agent is busy", "")
 	}
 	taskID, err := agent.SendRpaRun(args.GetUrl(), args.GetIsDebug())
 	if err != nil {
-		return status.Errorf(codes.Unavailable, "send message: %v", err)
+		return svr.runResponse(codes.Unavailable, "send message: "+err.Error(), "")
 	}
 	defer agent.ChanClose(taskID)
 	chRep := make(chan *anet.RPACtrlRep, 1)
@@ -41,11 +43,11 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 	for {
 		ch := agent.ChanRead(taskID)
 		if ch == nil {
-			return status.Error(codes.Unavailable, "agent is closed")
+			return svr.runResponse(codes.Unavailable, "agent is closed", "")
 		}
 		msg := <-ch
 		if msg == nil {
-			return status.Error(codes.Unavailable, "agent is closed")
+			return svr.runResponse(codes.Unavailable, "agent is closed", "")
 		}
 		switch msg.Type {
 		case anet.TypeRPAControlRep:
@@ -54,7 +56,7 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 			err := stream.Send(&Log{Data: string(*msg.RPALog)})
 			if err != nil {
 				logging.Error("send log error: %v", err)
-				return status.Errorf(codes.Internal, "send log error: %v", err)
+				return svr.runResponse(codes.Internal, "send log error: "+err.Error(), "")
 			}
 		case anet.TypeRPAFinish:
 			payload := msg.RPAFinish
@@ -64,8 +66,22 @@ func (svr *Server) Run(args *RunArgs, stream Rpa_RunServer) error {
 			} else {
 				code = 1
 			}
-			logging.Error("rpa finish(%d): %s", payload.Code, payload.Msg)
-			return status.Errorf(codes.Code(code), payload.Msg)
+			logging.Info("rpa finish(%d): %s", payload.Code, payload.Msg)
+			return svr.runResponse(codes.Code(code), payload.Msg, payload.Data)
 		}
 	}
+}
+
+func (svr *Server) runResponse(code codes.Code, msg, data string) error {
+	var rep struct {
+		Msg  string `json:"msg"`
+		Data string `json:"data"`
+	}
+	rep.Msg = msg
+	rep.Data = data
+	payload, err := json.Marshal(rep)
+	if err != nil {
+		return status.Errorf(codes.Internal, `{"msg":"`+err.Error()+`","data":""}`)
+	}
+	return status.Errorf(code, "%s", string(payload))
 }
