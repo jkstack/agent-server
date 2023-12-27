@@ -79,6 +79,18 @@ definitions:
     - type
     - version
     type: object
+  anet.SNMPItem:
+    properties:
+      oid:
+        description: snmp oid
+        type: string
+      type:
+        description: snmp type
+        type: string
+      value:
+        description: snmp value
+        type: string
+    type: object
   api.Success:
     properties:
       code:
@@ -2374,6 +2386,48 @@ paths:
       summary: 执行脚本
       tags:
       - script
+  /snmp/{id}/list:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/snmp/list
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: SNMP服务地址
+        in: query
+        name: host
+        required: true
+        type: string
+      - description: SNMP community
+        in: query
+        name: community
+        required: true
+        type: string
+      - description: SNMP oid
+        in: query
+        name: oid
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: snmp列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/anet.SNMPItem'
+                  type: array
+              type: object
+      summary: 获取snmp清单
+      tags:
+      - snmp
 swagger: "2.0"
 tags:
 - description: agent相关操作接口
@@ -2394,3 +2448,5 @@ tags:
   name: script
 - description: ipmi相关接口
   name: ipmi
+- description: snmp相关接口
+  name: snmp

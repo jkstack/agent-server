@@ -11,4 +11,6 @@ const (
 	TypeRPA = "rpa-agent"
 	// TypeIPMI ipmi agent type
 	TypeIPMI = "ipmi-agent"
+	// TypeSNMP snmp agent type
+	TypeSNMP = "snmp-agent"
 )

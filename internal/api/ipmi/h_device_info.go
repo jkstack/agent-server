@@ -73,7 +73,7 @@ func (h *Handler) deviceInfo(gin *gin.Context) {
 		return
 	}
 	if cli.Type() != agent.TypeIPMI {
-		g.InvalidType(agent.TypeExec, cli.Type())
+		g.InvalidType(agent.TypeIPMI, cli.Type())
 		return
 	}
 

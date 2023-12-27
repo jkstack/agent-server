@@ -14,6 +14,7 @@ LDFLAGS="-X 'main.gitBranch=$BRANCH'
 
 swag fmt -d ./
 swag init \
+    --pd \
     --md api_docs \
     -g internal/api/api.go
 protoc --go_out=internal/api/metrics internal/api/metrics/*.proto

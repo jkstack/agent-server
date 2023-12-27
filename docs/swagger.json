@@ -1758,6 +1758,73 @@
                     }
                 }
             }
+        },
+        "/snmp/{id}/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "snmp"
+                ],
+                "summary": "获取snmp清单",
+                "operationId": "/api/snmp/list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "SNMP服务地址",
+                        "name": "host",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "SNMP community",
+                        "name": "community",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "SNMP oid",
+                        "name": "oid",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "snmp列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/anet.SNMPItem"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1858,6 +1925,23 @@
                     "description": "agent版本号",
                     "type": "string",
                     "example": "1.0.0"
+                }
+            }
+        },
+        "anet.SNMPItem": {
+            "type": "object",
+            "properties": {
+                "oid": {
+                    "description": "snmp oid",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "snmp type",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "snmp value",
+                    "type": "string"
                 }
             }
         },
@@ -3411,6 +3495,10 @@
         {
             "description": "ipmi相关接口",
             "name": "ipmi"
+        },
+        {
+            "description": "snmp相关接口",
+            "name": "snmp"
         }
     ]
 }
