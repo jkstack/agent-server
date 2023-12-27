@@ -2,6 +2,7 @@ package ipmi
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"server/internal/agent"
 	"server/internal/api"
@@ -65,6 +66,13 @@ func (h *Handler) sensorList(gin *gin.Context) {
 		g.BadParam(err.Error())
 		return
 	}
+
+	host, port, err := net.SplitHostPort(args.Addr)
+	utils.Assert(err)
+	if len(port) == 0 {
+		port = "623"
+	}
+	args.Addr = fmt.Sprintf("%s:%s", host, port)
 
 	switch args.Mode {
 	case "lan", "lanplus":
