@@ -2,10 +2,10 @@ package ipmi
 
 import (
 	"fmt"
-	"net"
 	"net/http"
 	"server/internal/agent"
 	"server/internal/api"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -67,12 +67,10 @@ func (h *Handler) sensorList(gin *gin.Context) {
 		return
 	}
 
-	host, port, err := net.SplitHostPort(args.Addr)
-	utils.Assert(err)
-	if len(port) == 0 {
-		port = "623"
+	tmp := strings.SplitN(args.Addr, ":", 2)
+	if len(tmp) == 1 {
+		args.Addr = fmt.Sprintf("%s:623", tmp[0])
 	}
-	args.Addr = fmt.Sprintf("%s:%s", host, port)
 
 	switch args.Mode {
 	case "lan", "lanplus":
