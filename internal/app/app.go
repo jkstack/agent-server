@@ -12,10 +12,12 @@ import (
 	"server/internal/api/file"
 	"server/internal/api/foo"
 	"server/internal/api/info"
+	"server/internal/api/ipmi"
 	"server/internal/api/layout"
 	"server/internal/api/metrics"
 	"server/internal/api/rpa"
 	"server/internal/api/script"
+	"server/internal/api/snmp"
 	"server/internal/conf"
 	"server/internal/utils"
 	"sync"
@@ -113,6 +115,8 @@ func (app *App) Start(s service.Service) error {
 		apis = append(apis, script.New())
 		apis = append(apis, layout.New())
 		apis = append(apis, rpa.New())
+		apis = append(apis, ipmi.New())
+		apis = append(apis, snmp.New())
 
 		for _, api := range apis {
 			api.Init(app.cfg, app.stats)

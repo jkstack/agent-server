@@ -79,6 +79,18 @@ definitions:
     - type
     - version
     type: object
+  anet.SNMPItem:
+    properties:
+      oid:
+        description: snmp oid
+        type: string
+      type:
+        description: snmp type
+        type: string
+      value:
+        description: snmp value
+        type: string
+    type: object
   api.Success:
     properties:
       code:
@@ -299,6 +311,122 @@ definitions:
     - id
     - is_blocking
     - version
+    type: object
+  ipmi.deviceInfo:
+    properties:
+      firmware_version:
+        default: "0.0"
+        description: 固件版本
+        type: string
+      ipmi_version:
+        default: "2.0"
+        description: IPMI版本
+        type: string
+      oem:
+        default: IBM
+        description: 生产厂商
+        type: string
+    required:
+    - firmware_version
+    - ipmi_version
+    - oem
+    type: object
+  ipmi.sensorCritical:
+    properties:
+      critical:
+        default: 70
+        description: 告警数值
+        type: number
+      non_critical:
+        default: 60
+        description: 恢复数值
+        type: number
+      non_recoverable:
+        default: 100
+        description: 严重告警数值
+        type: number
+    type: object
+  ipmi.sensorInfo:
+    properties:
+      discrete:
+        default: false
+        description: 是否是离散传感器
+        type: boolean
+      entity_id:
+        default: "12.1"
+        description: 实体ID
+        type: string
+      id:
+        default: 0
+        description: 传感器序号
+        type: integer
+      name:
+        default: Ambient Temp
+        description: 传感器名称
+        type: string
+      sensor_id:
+        default: 44
+        description: 传感器ID
+        type: integer
+      type:
+        default: Temperature
+        description: 传感器类型
+        type: string
+      values:
+        allOf:
+        - $ref: '#/definitions/ipmi.sensorValue'
+        description: 传感器数值
+    required:
+    - discrete
+    - entity_id
+    - id
+    - name
+    - sensor_id
+    - type
+    type: object
+  ipmi.sensorUnitValue:
+    properties:
+      base:
+        default: degrees C
+        description: 基本单位
+        type: string
+      mod:
+        default: minute
+        description: 第二项单位
+        type: string
+      op:
+        default: /
+        description: 乘或除
+        type: string
+      percent:
+        default: false
+        description: 是否是百分比
+        type: boolean
+    required:
+    - base
+    - percent
+    type: object
+  ipmi.sensorValue:
+    properties:
+      current:
+        default: 23
+        description: 当前数值
+        type: number
+      lower:
+        allOf:
+        - $ref: '#/definitions/ipmi.sensorCritical'
+        description: 最低告警数值
+      unit:
+        allOf:
+        - $ref: '#/definitions/ipmi.sensorUnitValue'
+        description: 当前传感器的单位信息
+      upper:
+        allOf:
+        - $ref: '#/definitions/ipmi.sensorCritical'
+        description: 最高告警数值
+    required:
+    - current
+    - unit
     type: object
   layout.nodeStatus:
     properties:
@@ -1202,7 +1330,8 @@ paths:
         name: id
         required: true
         type: string
-      - description: 文件列表
+      - collectionFormat: csv
+        description: 文件列表
         in: query
         items:
           type: string
@@ -1583,6 +1712,109 @@ paths:
       summary: 获取当前服务器状态
       tags:
       - info
+  /ipmi/{id}/device:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/ipmi/device
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: IPMI地址
+        in: query
+        name: addr
+        required: true
+        type: string
+      - description: IPMI用户名
+        in: query
+        name: user
+        required: true
+        type: string
+      - description: IPMI密码
+        in: query
+        name: pass
+        required: true
+        type: string
+      - default: auto
+        description: IPMI连接模式
+        enum:
+        - lan
+        - lanplus
+        - auto
+        in: query
+        name: mode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 服务器IPMI信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  $ref: '#/definitions/ipmi.deviceInfo'
+              type: object
+      summary: 获取服务器的设备信息
+      tags:
+      - ipmi
+  /ipmi/{id}/sensors:
+    get:
+      consumes:
+      - application/json
+      description: 常量定义：https://docs.jkservice.org/dp/others/ipmi/defs/
+      operationId: /api/ipmi/sensors
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: IPMI地址
+        in: query
+        name: addr
+        required: true
+        type: string
+      - description: IPMI用户名
+        in: query
+        name: user
+        required: true
+        type: string
+      - description: IPMI密码
+        in: query
+        name: pass
+        required: true
+        type: string
+      - default: auto
+        description: IPMI连接模式
+        enum:
+        - lan
+        - lanplus
+        - auto
+        in: query
+        name: mode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 传感器列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/ipmi.sensorInfo'
+                  type: array
+              type: object
+      summary: 获取服务器的传感器列表
+      tags:
+      - ipmi
   /layout/{id}:
     get:
       consumes:
@@ -1618,14 +1850,16 @@ paths:
         当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务
       operationId: /api/layout/run
       parameters:
-      - description: 节点ID列表
+      - collectionFormat: csv
+        description: 节点ID列表
         in: formData
         items:
           type: string
         name: ids
         required: true
         type: array
-      - description: 分组列表
+      - collectionFormat: csv
+        description: 分组列表
         in: formData
         items:
           type: integer
@@ -1651,7 +1885,8 @@ paths:
         name: type
         required: true
         type: string
-      - description: 参数
+      - collectionFormat: csv
+        description: 参数
         in: formData
         items:
           type: string
@@ -1677,7 +1912,8 @@ paths:
         in: formData
         name: workdir
         type: string
-      - description: 环境变量
+      - collectionFormat: csv
+        description: 环境变量
         in: formData
         items:
           type: string
@@ -1730,7 +1966,8 @@ paths:
         in: query
         name: top
         type: integer
-      - description: 获取连接类型
+      - collectionFormat: csv
+        description: 获取连接类型
         in: query
         items:
           enum:
@@ -1773,7 +2010,8 @@ paths:
         name: id
         required: true
         type: string
-      - description: 获取连接类型
+      - collectionFormat: csv
+        description: 获取连接类型
         in: query
         items:
           enum:
@@ -2094,7 +2332,8 @@ paths:
         name: type
         required: true
         type: string
-      - description: 参数
+      - collectionFormat: csv
+        description: 参数
         in: formData
         items:
           type: string
@@ -2120,7 +2359,8 @@ paths:
         in: formData
         name: workdir
         type: string
-      - description: 环境变量
+      - collectionFormat: csv
+        description: 环境变量
         in: formData
         items:
           type: string
@@ -2146,6 +2386,48 @@ paths:
       summary: 执行脚本
       tags:
       - script
+  /snmp/{id}/list:
+    get:
+      consumes:
+      - application/json
+      operationId: /api/snmp/list
+      parameters:
+      - description: 节点ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: SNMP服务地址
+        in: query
+        name: host
+        required: true
+        type: string
+      - description: SNMP community
+        in: query
+        name: community
+        required: true
+        type: string
+      - description: SNMP oid
+        in: query
+        name: oid
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: snmp列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Success'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/anet.SNMPItem'
+                  type: array
+              type: object
+      summary: 获取snmp清单
+      tags:
+      - snmp
 swagger: "2.0"
 tags:
 - description: agent相关操作接口
@@ -2164,3 +2446,7 @@ tags:
   name: metrics
 - description: 脚本运行相关接口
   name: script
+- description: ipmi相关接口
+  name: ipmi
+- description: snmp相关接口
+  name: snmp

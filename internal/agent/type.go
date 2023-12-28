@@ -9,4 +9,8 @@ const (
 	TypeExec = "exec-agent"
 	// TypeRPA rpa agent type
 	TypeRPA = "rpa-agent"
+	// TypeIPMI ipmi agent type
+	TypeIPMI = "ipmi-agent"
+	// TypeSNMP snmp agent type
+	TypeSNMP = "snmp-agent"
 )

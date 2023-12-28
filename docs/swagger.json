@@ -159,6 +159,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "文件列表",
                         "name": "files",
                         "in": "query",
@@ -747,6 +748,164 @@
                 }
             }
         },
+        "/ipmi/{id}/device": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ipmi"
+                ],
+                "summary": "获取服务器的设备信息",
+                "operationId": "/api/ipmi/device",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI地址",
+                        "name": "addr",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI用户名",
+                        "name": "user",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI密码",
+                        "name": "pass",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "lan",
+                            "lanplus",
+                            "auto"
+                        ],
+                        "type": "string",
+                        "default": "auto",
+                        "description": "IPMI连接模式",
+                        "name": "mode",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "服务器IPMI信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "$ref": "#/definitions/ipmi.deviceInfo"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/ipmi/{id}/sensors": {
+            "get": {
+                "description": "常量定义：https://docs.jkservice.org/dp/others/ipmi/defs/",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ipmi"
+                ],
+                "summary": "获取服务器的传感器列表",
+                "operationId": "/api/ipmi/sensors",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI地址",
+                        "name": "addr",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI用户名",
+                        "name": "user",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "IPMI密码",
+                        "name": "pass",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "lan",
+                            "lanplus",
+                            "auto"
+                        ],
+                        "type": "string",
+                        "default": "auto",
+                        "description": "IPMI连接模式",
+                        "name": "mode",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "传感器列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/ipmi.sensorInfo"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/layout/run": {
             "post": {
                 "description": "分组示例:\n当ids参数为exec-01,exec-02,exec-03，group参数为1,1,2时，exec-01和exec-02节点为第一分组并发执行，当执行失败时若onerror参数为exit则不会执行后续分组中的exec-03节点任务",
@@ -767,6 +926,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "节点ID列表",
                         "name": "ids",
                         "in": "formData",
@@ -777,6 +937,7 @@
                         "items": {
                             "type": "integer"
                         },
+                        "collectionFormat": "csv",
                         "description": "分组列表",
                         "name": "group",
                         "in": "formData",
@@ -811,6 +972,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "参数",
                         "name": "args",
                         "in": "formData"
@@ -849,6 +1011,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "环境变量",
                         "name": "env",
                         "in": "formData"
@@ -1023,6 +1186,7 @@
                             ],
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "获取连接类型",
                         "name": "kinds",
                         "in": "query"
@@ -1086,6 +1250,7 @@
                             ],
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "获取连接类型",
                         "name": "kinds",
                         "in": "query"
@@ -1520,6 +1685,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "参数",
                         "name": "args",
                         "in": "formData"
@@ -1558,6 +1724,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "collectionFormat": "csv",
                         "description": "环境变量",
                         "name": "env",
                         "in": "formData"
@@ -1583,6 +1750,73 @@
                                     "properties": {
                                         "payload": {
                                             "$ref": "#/definitions/script.runPayload"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/snmp/{id}/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "snmp"
+                ],
+                "summary": "获取snmp清单",
+                "operationId": "/api/snmp/list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "节点ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "SNMP服务地址",
+                        "name": "host",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "SNMP community",
+                        "name": "community",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "SNMP oid",
+                        "name": "oid",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "snmp列表",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "payload": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/anet.SNMPItem"
+                                            }
                                         }
                                     }
                                 }
@@ -1691,6 +1925,23 @@
                     "description": "agent版本号",
                     "type": "string",
                     "example": "1.0.0"
+                }
+            }
+        },
+        "anet.SNMPItem": {
+            "type": "object",
+            "properties": {
+                "oid": {
+                    "description": "snmp oid",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "snmp type",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "snmp value",
+                    "type": "string"
                 }
             }
         },
@@ -1983,6 +2234,169 @@
                     "description": "服务端版本号",
                     "type": "string",
                     "example": "1.0.0"
+                }
+            }
+        },
+        "ipmi.deviceInfo": {
+            "type": "object",
+            "required": [
+                "firmware_version",
+                "ipmi_version",
+                "oem"
+            ],
+            "properties": {
+                "firmware_version": {
+                    "description": "固件版本",
+                    "type": "string",
+                    "default": "0.0"
+                },
+                "ipmi_version": {
+                    "description": "IPMI版本",
+                    "type": "string",
+                    "default": "2.0"
+                },
+                "oem": {
+                    "description": "生产厂商",
+                    "type": "string",
+                    "default": "IBM"
+                }
+            }
+        },
+        "ipmi.sensorCritical": {
+            "type": "object",
+            "properties": {
+                "critical": {
+                    "description": "告警数值",
+                    "type": "number",
+                    "default": 70
+                },
+                "non_critical": {
+                    "description": "恢复数值",
+                    "type": "number",
+                    "default": 60
+                },
+                "non_recoverable": {
+                    "description": "严重告警数值",
+                    "type": "number",
+                    "default": 100
+                }
+            }
+        },
+        "ipmi.sensorInfo": {
+            "type": "object",
+            "required": [
+                "discrete",
+                "entity_id",
+                "id",
+                "name",
+                "sensor_id",
+                "type"
+            ],
+            "properties": {
+                "discrete": {
+                    "description": "是否是离散传感器",
+                    "type": "boolean",
+                    "default": false
+                },
+                "entity_id": {
+                    "description": "实体ID",
+                    "type": "string",
+                    "default": "12.1"
+                },
+                "id": {
+                    "description": "传感器序号",
+                    "type": "integer",
+                    "default": 0
+                },
+                "name": {
+                    "description": "传感器名称",
+                    "type": "string",
+                    "default": "Ambient Temp"
+                },
+                "sensor_id": {
+                    "description": "传感器ID",
+                    "type": "integer",
+                    "default": 44
+                },
+                "type": {
+                    "description": "传感器类型",
+                    "type": "string",
+                    "default": "Temperature"
+                },
+                "values": {
+                    "description": "传感器数值",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ipmi.sensorValue"
+                        }
+                    ]
+                }
+            }
+        },
+        "ipmi.sensorUnitValue": {
+            "type": "object",
+            "required": [
+                "base",
+                "percent"
+            ],
+            "properties": {
+                "base": {
+                    "description": "基本单位",
+                    "type": "string",
+                    "default": "degrees C"
+                },
+                "mod": {
+                    "description": "第二项单位",
+                    "type": "string",
+                    "default": "minute"
+                },
+                "op": {
+                    "description": "乘或除",
+                    "type": "string",
+                    "default": "/"
+                },
+                "percent": {
+                    "description": "是否是百分比",
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "ipmi.sensorValue": {
+            "type": "object",
+            "required": [
+                "current",
+                "unit"
+            ],
+            "properties": {
+                "current": {
+                    "description": "当前数值",
+                    "type": "number",
+                    "default": 23
+                },
+                "lower": {
+                    "description": "最低告警数值",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ipmi.sensorCritical"
+                        }
+                    ]
+                },
+                "unit": {
+                    "description": "当前传感器的单位信息",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ipmi.sensorUnitValue"
+                        }
+                    ]
+                },
+                "upper": {
+                    "description": "最高告警数值",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/ipmi.sensorCritical"
+                        }
+                    ]
                 }
             }
         },
@@ -3077,6 +3491,14 @@
         {
             "description": "脚本运行相关接口",
             "name": "script"
+        },
+        {
+            "description": "ipmi相关接口",
+            "name": "ipmi"
+        },
+        {
+            "description": "snmp相关接口",
+            "name": "snmp"
         }
     ]
 }

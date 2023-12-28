@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/jkstack/anet"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // Control send control packet to rpa agent
@@ -13,24 +13,24 @@ func (svr *Server) Control(ctx context.Context, args *ControlArgs) (*ControlResp
 	agentID := args.GetId()
 	agent := svr.agents.Get(agentID)
 	if agent == nil {
-		return nil, grpc.Errorf(codes.NotFound, "agent not found")
+		return nil, status.Errorf(codes.NotFound, "agent not found")
 	}
 	svr.RLock()
 	taskID := svr.jobs[agentID]
 	svr.RUnlock()
 	if len(taskID) == 0 {
-		return nil, grpc.Errorf(codes.NotFound, "task not found")
+		return nil, status.Errorf(codes.NotFound, "task not found")
 	}
-	var status int
+	var st int
 	switch args.GetSt() {
 	case ControlArgs_Pause:
-		status = anet.RPAPause
+		st = anet.RPAPause
 	case ControlArgs_Stop:
-		status = anet.RPAStop
+		st = anet.RPAStop
 	case ControlArgs_Resume:
-		status = anet.RPAContinue
+		st = anet.RPAContinue
 	}
-	err := agent.SendRpaCtrl(taskID, status)
+	err := agent.SendRpaCtrl(taskID, st)
 	if err != nil {
 		return nil, err
 	}
@@ -38,11 +38,11 @@ func (svr *Server) Control(ctx context.Context, args *ControlArgs) (*ControlResp
 	ch := svr.ctrlRep[taskID]
 	svr.RUnlock()
 	if ch == nil {
-		return nil, grpc.Errorf(codes.Unavailable, "channel not found")
+		return nil, status.Errorf(codes.Unavailable, "channel not found")
 	}
 	rep := <-ch
 	if rep == nil {
-		return nil, grpc.Errorf(codes.Unavailable, "channel closed")
+		return nil, status.Errorf(codes.Unavailable, "channel closed")
 	}
 	return &ControlResponse{
 		Ok:  rep.OK,

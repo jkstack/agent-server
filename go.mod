@@ -1,6 +1,6 @@
 module server
 
-go 1.18
+go 1.20
 
 replace github.com/kardianos/service => github.com/lwch/service v1.2.1-1
 
@@ -11,7 +11,7 @@ require (
 	github.com/goreleaser/nfpm/v2 v2.25.1
 	github.com/gorilla/websocket v1.5.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
-	github.com/jkstack/anet v0.0.0-20230904100446-bde8f97f3d57
+	github.com/jkstack/anet v0.0.0-20231227072717-88563bef3d16
 	github.com/jkstack/jkframe v1.2.2
 	github.com/kardianos/service v1.2.1
 	github.com/prometheus/client_golang v1.14.0
@@ -19,7 +19,7 @@ require (
 	github.com/spf13/cobra v1.6.1
 	github.com/swaggo/files v1.0.0
 	github.com/swaggo/gin-swagger v1.5.3
-	github.com/swaggo/swag v1.8.10
+	github.com/swaggo/swag v1.16.2
 	golang.org/x/time v0.3.0
 	google.golang.org/grpc v1.53.0
 	google.golang.org/protobuf v1.28.1
@@ -108,11 +108,11 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	gitlab.com/digitalxero/go-conventional-commit v1.0.7 // indirect
 	golang.org/x/crypto v0.5.0 // indirect
-	golang.org/x/mod v0.7.0 // indirect
-	golang.org/x/net v0.5.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
-	golang.org/x/text v0.6.0 // indirect
-	golang.org/x/tools v0.5.0 // indirect
+	golang.org/x/mod v0.9.0 // indirect
+	golang.org/x/net v0.8.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/text v0.8.0 // indirect
+	golang.org/x/tools v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
