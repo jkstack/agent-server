@@ -28,6 +28,9 @@ jkstack agent统一管理服务，与同类产品相比有以下优势：
 1. [example-agent](https://github.com/jkstack/example-agent): 一个agent的示例
 2. [metrics-agent](https://github.com/jkstack/metrics-agent): 主机监控信息采集
 3. [exec-agent](https://github.com/jkstack/exec-agent): 远程执行脚本或上传下载文件
+4. rpa-agent: 桌面自动化
+5. ipmi-agent: 物理服务器IPMI监控数据采集
+6. snmp-agent: 物理服务器SNMP监控数据采集
 
 ## 快速部署
 
